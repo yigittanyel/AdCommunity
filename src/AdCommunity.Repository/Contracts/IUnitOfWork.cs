@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AdCommunity.Repository.Contracts;
 
-namespace AdCommunity.Repository.Contracts
+public interface IUnitOfWork : IDisposable
 {
-    internal class IUnitOfWork
-    {
-    }
+    void SaveChanges();
+    void BeginTransaction();
+    void CommitTransaction();
+    void RollbackTransaction();
 }

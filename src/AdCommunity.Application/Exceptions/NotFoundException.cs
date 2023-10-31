@@ -1,4 +1,4 @@
-﻿namespace Application.Exceptions;
+﻿namespace AdCommunity.Application.Exceptions;
 
 public class NotFoundException : Exception
 {
