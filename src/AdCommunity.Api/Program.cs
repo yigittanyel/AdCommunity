@@ -1,4 +1,7 @@
 using AdCommunity.Repository;
+using AdCommunity.Core;
+using System.Reflection;
+using System.Runtime.Loader;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 RepositoryServiceRegistration.AddRepositoryRegistration(builder.Services, builder.Configuration);
+//var assemblies = GetAssemblies();
+//builder.Services.AddYt(assemblies);
+
 
 var app = builder.Build();
 
@@ -29,3 +35,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+static Assembly[] GetAssemblies()
+{
+    var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+    return Directory
+        .GetFiles(path, "AdCommunity.*.dll", SearchOption.TopDirectoryOnly)
+        .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath)
+        .ToArray();
+}

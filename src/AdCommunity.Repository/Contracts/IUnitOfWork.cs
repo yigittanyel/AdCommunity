@@ -2,8 +2,17 @@
 
 public interface IUnitOfWork : IDisposable
 {
-    void SaveChanges();
-    void BeginTransaction();
-    void CommitTransaction();
-    void RollbackTransaction();
+    ICommunityEventRepository CommunityEventRepository { get; }
+    ICommunityRepository CommunityRepository { get; }
+    ITicketRepository TicketRepository { get; }
+    IUserCommunityRepository UserCommunityRepository { get; }
+    IUserEventRepository UserEventRepository { get; }
+    IUserRepository UserRepository { get; }
+    IUserTicketRepository UserTicketRepository { get; }
+    ISocialRepository SocialRepository { get; }
+
+    Task<int> SaveChangesAsync();
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
 }

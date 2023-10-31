@@ -1,25 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace AdCommunity.Domain.Entities;
 
-namespace AdCommunity.Domain.Entities;
-
-public partial class Communityevent
+public partial class CommunityEvent
 {
     public int Id { get; set; }
 
-    public string? Eventname { get; set; }
+    public string? EventName { get; set; }
 
     public string? Description { get; set; }
 
-    public DateTime? Eventdate { get; set; }
+    public DateTime? EventDate { get; set; }
 
     public string? Location { get; set; }
 
-    public int? Communityid { get; set; }
+    public int? CommunityId { get; set; }
 
-    public int? Attendingmembercount { get; set; }
-
-    [ForeignKey(nameof(Communityid))]
     public virtual Community? Community { get; set; }
 
-    public virtual ICollection<Userevent> Userevents { get; set; } = new List<Userevent>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
+    public virtual ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
 }

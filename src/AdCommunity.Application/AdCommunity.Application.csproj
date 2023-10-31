@@ -6,4 +6,23 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\CommunityEvent\Commands\" />
+    <Folder Include="Features\CommunityEvent\Queries\" />
+    <Folder Include="Features\Community\Commands\" />
+    <Folder Include="Features\Community\" />
+    <Folder Include="Features\Community\Queries\" />
+    <Folder Include="Features\Invoice\Commands\" />
+    <Folder Include="Features\Invoice\Queries\" />
+    <Folder Include="Features\" />
+    <Folder Include="Features\Ticket\Commands\" />
+    <Folder Include="Features\Ticket\Queries\" />
+    <Folder Include="Features\UserCommunity\Commands\" />
+    <Folder Include="Features\UserCommunity\Queries\" />
+    <Folder Include="Features\UserEvent\Commands\" />
+    <Folder Include="Features\UserEvent\Queries\" />
+    <Folder Include="Features\User\Commands\" />
+    <Folder Include="Features\User\Queries\" />
+  </ItemGroup>
+
 </Project>

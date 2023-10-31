@@ -4,9 +4,9 @@ public partial class User
 {
     public int Id { get; set; }
 
-    public string? Firstname { get; set; }
+    public string? FirstName { get; set; }
 
-    public string? Lastname { get; set; }
+    public string? LastName { get; set; }
 
     public string? Email { get; set; }
 
@@ -16,9 +16,13 @@ public partial class User
 
     public string? Username { get; set; }
 
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public int? SocialId { get; set; }
 
-    public virtual ICollection<Usercommunity> Usercommunities { get; set; } = new List<Usercommunity>();
+    public virtual Social? Social { get; set; }
 
-    public virtual ICollection<Userevent> Userevents { get; set; } = new List<Userevent>();
+    public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
+
+    public virtual ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
+
+    public virtual ICollection<UserTicket> UserTickets { get; set; } = new List<UserTicket>();
 }

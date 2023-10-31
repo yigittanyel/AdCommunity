@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdCommunity.Application\AdCommunity.Application.csproj" />
+    <ProjectReference Include="..\AdCommunity.Core\AdCommunity.Core.csproj" />
     <ProjectReference Include="..\AdCommunity.Repository\AdCommunity.Repository.csproj" />
   </ItemGroup>
 

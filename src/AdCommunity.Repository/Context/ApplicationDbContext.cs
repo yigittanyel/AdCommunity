@@ -16,9 +16,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Community> Communities { get; set; }
 
-    public virtual DbSet<Communityevent> Communityevents { get; set; }
-
-    public virtual DbSet<Invoice> Invoices { get; set; }
+    public virtual DbSet<CommunityEvent> CommunityEvents { get; set; }
 
     public virtual DbSet<Social> Socials { get; set; }
 
@@ -26,199 +24,138 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Usercommunity> Usercommunities { get; set; }
+    public virtual DbSet<UserCommunity> UserCommunities { get; set; }
 
-    public virtual DbSet<Userevent> Userevents { get; set; }
+    public virtual DbSet<UserEvent> UserEvents { get; set; }
+
+    public virtual DbSet<UserTicket> UserTickets { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=CnnStr");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Server=127.0.0.1;Port=5432;Database=AdCommunityDb;User Id=postgres;Password=YgtTnyl2000.com.tr");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Community>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("community_pkey");
+            entity.HasKey(e => e.Id).HasName("Community_pkey");
 
-            entity.ToTable("community");
+            entity.ToTable("Community");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Description)
-                .HasColumnType("character varying")
-                .HasColumnName("description");
-            entity.Property(e => e.Location)
-                .HasColumnType("character varying")
-                .HasColumnName("location");
-            entity.Property(e => e.Membercount).HasColumnName("membercount");
-            entity.Property(e => e.Name)
-                .HasColumnType("character varying")
-                .HasColumnName("name");
-            entity.Property(e => e.Organizators)
-                .HasColumnType("character varying")
-                .HasColumnName("organizators");
-            entity.Property(e => e.Social)
-                .HasColumnType("jsonb")
-                .HasColumnName("social");
-            entity.Property(e => e.Tags)
-                .HasColumnType("character varying")
-                .HasColumnName("tags");
+            entity.Property(e => e.Description).HasColumnType("character varying");
+            entity.Property(e => e.Location).HasColumnType("character varying");
+            entity.Property(e => e.Name).HasColumnType("character varying");
+            entity.Property(e => e.Organizators).HasColumnType("character varying");
+            entity.Property(e => e.Tags).HasColumnType("character varying");
+
+            entity.HasOne(d => d.Social).WithMany(p => p.Communities)
+                .HasForeignKey(d => d.SocialId)
+                .HasConstraintName("FK_Community_Social");
         });
 
-        modelBuilder.Entity<Communityevent>(entity =>
+        modelBuilder.Entity<CommunityEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("communityevents_pkey");
+            entity.HasKey(e => e.Id).HasName("CommunityEvent_pkey");
 
-            entity.ToTable("communityevents");
+            entity.ToTable("CommunityEvent");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Attendingmembercount).HasColumnName("attendingmembercount");
-            entity.Property(e => e.Communityid).HasColumnName("communityid");
-            entity.Property(e => e.Description)
-                .HasColumnType("character varying")
-                .HasColumnName("description");
-            entity.Property(e => e.Eventdate)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("eventdate");
-            entity.Property(e => e.Eventname)
-                .HasColumnType("character varying")
-                .HasColumnName("eventname");
-            entity.Property(e => e.Location)
-                .HasColumnType("character varying")
-                .HasColumnName("location");
+            entity.Property(e => e.Description).HasColumnType("character varying");
+            entity.Property(e => e.EventDate).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.EventName).HasColumnType("character varying");
+            entity.Property(e => e.Location).HasColumnType("character varying");
 
-            entity.HasOne(d => d.Community).WithMany(p => p.Communityevents)
-                .HasForeignKey(d => d.Communityid)
-                .HasConstraintName("communityevents_communityid_fkey");
-        });
-
-        modelBuilder.Entity<Invoice>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("invoice_pkey");
-
-            entity.ToTable("invoice");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Amount).HasColumnName("amount");
-            entity.Property(e => e.Createddate)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("createddate");
-            entity.Property(e => e.Invoiceno)
-                .HasColumnType("character varying")
-                .HasColumnName("invoiceno");
+            entity.HasOne(d => d.Community).WithMany(p => p.CommunityEvents)
+                .HasForeignKey(d => d.CommunityId)
+                .HasConstraintName("FK_CommunityEvent_Community");
         });
 
         modelBuilder.Entity<Social>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("social");
+            entity.HasKey(e => e.Id).HasName("Social_pkey");
 
-            entity.Property(e => e.Facebook)
-                .HasColumnType("character varying")
-                .HasColumnName("facebook");
-            entity.Property(e => e.Github)
-                .HasColumnType("character varying")
-                .HasColumnName("github");
-            entity.Property(e => e.Instagram)
-                .HasColumnType("character varying")
-                .HasColumnName("instagram");
-            entity.Property(e => e.Medium)
-                .HasColumnType("character varying")
-                .HasColumnName("medium");
-            entity.Property(e => e.Twitch)
-                .HasColumnType("character varying")
-                .HasColumnName("twitch");
-            entity.Property(e => e.Twitter)
-                .HasColumnType("character varying")
-                .HasColumnName("twitter");
-            entity.Property(e => e.Website)
-                .HasColumnType("character varying")
-                .HasColumnName("website");
+            entity.ToTable("Social");
+
+            entity.Property(e => e.Facebook).HasColumnType("character varying");
+            entity.Property(e => e.Github).HasColumnType("character varying");
+            entity.Property(e => e.Instagram).HasColumnType("character varying");
+            entity.Property(e => e.Medium).HasColumnType("character varying");
+            entity.Property(e => e.Twitch).HasColumnType("character varying");
+            entity.Property(e => e.Twitter).HasColumnType("character varying");
+            entity.Property(e => e.website).HasColumnType("character varying");
         });
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("tickets_pkey");
+            entity.HasKey(e => e.Id).HasName("Tickets_pkey");
 
-            entity.ToTable("tickets");
+            entity.Property(e => e.Pnr).HasColumnType("character varying");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Pnr)
-                .HasColumnType("character varying")
-                .HasColumnName("pnr");
-            entity.Property(e => e.Price).HasColumnName("price");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.HasOne(d => d.CommunityEvent).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.CommunityEventId)
+                .HasConstraintName("FK_Tickets_CommunityEvent");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Tickets)
-                .HasForeignKey(d => d.Userid)
-                .HasConstraintName("fk_tickets_users");
+            entity.HasOne(d => d.Community).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.CommunityId)
+                .HasConstraintName("FK_Tickets_Community");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("users_pkey");
+            entity.HasKey(e => e.Id).HasName("Users_pkey");
 
-            entity.ToTable("users");
+            entity.Property(e => e.Email).HasColumnType("character varying");
+            entity.Property(e => e.FirstName).HasColumnType("character varying");
+            entity.Property(e => e.LastName).HasColumnType("character varying");
+            entity.Property(e => e.Password).HasColumnType("character varying");
+            entity.Property(e => e.Phone).HasColumnType("character varying");
+            entity.Property(e => e.Username).HasColumnType("character varying");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Email)
-                .HasColumnType("character varying")
-                .HasColumnName("email");
-            entity.Property(e => e.Firstname)
-                .HasColumnType("character varying")
-                .HasColumnName("firstname");
-            entity.Property(e => e.Lastname)
-                .HasColumnType("character varying")
-                .HasColumnName("lastname");
-            entity.Property(e => e.Password)
-                .HasColumnType("character varying")
-                .HasColumnName("password");
-            entity.Property(e => e.Phone)
-                .HasColumnType("character varying")
-                .HasColumnName("phone");
-            entity.Property(e => e.Username)
-                .HasColumnType("character varying")
-                .HasColumnName("username");
+            entity.HasOne(d => d.Social).WithMany(p => p.Users)
+                .HasForeignKey(d => d.SocialId)
+                .HasConstraintName("FK_Users_Social");
         });
 
-        modelBuilder.Entity<Usercommunity>(entity =>
+        modelBuilder.Entity<UserCommunity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("usercommunity_pkey");
+            entity.HasKey(e => e.Id).HasName("UserCommunity_pkey");
 
-            entity.ToTable("usercommunity");
+            entity.ToTable("UserCommunity");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Communityid).HasColumnName("communityid");
-            entity.Property(e => e.Joindate)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("joindate");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.JoinDate).HasColumnType("timestamp without time zone");
 
-            entity.HasOne(d => d.Community).WithMany(p => p.Usercommunities)
-                .HasForeignKey(d => d.Communityid)
-                .HasConstraintName("usercommunity_communityid_fkey");
+            entity.HasOne(d => d.Community).WithMany(p => p.UserCommunities)
+                .HasForeignKey(d => d.CommunityId)
+                .HasConstraintName("FK_UserCommunity_Community");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Usercommunities)
-                .HasForeignKey(d => d.Userid)
-                .HasConstraintName("usercommunity_userid_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.UserCommunities)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserCommunity_Users");
         });
 
-        modelBuilder.Entity<Userevent>(entity =>
+        modelBuilder.Entity<UserEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("userevents_pkey");
+            entity.HasKey(e => e.Id).HasName("UserEvents_pkey");
 
-            entity.ToTable("userevents");
+            entity.HasOne(d => d.Event).WithMany(p => p.UserEvents)
+                .HasForeignKey(d => d.EventId)
+                .HasConstraintName("FK_UserEvents_CommunityEvent");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Eventid).HasColumnName("eventid");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.HasOne(d => d.User).WithMany(p => p.UserEvents)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserEvents_Users");
+        });
 
-            entity.HasOne(d => d.Event).WithMany(p => p.Userevents)
-                .HasForeignKey(d => d.Eventid)
-                .HasConstraintName("userevents_eventid_fkey");
+        modelBuilder.Entity<UserTicket>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("UserTickets_pkey");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Userevents)
-                .HasForeignKey(d => d.Userid)
-                .HasConstraintName("userevents_userid_fkey");
+            entity.HasOne(d => d.Ticket).WithMany(p => p.UserTickets)
+                .HasForeignKey(d => d.TicketId)
+                .HasConstraintName("FK_UserTickets_Tickets");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserTickets)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserTickets_Users");
         });
 
         OnModelCreatingPartial(modelBuilder);

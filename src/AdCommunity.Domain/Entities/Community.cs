@@ -14,11 +14,13 @@ public partial class Community
 
     public string? Organizators { get; set; }
 
-    public string? Social { get; set; }
+    public int? SocialId { get; set; }
 
-    public int? Membercount { get; set; }
+    public virtual ICollection<CommunityEvent> CommunityEvents { get; set; } = new List<CommunityEvent>();
 
-    public virtual ICollection<Communityevent> Communityevents { get; set; } = new List<Communityevent>();
+    public virtual Social? Social { get; set; }
 
-    public virtual ICollection<Usercommunity> Usercommunities { get; set; } = new List<Usercommunity>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
+    public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
 }

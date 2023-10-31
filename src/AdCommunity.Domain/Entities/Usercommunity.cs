@@ -1,14 +1,14 @@
 ﻿namespace AdCommunity.Domain.Entities;
 
-public partial class Usercommunity
+public partial class UserCommunity
 {
     public int Id { get; set; }
 
-    public int? Userid { get; set; }
+    public int? UserId { get; set; }
 
-    public int? Communityid { get; set; }
+    public int? CommunityId { get; set; }
 
-    public DateTime? Joindate { get; set; }
+    public DateTime? JoinDate { get; set; }
 
     public virtual Community? Community { get; set; }
 
