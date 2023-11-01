@@ -1,11 +1,10 @@
-﻿using System.Text;
+﻿using AdCommunity.Domain.Base;
+using System.Text;
 
-namespace AdCommunity.Domain.Entities;
+namespace AdCommunity.Domain.Entities.UserModels;
 
-public partial class User
+public partial class User:BaseEntity,IAggregateRoot
 {
-    public int Id { get; protected set; }
-
     public string? FirstName { get; protected set; }
 
     public string? LastName { get; protected set; }
@@ -30,8 +29,6 @@ public partial class User
     public string? Github { get; protected set; }
 
     public string? Medium { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual ICollection<UserCommunity> UserCommunities { get; protected set; } = new List<UserCommunity>();
 

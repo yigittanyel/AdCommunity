@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Entities.CommunityModels;
+using AdCommunity.Domain.Entities.UserModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Repository.Context;

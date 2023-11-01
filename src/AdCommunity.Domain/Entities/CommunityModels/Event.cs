@@ -1,9 +1,10 @@
-﻿namespace AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Base;
+using AdCommunity.Domain.Entities.UserModels;
 
-public partial class Event
+namespace AdCommunity.Domain.Entities.CommunityModels;
+
+public partial class Event:BaseEntity
 {
-    public int Id { get; protected set; }
-
     public string? EventName { get; protected set; }
 
     public string? Description { get; protected set; }
@@ -13,8 +14,6 @@ public partial class Event
     public string? Location { get; protected set; }
 
     public int? CommunityId { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Community? Community { get; protected set; }
 

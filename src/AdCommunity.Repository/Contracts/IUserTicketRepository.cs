@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Entities.UserModels;
 
 namespace AdCommunity.Repository.Contracts;
 

@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Entities.CommunityModels;
 using AdCommunity.Repository.Context;
 using AdCommunity.Repository.Contracts;
 

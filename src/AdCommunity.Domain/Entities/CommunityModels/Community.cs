@@ -1,6 +1,9 @@
-﻿namespace AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Base;
+using AdCommunity.Domain.Entities.UserModels;
 
-public partial class Community
+namespace AdCommunity.Domain.Entities.CommunityModels;
+
+public partial class Community : BaseEntity,IAggregateRoot
 {
     public int Id { get; protected set; }
 
@@ -26,17 +29,14 @@ public partial class Community
 
     public string? Medium { get; protected set; }
 
-    public DateTime? CreatedOn { get; protected set; }
-
     public virtual ICollection<Event> Events { get; protected set; } = new List<Event>();
 
     public virtual ICollection<Ticket> Tickets { get; protected set; } = new List<Ticket>();
 
     public virtual ICollection<UserCommunity> UserCommunities { get; protected set; } = new List<UserCommunity>();
 
-    public Community(int id, string? name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, DateTime? createdOn, ICollection<Event> events, ICollection<Ticket> tickets, ICollection<UserCommunity> userCommunities)
+    public Community(string? name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, DateTime? createdOn, ICollection<Event> events, ICollection<Ticket> tickets, ICollection<UserCommunity> userCommunities)
     {
-        Id = id;
         Name = name;
         Description = description;
         Tags = tags;
@@ -54,9 +54,8 @@ public partial class Community
         UserCommunities = userCommunities;
     }
 
-    public Community(int id, string? name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, DateTime? createdOn)
+    public Community(string? name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, DateTime? createdOn)
     {
-        Id = id;
         Name = name;
         Description = description;
         Tags = tags;

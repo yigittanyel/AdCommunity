@@ -1,16 +1,15 @@
-﻿namespace AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Base;
+using AdCommunity.Domain.Entities.CommunityModels;
 
-public partial class UserTicket
+namespace AdCommunity.Domain.Entities.UserModels;
+
+public partial class UserTicket:BaseEntity
 {
-    public int Id { get; protected set; }
-
     public int? UserId { get; protected set; }
 
     public int? TicketId { get; protected set; }
 
     public string? Pnr { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Ticket? Ticket { get; protected set; }
 

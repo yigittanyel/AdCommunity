@@ -1,14 +1,13 @@
-﻿namespace AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Base;
+using AdCommunity.Domain.Entities.CommunityModels;
 
-public partial class UserEvent
+namespace AdCommunity.Domain.Entities.UserModels;
+
+public partial class UserEvent:BaseEntity
 {
-    public int Id { get; protected set; }
-
     public int? UserId { get; protected set; }
 
     public int? EventId { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Event? Event { get; protected set; }
 

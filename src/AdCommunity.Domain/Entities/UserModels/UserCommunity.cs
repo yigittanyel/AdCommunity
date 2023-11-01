@@ -1,16 +1,15 @@
-﻿namespace AdCommunity.Domain.Entities;
+﻿using AdCommunity.Domain.Base;
+using AdCommunity.Domain.Entities.CommunityModels;
 
-public partial class UserCommunity
+namespace AdCommunity.Domain.Entities.UserModels;
+
+public partial class UserCommunity : BaseEntity
 {
-    public int Id { get; protected set; }
-
     public int? UserId { get; protected set; }
 
     public int? CommunityId { get; protected set; }
 
     public DateTime? JoinDate { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Community? Community { get; protected set; }
 
