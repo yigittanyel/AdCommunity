@@ -1,32 +1,43 @@
-using AdCommunity.Repository;
+using AdCommunity.Api.Middlewares;
 using AdCommunity.Core;
-using System.Reflection;
-using System.Runtime.Loader;
+using AdCommunity.Repository;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-RepositoryServiceRegistration.AddRepositoryRegistration(builder.Services, builder.Configuration);
-//var assemblies = GetAssemblies();
-//builder.Services.AddYt(assemblies);
+#region Serilog Implementation
+using var log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("./logs.txt")
+    .CreateLogger();
 
+builder.Services.AddSingleton<Serilog.ILogger>(log);
+#endregion
+
+#region CustomMapper and CustomMediator Implementation
+builder.Services.AddYtMapper();
+builder.Services.AddYtMeditor(AppDomain.CurrentDomain.Load("AdCommunity.Application"));
+#endregion
+
+#region Repository Registration Implementation
+RepositoryServiceRegistration.AddRepositoryRegistration(builder.Services, builder.Configuration);
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
+#region Exception Middleware Implementation
+app.UseMiddleware<ExceptionMiddleware>();
+#endregion
 
 app.UseHttpsRedirection();
 
@@ -35,14 +46,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-static Assembly[] GetAssemblies()
-{
-    var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-    return Directory
-        .GetFiles(path, "AdCommunity.*.dll", SearchOption.TopDirectoryOnly)
-        .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath)
-        .ToArray();
-}

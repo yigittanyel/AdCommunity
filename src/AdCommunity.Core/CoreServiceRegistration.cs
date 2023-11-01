@@ -1,4 +1,5 @@
-﻿using AdCommunity.Core.Extensions;
+﻿using AdCommunity.Core.CustomMapper;
+using AdCommunity.Core.Extensions;
 using AdCommunity.Core.Extensions.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -8,7 +9,13 @@ namespace AdCommunity.Core;
 
 public static class CoreServiceRegistration
 {
-    public static IServiceCollection AddYt(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection AddYtMapper(this IServiceCollection services)
+    {
+        services.AddScoped<IYtMapper, YtMapper>();
+        return services;
+    }
+
+    public static IServiceCollection AddYtMeditor(this IServiceCollection services, params Assembly[] assemblies)
     {
         AddRequiredServices(services);
         RegisterServices(services, assemblies, typeof(IYtRequestHandler<,>));
@@ -17,6 +24,7 @@ public static class CoreServiceRegistration
     }
     private static IServiceCollection RegisterServices(this IServiceCollection services, Assembly[] assemblies, Type registerationObj)
     {
+
         foreach (var assembly in assemblies)
         {
             var types = assembly.GetTypes();
@@ -33,10 +41,11 @@ public static class CoreServiceRegistration
 
         return services;
     }
-
     private static void AddRequiredServices(IServiceCollection services)
     {
         services.TryAdd(new ServiceDescriptor(typeof(IYtMediator), typeof(YtMediator), ServiceLifetime.Transient));
+
+
     }
 
 }

@@ -1,6 +1,6 @@
 ﻿namespace AdCommunity.Repository.Contracts;
 
-public interface IUnitOfWork : IDisposable
+public interface IUnitOfWork
 {
     IEventRepository CommunityEventRepository { get; }
     ICommunityRepository CommunityRepository { get; }

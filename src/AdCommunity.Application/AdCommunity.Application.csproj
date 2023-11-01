@@ -14,7 +14,6 @@
     <Folder Include="Features\Community\Queries\" />
     <Folder Include="Features\Invoice\Commands\" />
     <Folder Include="Features\Invoice\Queries\" />
-    <Folder Include="Features\" />
     <Folder Include="Features\Ticket\Commands\" />
     <Folder Include="Features\Ticket\Queries\" />
     <Folder Include="Features\UserCommunity\Commands\" />
@@ -22,7 +21,13 @@
     <Folder Include="Features\UserEvent\Commands\" />
     <Folder Include="Features\UserEvent\Queries\" />
     <Folder Include="Features\User\Commands\" />
-    <Folder Include="Features\User\Queries\" />
+    <Folder Include="Features\User\Requests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdCommunity.Core\AdCommunity.Core.csproj" />
+    <ProjectReference Include="..\AdCommunity.Domain\AdCommunity.Domain.csproj" />
+    <ProjectReference Include="..\AdCommunity.Repository\AdCommunity.Repository.csproj" />
   </ItemGroup>
 
 </Project>

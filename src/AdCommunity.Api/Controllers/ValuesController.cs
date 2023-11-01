@@ -1,4 +1,6 @@
-﻿using AdCommunity.Repository.Context;
+﻿using AdCommunity.Application.Features.User.Queries;
+using AdCommunity.Core.Extensions.Mediator;
+using AdCommunity.Repository.Context;
 using AdCommunity.Repository.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -9,19 +11,18 @@ namespace AdCommunity.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IYtMediator _ytMediator;
 
-        public ValuesController(ApplicationDbContext dbContext)
+        public ValuesController(IYtMediator ytMediator)
         {
-            _dbContext = dbContext;
+            _ytMediator = ytMediator;
         }
-
 
         [HttpGet]
         public IActionResult Get()
         {
-            var users= _dbContext.Users.ToList();
-            return Ok(users);
+            var query=new GetUsersQuery();
+            return Ok(_ytMediator.Send(query));
         }
     }
 }

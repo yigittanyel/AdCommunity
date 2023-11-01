@@ -13,17 +13,17 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         _dbContext = context;
     }
 
-    public async Task<T> GetById(int id)
+    public async Task<T> GetByIdAsync(int id)
     {
         return await _dbContext.Set<T>().FindAsync(id);
     }
 
-    public async Task<IEnumerable<T>> GetAll()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _dbContext.Set<T>().ToListAsync();
     }
 
-    public async Task Add(T entity)
+    public async Task AddAsync(T entity)
     {
         await _dbContext.Set<T>().AddAsync(entity);
     }
