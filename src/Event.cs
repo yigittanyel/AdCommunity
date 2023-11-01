@@ -1,6 +1,9 @@
-﻿namespace AdCommunity.Domain.Entities;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class CommunityEvent
+namespace AdCommunity.Domain.Entities;
+
+public partial class Event
 {
     public int Id { get; set; }
 
@@ -13,6 +16,8 @@ public partial class CommunityEvent
     public string? Location { get; set; }
 
     public int? CommunityId { get; set; }
+
+    public DateTime? CreatedOn { get; set; }
 
     public virtual Community? Community { get; set; }
 

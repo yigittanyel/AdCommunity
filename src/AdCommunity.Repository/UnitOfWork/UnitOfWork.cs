@@ -8,13 +8,12 @@ public class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _context;
 
     public UnitOfWork(ApplicationDbContext context,
-        ICommunityEventRepository communityEventRepository,
+        IEventRepository communityEventRepository,
         ICommunityRepository communityRepository,
         ITicketRepository ticketRepository,
         IUserCommunityRepository userCommunityRepository,
         IUserEventRepository userEventRepository,
         IUserTicketRepository userTicketRepository,
-        ISocialRepository socialRepository,
         IUserRepository userRepository)
     {
         _context = context;
@@ -25,17 +24,15 @@ public class UnitOfWork : IUnitOfWork
         UserEventRepository = userEventRepository;
         UserRepository = userRepository;
         UserTicketRepository = userTicketRepository;
-        SocialRepository = socialRepository;
     }
 
-    public ICommunityEventRepository CommunityEventRepository { get; }
+    public IEventRepository CommunityEventRepository { get; }
     public ICommunityRepository CommunityRepository { get; }
     public ITicketRepository TicketRepository { get; }
     public IUserCommunityRepository UserCommunityRepository { get; }
     public IUserEventRepository UserEventRepository { get; }
     public IUserRepository UserRepository { get; }
     public IUserTicketRepository UserTicketRepository { get; }
-    public ISocialRepository SocialRepository { get; }
 
     public async Task<int> SaveChangesAsync()
     {

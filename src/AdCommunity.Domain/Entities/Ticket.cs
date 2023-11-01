@@ -2,19 +2,46 @@
 
 public partial class Ticket
 {
-    public int Id { get; set; }
+    public int Id { get; protected set; }
 
-    public string? Pnr { get; set; }
+    public int? CommunityEventId { get; protected set; }
 
-    public int? CommunityEventId { get; set; }
+    public int? CommunityId { get; protected set; }
 
-    public int? CommunityId { get; set; }
+    public decimal? Price { get; protected set; }
 
-    public decimal? Price { get; set; }
+    public DateTime? CreatedOn { get; protected set; }
 
-    public virtual Community? Community { get; set; }
+    public virtual Community? Community { get; protected set; }
 
-    public virtual CommunityEvent? CommunityEvent { get; set; }
+    public virtual Event? CommunityEvent { get; protected set; }
 
-    public virtual ICollection<UserTicket> UserTickets { get; set; } = new List<UserTicket>();
+    public virtual ICollection<UserTicket> UserTickets { get; protected set; } = new List<UserTicket>();
+
+    public Ticket(int id, int? communityEventId, int? communityId, decimal? price, DateTime? createdOn, Community? community, Event? communityEvent, ICollection<UserTicket> userTickets)
+    {
+        Id = id;
+        CommunityEventId = communityEventId;
+        CommunityId = communityId;
+        Price = price;
+        CreatedOn = createdOn;
+        Community = community;
+        CommunityEvent = communityEvent;
+        UserTickets = userTickets;
+    }
+
+    public Ticket(int id, int? communityEventId, int? communityId, decimal? price, DateTime? createdOn)
+    {
+        Id = id;
+        CommunityEventId = communityEventId;
+        CommunityId = communityId;
+        Price = price;
+        CreatedOn = createdOn;
+    }
+
+    public Ticket(int id)
+    {
+        Id = id;
+    }
+
 }

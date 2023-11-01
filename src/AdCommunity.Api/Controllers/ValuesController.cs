@@ -9,19 +9,19 @@ namespace AdCommunity.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly ITicketRepository _ticketRepository;
+        private readonly ApplicationDbContext _dbContext;
 
-        public ValuesController(ITicketRepository ticketRepository)
+        public ValuesController(ApplicationDbContext dbContext)
         {
-            _ticketRepository = ticketRepository;
+            _dbContext = dbContext;
         }
 
 
         [HttpGet]
         public IActionResult Get()
         {
-            var x=_ticketRepository.QueryListAsync(selector:p=>new { p.Id,p.Price});
-            return Ok(JsonSerializer.Serialize(x));
+            var users= _dbContext.Users.ToList();
+            return Ok(users);
         }
     }
 }

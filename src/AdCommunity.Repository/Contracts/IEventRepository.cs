@@ -2,6 +2,6 @@
 
 namespace AdCommunity.Repository.Contracts;
 
-public interface ICommunityEventRepository : IGenericRepository<CommunityEvent>
+public interface IEventRepository : IGenericRepository<Event>
 {
 }
