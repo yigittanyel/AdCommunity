@@ -39,7 +39,7 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("Community_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Community_Id_seq\"'::regclass)");
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
             entity.Property(e => e.Description).HasColumnType("character varying");
             entity.Property(e => e.Facebook).HasColumnType("character varying");
             entity.Property(e => e.Github).HasColumnType("character varying");
@@ -58,9 +58,9 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("CommunityEvent_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"CommunityEvent_Id_seq\"'::regclass)");
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
             entity.Property(e => e.Description).HasColumnType("character varying");
-            entity.Property(e => e.EventDate).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.EventDate).HasColumnType("timestamp with time zone");
             entity.Property(e => e.EventName).HasColumnType("character varying");
             entity.Property(e => e.Location).HasColumnType("character varying");
 
@@ -73,7 +73,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("Tickets_pkey");
 
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
 
             entity.HasOne(d => d.CommunityEvent).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.CommunityEventId)
@@ -88,7 +88,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("Users_pkey");
 
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
             entity.Property(e => e.Email).HasColumnType("character varying");
             entity.Property(e => e.Facebook).HasColumnType("character varying");
             entity.Property(e => e.FirstName).HasColumnType("character varying");
@@ -111,8 +111,8 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("UserCommunity_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"UserCommunity_Id_seq\"'::regclass)");
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
-            entity.Property(e => e.JoinDate).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
+            entity.Property(e => e.JoinDate).HasColumnType("timestamp with time zone");
 
             entity.HasOne(d => d.Community).WithMany(p => p.UserCommunities)
                 .HasForeignKey(d => d.CommunityId)
@@ -127,7 +127,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("UserEvents_pkey");
 
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
 
             entity.HasOne(d => d.Event).WithMany(p => p.UserEvents)
                 .HasForeignKey(d => d.EventId)
@@ -142,7 +142,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("UserTickets_pkey");
 
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
             entity.Property(e => e.Pnr).HasColumnType("character varying");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.UserTickets)

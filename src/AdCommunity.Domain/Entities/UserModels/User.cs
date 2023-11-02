@@ -75,6 +75,23 @@ public partial class User:BaseEntity,IAggregateRoot
         CreatedOn = createdOn;
     }
 
+    public User(string? firstName, string? lastName, string? email, string? password, string? phone, string? username, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, DateTime? createdOn)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Password = password;
+        Phone = phone;
+        Username = username;
+        Website = website;
+        Facebook = facebook;
+        Twitter = twitter;
+        Instagram = instagram;
+        Github = github;
+        Medium = medium;
+        CreatedOn = createdOn;
+    }
+
     public User(int id)
     {
         Id = id;

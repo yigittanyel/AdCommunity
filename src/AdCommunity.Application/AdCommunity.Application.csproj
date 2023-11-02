@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AdCommunity.Core\AdCommunity.Core.csproj" />
     <ProjectReference Include="..\AdCommunity.Domain\AdCommunity.Domain.csproj" />
     <ProjectReference Include="..\AdCommunity.Repository\AdCommunity.Repository.csproj" />

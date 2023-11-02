@@ -1,7 +1,13 @@
 using AdCommunity.Api.Middlewares;
 using AdCommunity.Core;
+using AdCommunity.Domain.Base;
 using AdCommunity.Repository;
+using AdCommunity.Repository.Contracts;
+using AdCommunity.Repository.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +33,29 @@ builder.Services.AddYtMeditor(AppDomain.CurrentDomain.Load("AdCommunity.Applicat
 RepositoryServiceRegistration.AddRepositoryRegistration(builder.Services, builder.Configuration);
 #endregion
 
+#region JWT Implementation
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    var Key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]);
+    o.SaveToken = true;
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Key)
+    };
+});
+
+builder.Services.AddScoped<IAuthenticateRepository, AuthenticateRepository>();
+#endregion
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -35,12 +64,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-#region Exception Middleware Implementation
-app.UseMiddleware<ExceptionMiddleware>();
-#endregion
+//#region Exception Middleware Implementation
+//app.UseMiddleware<ExceptionMiddleware>();
+//#endregion
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

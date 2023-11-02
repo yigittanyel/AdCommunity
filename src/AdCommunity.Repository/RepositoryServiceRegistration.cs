@@ -23,5 +23,11 @@ public static class RepositoryServiceRegistration
         serviceCollection.AddScoped<IUserTicketRepository, UserTicketRepository>();
 
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+
+        serviceCollection.AddSingleton<RedisService>(sp =>
+        {
+            return new RedisService(configuration["Redis:ConnectionString"]);
+        });
+
     }
 }
