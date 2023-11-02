@@ -1,4 +1,6 @@
-﻿namespace AdCommunity.Domain.Entities.Aggregates.User;
+﻿using AdCommunity.Domain.Exceptions;
+
+namespace AdCommunity.Domain.Entities.Aggregates.User;
 
 public partial class UserCommunity
 {
@@ -15,4 +17,17 @@ public partial class UserCommunity
     public virtual Entities.Aggregates.Community.Community Community { get; protected set; } = null!;
 
     public virtual User User { get; protected set; } = null!;
+
+    public UserCommunity(int userId, int communityId, DateTime? joinDate)
+    {
+        if(userId <= 0)
+            throw new ForeignKeyException(nameof(userId));
+        if (communityId <= 0)
+            throw new ForeignKeyException(nameof(communityId));
+
+        UserId = userId;
+        CommunityId = communityId;
+        JoinDate = joinDate;
+        CreatedOn = DateTime.UtcNow;
+    }
 }

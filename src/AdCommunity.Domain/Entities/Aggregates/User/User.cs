@@ -1,4 +1,6 @@
-﻿namespace AdCommunity.Domain.Entities.Aggregates.User;
+﻿using AdCommunity.Domain.Exceptions;
+
+namespace AdCommunity.Domain.Entities.Aggregates.User;
 
 
 public partial class User
@@ -42,17 +44,17 @@ public partial class User
     public User(string firstName, string lastName, string email, string password, string phone, string username, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
         if (string.IsNullOrEmpty(firstName))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(firstName));
+            throw new NullException(nameof(firstName));
         if (string.IsNullOrEmpty(lastName))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(lastName));
+            throw new NullException(nameof(lastName));
         if (string.IsNullOrEmpty(email))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(email));
+            throw new NullException(nameof(email));
         if (string.IsNullOrEmpty(password))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(password));
+            throw new NullException(nameof(password));
         if (string.IsNullOrEmpty(phone))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(phone));
+            throw new NullException(nameof(phone));
         if (string.IsNullOrEmpty(username))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(username));
+            throw new NullException(nameof(username));
 
         FirstName = firstName;
         LastName = lastName;

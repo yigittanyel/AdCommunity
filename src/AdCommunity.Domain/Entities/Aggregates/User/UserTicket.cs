@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.Community;
+using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.User;
 
@@ -17,4 +18,17 @@ public partial class UserTicket
     public virtual Ticket Ticket { get; protected set; } = null!;
 
     public virtual User User { get; protected set; } = null!;
+
+    public UserTicket(int userId, int ticketId, string? pnr)
+    {
+        if (userId <= 0)
+            throw new ForeignKeyException(nameof(userId));
+        if (ticketId <= 0)
+            throw new ForeignKeyException(nameof(ticketId));
+
+        UserId = userId;
+        TicketId = ticketId;
+        Pnr = pnr;
+        CreatedOn = DateTime.UtcNow;
+    }
 }
