@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Base;
+﻿using AdCommunity.Domain.Entities.Base;
 using AdCommunity.Domain.Entities.UserModels;
 
 namespace AdCommunity.Domain.Entities.CommunityModels;

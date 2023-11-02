@@ -1,6 +1,4 @@
-using AdCommunity.Api.Middlewares;
 using AdCommunity.Core;
-using AdCommunity.Domain.Base;
 using AdCommunity.Repository;
 using AdCommunity.Repository.Contracts;
 using AdCommunity.Repository.Repositories;

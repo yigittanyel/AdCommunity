@@ -33,5 +33,18 @@ public class UsersController : ControllerBase
         return Ok(token);
     }
 
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> Register(UserCreateDto usersdata)
+    {
+        var token = await _authRepository.Register(usersdata);
 
+        if (token == null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(token);
+    }
 }
