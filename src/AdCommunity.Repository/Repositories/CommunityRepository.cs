@@ -1,6 +1,6 @@
-﻿using AdCommunity.Domain.Entities.CommunityModels;
+﻿using AdCommunity.Domain.Contracts;
+using AdCommunity.Domain.Entities.Aggregates.Community;
 using AdCommunity.Repository.Context;
-using AdCommunity.Repository.Contracts;
 
 namespace AdCommunity.Repository.Repositories;
 

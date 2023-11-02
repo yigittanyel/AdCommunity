@@ -1,5 +1,5 @@
-﻿using AdCommunity.Domain.Entities.CommunityModels;
-using AdCommunity.Domain.Entities.UserModels;
+﻿using AdCommunity.Domain.Entities.Aggregates.Community;
+using AdCommunity.Domain.Entities.Aggregates.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Repository.Context;
@@ -39,7 +39,6 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("Community_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Community_Id_seq\"'::regclass)");
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
             entity.Property(e => e.Description).HasColumnType("character varying");
             entity.Property(e => e.Facebook).HasColumnType("character varying");
             entity.Property(e => e.Github).HasColumnType("character varying");
@@ -58,7 +57,6 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("CommunityEvent_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"CommunityEvent_Id_seq\"'::regclass)");
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
             entity.Property(e => e.Description).HasColumnType("character varying");
             entity.Property(e => e.EventDate).HasColumnType("timestamp with time zone");
             entity.Property(e => e.EventName).HasColumnType("character varying");
@@ -66,6 +64,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Community).WithMany(p => p.Events)
                 .HasForeignKey(d => d.CommunityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CommunityEvent_Community");
         });
 
@@ -73,14 +72,14 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("Tickets_pkey");
 
-            entity.Property(e => e.CreatedOn).HasColumnType("timestamp with time zone");
-
             entity.HasOne(d => d.CommunityEvent).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.CommunityEventId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Tickets_CommunityEvent");
 
             entity.HasOne(d => d.Community).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.CommunityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Tickets_Community");
         });
 
@@ -93,7 +92,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Facebook).HasColumnType("character varying");
             entity.Property(e => e.FirstName).HasColumnType("character varying");
             entity.Property(e => e.Github).HasColumnType("character varying");
-            entity.Property(e => e.HashedPassword)
+            entity.Property(e => e.HashedPassword_)
                 .HasColumnType("character varying")
                 .HasColumnName("HashedPassword ");
             entity.Property(e => e.Instagram).HasColumnType("character varying");
@@ -116,10 +115,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Community).WithMany(p => p.UserCommunities)
                 .HasForeignKey(d => d.CommunityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserCommunity_Community");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserCommunities)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserCommunity_Users");
         });
 
@@ -131,10 +132,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Event).WithMany(p => p.UserEvents)
                 .HasForeignKey(d => d.EventId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserEvents_CommunityEvent");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserEvents)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserEvents_Users");
         });
 
@@ -147,10 +150,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.UserTickets)
                 .HasForeignKey(d => d.TicketId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserTickets_Tickets");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserTickets)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserTickets_Users");
         });
 

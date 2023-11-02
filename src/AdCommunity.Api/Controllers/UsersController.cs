@@ -1,6 +1,5 @@
-﻿using AdCommunity.Domain.Entities.UserModels;
-using AdCommunity.Repository.Contracts;
-using AdCommunity.Repository.DTOs.User;
+﻿using AdCommunity.Application.DTOs.User;
+using AdCommunity.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +10,9 @@ namespace AdCommunity.Api.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IAuthenticateRepository _authRepository;
+    private readonly IAuthenticateService _authRepository;
 
-    public UsersController(IAuthenticateRepository authRepository)
+    public UsersController(IAuthenticateService authRepository)
     {
         _authRepository = authRepository;
     }

@@ -1,6 +1,6 @@
-﻿using AdCommunity.Domain.Entities.UserModels;
+﻿using AdCommunity.Domain.Contracts;
+using AdCommunity.Domain.Entities.Aggregates.User;
 using AdCommunity.Repository.Context;
-using AdCommunity.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Repository.Repositories;

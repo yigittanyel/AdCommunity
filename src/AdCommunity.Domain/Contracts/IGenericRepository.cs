@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
-
-namespace AdCommunity.Repository.Contracts;
+﻿namespace AdCommunity.Domain.Contracts;
 
 public interface IGenericRepository<T> where T : class
 {

@@ -1,6 +1,6 @@
+using AdCommunity.Application.Services;
 using AdCommunity.Core;
 using AdCommunity.Repository;
-using AdCommunity.Repository.Contracts;
 using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -51,7 +51,7 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddScoped<IAuthenticateRepository, AuthenticateRepository>();
+builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 #endregion
 
 var app = builder.Build();

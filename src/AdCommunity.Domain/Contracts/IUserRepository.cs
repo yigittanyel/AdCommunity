@@ -1,6 +1,6 @@
-﻿using AdCommunity.Domain.Entities.UserModels;
+﻿using AdCommunity.Domain.Entities.Aggregates.User;
 
-namespace AdCommunity.Repository.Contracts;
+namespace AdCommunity.Domain.Contracts;
 
 public interface IUserRepository : IGenericRepository<User>
 {

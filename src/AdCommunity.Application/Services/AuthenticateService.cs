@@ -1,27 +1,27 @@
-﻿using AdCommunity.Domain.Entities.Base;
-using AdCommunity.Domain.Entities.UserModels;
-using AdCommunity.Repository.Contracts;
-using AdCommunity.Repository.DTOs.User;
+﻿using AdCommunity.Application.DTOs.User;
+using AdCommunity.Domain.Contracts;
+using AdCommunity.Domain.Entities.Aggregates.User;
+using AdCommunity.Domain.Entities.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AdCommunity.Repository.Repositories;
+namespace AdCommunity.Application.Services;
 
-public class AuthenticateRepository : IAuthenticateRepository
+public class AuthenticateService : IAuthenticateService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _configuration;
 
-    public AuthenticateRepository(IUnitOfWork unitOfWork, IConfiguration configuration)
+    public AuthenticateService(IUnitOfWork unitOfWork, IConfiguration configuration)
     {
         _unitOfWork = unitOfWork;
         _configuration = configuration;
     }
 
-    public async Task<Tokens> Login(UserLoginDto user)
+    public async Task<Tokens> Login(Application.DTOs.User.UserLoginDto user) 
     {
         var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(user.Username, user.Password);
 
@@ -48,21 +48,22 @@ public class AuthenticateRepository : IAuthenticateRepository
 
     public async Task<Tokens> Register(UserCreateDto userData)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(userData.Username, userData.Password);
+        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(userData.Data.Username, userData.Data.Password);
 
         if (existingUser != null && existingUser.Any())
         {
             return null;
         }
 
-        var user = new User(userData.FirstName, userData.LastName, userData.Email, userData.Password
-            , userData.Phone, userData.Username, userData.Website, userData.Facebook, userData.Twitter, userData.Instagram,
-            userData.Github, userData.Medium, userData.CreatedOn= DateTime.Now.ToUniversalTime());
+        var user = new User(userData.Data.FirstName, userData.Data.LastName, userData.Data.Email, userData.Data.Username
+            , userData.Data.Username, userData.Data.Username, userData.Data.Username, userData.Data.Username, userData.Data.Username, userData.Data.Username,
+            userData.Data.Username, userData.Data.Username);
 
 
         await _unitOfWork.UserRepository.AddAsync(user);
         await _unitOfWork.SaveChangesAsync();
 
-        return await Login(new UserLoginDto { Username = userData.Username, Password = userData.Password });
+        return await Login(new UserLoginDto(userData.Data.Username,userData.Data.Password));
     }
+
 }

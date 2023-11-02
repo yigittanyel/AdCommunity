@@ -18,7 +18,7 @@
 
     public record UserDto(int Id, UserBaseDto Data);
 
-    public record UserCreateDto(UserBaseDto Data, DateTime? CreatedOn);
+    public record UserCreateDto(UserBaseDto Data);
 
     public record UserUpdateDto(int Id, UserBaseDto Data);
 

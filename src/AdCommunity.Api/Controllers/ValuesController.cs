@@ -1,9 +1,6 @@
 ﻿using AdCommunity.Application.Features.User.Queries;
 using AdCommunity.Core.Extensions.Mediator;
-using AdCommunity.Repository.Context;
-using AdCommunity.Repository.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace AdCommunity.Api.Controllers
 {
