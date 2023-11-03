@@ -61,7 +61,7 @@ public class AuthenticateService : IAuthenticateService
 
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await Login(new UserLoginDto(userData.Username,userData.Password));
     }

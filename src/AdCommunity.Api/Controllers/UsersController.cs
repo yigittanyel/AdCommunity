@@ -1,52 +1,62 @@
 ﻿using AdCommunity.Application.DTOs.User;
+using AdCommunity.Application.Features.User.Commands;
 using AdCommunity.Application.Features.User.Queries;
-using AdCommunity.Application.Services;
-using Microsoft.AspNetCore.Authorization;
+using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers;
 
-[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IAuthenticateService _authRepository;
+    private readonly IYtMediator _mediator;
 
-    public UsersController(IAuthenticateService authRepository)
+    public UsersController(IYtMediator mediator)
     {
-        _authRepository = authRepository;
+        _mediator = mediator;
     }
 
-    [AllowAnonymous]
-    [HttpPost]
-    [Route("login")]
-    public async Task<IActionResult> Login(UserLoginDto usersdata)
+    [HttpGet("[action]/{userId}")]
+    public async Task<IActionResult> Get(int userId)
     {
-        var token = await _authRepository.Login(usersdata);
+        GetUserQuery query = new GetUserQuery { Id = userId };
+        UserDto user = await _mediator.Send(query);
 
-        if (token == null)
+        if (user == null)
         {
-            return Unauthorized();
+            return NotFound();
         }
 
-        return Ok(token);
+        return Ok(user);
     }
 
-    [AllowAnonymous]
-    [HttpPost]
-    [Route("register")]
-    public async Task<IActionResult> Register([FromBody] UserCreateDto usersdata, CancellationToken cancellationToken)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAll()
     {
-        var token = await _authRepository.Register(usersdata, cancellationToken);
+        GetUsersQuery query = new GetUsersQuery();
+        IEnumerable<UserDto> users = await _mediator.Send(query);
 
-        if (token == null)
+        if (users == null)
         {
-            return Unauthorized();
+            return NotFound();
         }
 
-        return Ok(token);
+        return Ok(users);
     }
 
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Create(UserCreateDto user)
+    {
+        CreateUserCommand command = new CreateUserCommand { User = user };
+        UserCreateDto createdUser = await _mediator.Send(command);
+
+        if (createdUser == null)
+        {
+            return BadRequest();
+        }
+
+        return Ok(createdUser);
+    }
 }
 

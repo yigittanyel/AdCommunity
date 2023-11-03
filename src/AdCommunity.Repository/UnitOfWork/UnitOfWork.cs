@@ -1,5 +1,7 @@
 ﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace AdCommunity.Repository.UnitOfWork;
 
@@ -34,23 +36,23 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository UserRepository { get; }
     public IUserTicketRepository UserTicketRepository { get; }
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken? cancellationToken)
     {
-        return await _context.SaveChangesAsync();
+        return await _context.SaveChangesAsync((CancellationToken)cancellationToken);
     }
 
-    public async Task BeginTransactionAsync()
+    public async Task BeginTransactionAsync(CancellationToken? cancellationToken)
     {
-        await _context.Database.BeginTransactionAsync();
+        await _context.Database.BeginTransactionAsync((CancellationToken)cancellationToken);
     }
 
-    public async Task CommitTransactionAsync()
+    public async Task CommitTransactionAsync(CancellationToken? cancellationToken)
     {
-        await _context.Database.CommitTransactionAsync();
+        await _context.Database.CommitTransactionAsync((CancellationToken)cancellationToken);
     }
 
-    public async Task RollbackTransactionAsync()
+    public async Task RollbackTransactionAsync(CancellationToken? cancellationToken)
     {
-        await _context.Database.RollbackTransactionAsync();
+        await _context.Database.RollbackTransactionAsync((CancellationToken)cancellationToken);
     }
 }
