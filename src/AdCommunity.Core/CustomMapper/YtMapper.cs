@@ -1,47 +1,57 @@
-﻿namespace AdCommunity.Core.CustomMapper;
+﻿using System.Reflection;
+
+namespace AdCommunity.Core.CustomMapper;
 
 public class YtMapper : IYtMapper
 {
-    private Dictionary<(Type SourceType, Type DestinationType), Delegate> _mappings = new Dictionary<(Type SourceType, Type DestinationType), Delegate>();
-
-    public void CreateMap<TSource, TDestination>()
-    {
-        Func<TSource, TDestination> mappingFunction = CreateMappingFunction<TSource, TDestination>();
-        _mappings[(typeof(TSource), typeof(TDestination))] = mappingFunction;
-    }
-
     public TDestination Map<TSource, TDestination>(TSource source)
     {
-        Delegate mappingFunction;
-        if (_mappings.TryGetValue((typeof(TSource), typeof(TDestination)), out mappingFunction))
+        if (source == null)
         {
-            return ((Func<TSource, TDestination>)mappingFunction)(source);
+            throw new ArgumentNullException(nameof(source));
         }
 
-        throw new InvalidOperationException($"Mapping from {typeof(TSource)} to {typeof(TDestination)} is not configured.");
+        Type sourceType = typeof(TSource);
+        Type destinationType = typeof(TDestination);
+
+        if (sourceType == destinationType)
+        {
+            return (TDestination)(object)source;
+        }
+
+        PropertyInfo[] sourceProperties = sourceType.GetProperties();
+        PropertyInfo[] destinationProperties = destinationType.GetProperties();
+
+        TDestination destination = Activator.CreateInstance<TDestination>();
+
+        foreach (PropertyInfo sourceProperty in sourceProperties)
+        {
+            PropertyInfo destinationProperty = destinationProperties.FirstOrDefault(p => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
+
+            if (destinationProperty != null)
+            {
+                destinationProperty.SetValue(destination, sourceProperty.GetValue(source));
+            }
+        }
+
+        return destination;
     }
 
-    private Func<TSource, TDestination> CreateMappingFunction<TSource, TDestination>()
+    public List<TDestination> MapList<TSource, TDestination>(List<TSource> sourceList)
     {
-        var sourceProperties = typeof(TSource).GetProperties();
-        var destinationProperties = typeof(TDestination).GetProperties();
-
-        return source =>
+        if (sourceList == null)
         {
-            var destination = Activator.CreateInstance<TDestination>();
+            throw new ArgumentNullException(nameof(sourceList));
+        }
 
-            foreach (var sourceProperty in sourceProperties)
-            {
-                var destinationProperty = destinationProperties
-                    .FirstOrDefault(p => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
+        List<TDestination> destinationList = new List<TDestination>();
 
-                if (destinationProperty != null)
-                {
-                    destinationProperty.SetValue(destination, sourceProperty.GetValue(source));
-                }
-            }
+        foreach (TSource source in sourceList)
+        {
+            TDestination destinationItem = Map<TSource, TDestination>(source);
+            destinationList.Add(destinationItem);
+        }
 
-            return destination;
-        };
+        return destinationList;
     }
 }

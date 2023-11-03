@@ -1,4 +1,6 @@
-﻿namespace AdCommunity.Core.Extensions.Command;
+﻿using AdCommunity.Core.CustomMediator.Request;
+
+namespace AdCommunity.Core.Extensions.Command;
 
 public interface IYtCommandHandler<in TRequest, TResponse> : IYtRequestHandler<TRequest, TResponse> where TRequest : IYtCommand<TResponse>
 {

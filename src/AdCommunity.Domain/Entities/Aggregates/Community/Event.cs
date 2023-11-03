@@ -1,6 +1,5 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
 using AdCommunity.Domain.Exceptions;
-using System.Xml.Linq;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 

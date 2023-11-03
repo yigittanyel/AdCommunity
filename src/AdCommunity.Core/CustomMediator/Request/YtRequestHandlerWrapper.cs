@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AdCommunity.Core.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace AdCommunity.Core.Extensions;
+namespace AdCommunity.Core.CustomMediator.Request;
 
 public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();
 
