@@ -21,7 +21,6 @@
     <Folder Include="Features\UserEvent\Commands\" />
     <Folder Include="Features\UserEvent\Queries\" />
     <Folder Include="Features\User\Commands\" />
-    <Folder Include="Features\User\Requests\" />
   </ItemGroup>
 
   <ItemGroup>

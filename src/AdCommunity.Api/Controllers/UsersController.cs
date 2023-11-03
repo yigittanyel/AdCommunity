@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.User;
+using AdCommunity.Application.Features.User.Queries;
 using AdCommunity.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,3 +49,4 @@ public class UsersController : ControllerBase
     }
 
 }
+

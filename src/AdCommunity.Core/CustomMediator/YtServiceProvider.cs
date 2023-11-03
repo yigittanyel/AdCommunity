@@ -1,12 +1,13 @@
-﻿namespace AdCommunity.Core.CustomMediator;
-public class YtServiceProvider
+﻿namespace AdCommunity.Core.CustomMediator
 {
-    private static IServiceProvider _serviceProvicer;
-    public static IServiceProvider ServiceProvicer => _serviceProvicer;
-
-    public static void SetInstance(IServiceProvider serviceProvider)
+    public class YtServiceProvider
     {
-        _serviceProvicer = serviceProvider;
+        private static IServiceProvider _serviceProvider;
+        public static IServiceProvider ServiceProvider => _serviceProvider;
+
+        public static void SetInstance(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
     }
 }
-

@@ -2,6 +2,6 @@
 
 public interface IYtMediator
 {
-    Task<TResponse> Send<TResponse>(IYtRequest<TResponse> request);
+    Task<TResponse> Send<TResponse>(IYtRequest<TResponse> request, CancellationToken cancellationToken = default);
 }
 

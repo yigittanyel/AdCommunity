@@ -10,7 +10,7 @@ public static class CoreServiceRegistration
 {
     public static IServiceCollection AddYtMapper(this IServiceCollection services)
     {
-        services.AddSingleton<IYtMapper, YtMapper>();
+        services.AddScoped<IYtMapper, YtMapper>();
         return services;
     }
 
@@ -30,21 +30,19 @@ public static class CoreServiceRegistration
 
             var genericType = typeof(IYtRequestHandler<,>).MakeGenericType(requestType, responseType);
 
-            services.AddTransient(genericType, handler);
+            services.AddScoped(genericType, handler);
         }
 
-        services.AddSingleton<IYtMediator, YtMediator>();
+        services.AddScoped<IYtMediator, YtMediator>();
 
         return services;
     }
 
     public static IServiceProvider UseCustomMediator(this IServiceProvider serviceProvider)
     {
-        CustomMediator.YtServiceProvider.SetInstance(serviceProvider);
+        YtServiceProvider.SetInstance(serviceProvider);
         return serviceProvider;
     }
-
-
 
     private static bool IsAssignableToGenericType(Type givenType, Type genericType)
     {

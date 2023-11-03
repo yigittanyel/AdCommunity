@@ -5,8 +5,13 @@ namespace AdCommunity.Core.CustomMediator;
 
 public class YtMediator : IYtMediator
 {
-    public Task<TResponse> Send<TResponse>(IYtRequest<TResponse> request)
+    public Task<TResponse> Send<TResponse>(IYtRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
         var reqType = request.GetType();
 
         var reqTypeInterface = reqType.GetInterfaces()
@@ -18,7 +23,7 @@ public class YtMediator : IYtMediator
 
         var genericType = typeof(IYtRequestHandler<,>).MakeGenericType(reqType, responseType);
 
-        var handler = YtServiceProvider.ServiceProvicer.GetService(genericType);
+        var handler = YtServiceProvider.ServiceProvider.GetService(genericType);
 
         return (Task<TResponse>)genericType.GetMethod("Handle").Invoke(handler, new object[] { request });
     }
