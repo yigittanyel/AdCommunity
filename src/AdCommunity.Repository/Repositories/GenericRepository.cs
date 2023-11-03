@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Contracts;
+﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,19 +13,19 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         _dbContext = context;
     }
 
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T> GetAsync(int id, CancellationToken? cancellationToken)
     {
-        return await _dbContext.Set<T>().FindAsync(id);
+        return await _dbContext.Set<T>().FindAsync(id,cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken? cancellationToken)
     {
-        return await _dbContext.Set<T>().ToListAsync();
+        return await _dbContext.Set<T>().ToListAsync((CancellationToken)(cancellationToken));
     }
 
-    public async Task AddAsync(T entity)
+    public async Task AddAsync(T entity, CancellationToken? cancellationToken)
     {
-        await _dbContext.Set<T>().AddAsync(entity);
+        await _dbContext.Set<T>().AddAsync(entity, (CancellationToken)(cancellationToken));
     }
 
     public void Delete(T entity)

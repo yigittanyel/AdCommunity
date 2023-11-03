@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 
-namespace AdCommunity.Domain.Contracts;
+namespace AdCommunity.Application.Services;
 
 public class RedisService
 {

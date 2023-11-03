@@ -1,7 +1,8 @@
+using AdCommunity.Api.Middlewares;
+using AdCommunity.Application;
 using AdCommunity.Application.Services;
 using AdCommunity.Core;
 using AdCommunity.Repository;
-using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -29,6 +30,10 @@ builder.Services.AddYtMeditor(AppDomain.CurrentDomain.Load("AdCommunity.Applicat
 
 #region Repository Registration Implementation
 RepositoryServiceRegistration.AddRepositoryRegistration(builder.Services, builder.Configuration);
+#endregion
+
+#region Application Registration Implementation
+ApplicationServiceRegistration.AddApplicationRegistration(builder.Services, builder.Configuration);
 #endregion
 
 #region JWT Implementation
@@ -62,9 +67,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//#region Exception Middleware Implementation
-//app.UseMiddleware<ExceptionMiddleware>();
-//#endregion
+#region Exception Middleware Implementation
+app.UseMiddleware<ExceptionMiddleware>();
+#endregion
 
 app.UseHttpsRedirection();
 

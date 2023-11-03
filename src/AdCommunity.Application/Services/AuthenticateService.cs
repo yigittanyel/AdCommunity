@@ -1,7 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.User;
-using AdCommunity.Domain.Contracts;
 using AdCommunity.Domain.Entities.Aggregates.User;
 using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -46,7 +46,7 @@ public class AuthenticateService : IAuthenticateService
         return new Tokens { Token = tokenHandler.WriteToken(token) };
     }
 
-    public async Task<Tokens> Register(UserCreateDto userData)
+    public async Task<Tokens> Register(UserCreateDto userData,CancellationToken? cancellationToken)
     {
         var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(userData.Data.Username, userData.Data.Password);
 
@@ -60,7 +60,7 @@ public class AuthenticateService : IAuthenticateService
             userData.Data.Username, userData.Data.Username);
 
 
-        await _unitOfWork.UserRepository.AddAsync(user);
+        await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
         return await Login(new UserLoginDto(userData.Data.Username,userData.Data.Password));

@@ -6,5 +6,5 @@ namespace AdCommunity.Application.Services;
 public interface IAuthenticateService
 {
     Task<Tokens> Login(UserLoginDto users);
-    Task<Tokens> Register(UserCreateDto userData);
+    Task<Tokens> Register(UserCreateDto userData, CancellationToken? cancellationToken);
 }

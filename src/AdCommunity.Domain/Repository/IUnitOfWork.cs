@@ -1,4 +1,4 @@
-﻿namespace AdCommunity.Domain.Contracts;
+﻿namespace AdCommunity.Domain.Repository;
 
 public interface IUnitOfWork
 {

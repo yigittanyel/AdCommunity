@@ -35,9 +35,9 @@ public class UsersController : ControllerBase
     [AllowAnonymous]
     [HttpPost]
     [Route("register")]
-    public async Task<IActionResult> Register(UserCreateDto usersdata)
+    public async Task<IActionResult> Register([FromBody] UserCreateDto usersdata, CancellationToken cancellationToken)
     {
-        var token = await _authRepository.Register(usersdata);
+        var token = await _authRepository.Register(usersdata, cancellationToken);
 
         if (token == null)
         {
@@ -46,4 +46,5 @@ public class UsersController : ControllerBase
 
         return Ok(token);
     }
+
 }

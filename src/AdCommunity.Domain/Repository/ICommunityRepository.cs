@@ -1,6 +1,6 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.Community;
 
-namespace AdCommunity.Domain.Contracts;
+namespace AdCommunity.Domain.Repository;
 
 public interface ICommunityRepository : IGenericRepository<Community>
 {

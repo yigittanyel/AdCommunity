@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Contracts;
+﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
 using AdCommunity.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +23,6 @@ public static class RepositoryServiceRegistration
         serviceCollection.AddScoped<IUserTicketRepository, UserTicketRepository>();
 
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
-
-        serviceCollection.AddSingleton<RedisService>(sp =>
-        {
-            return new RedisService(configuration["Redis:ConnectionString"]);
-        });
 
     }
 }
