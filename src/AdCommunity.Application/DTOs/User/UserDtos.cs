@@ -1,26 +1,96 @@
 ﻿namespace AdCommunity.Application.DTOs.User
 {
-    public record UserBaseDto(
-        string? FirstName,
-        string? LastName,
-        string? Email,
-        string? Password,
-        string? HashedPassword,
-        string? Phone,
-        string? Username,
-        string? Website,
-        string? Facebook,
-        string? Twitter,
-        string? Instagram,
-        string? Github,
-        string? Medium
-    );
+    public class UserBaseDto
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? HashedPassword { get; set; }
+        public string? Phone { get; set; }
+        public string? Username { get; set; }
+        public string? Website { get; set; }
+        public string? Facebook { get; set; }
+        public string? Twitter { get; set; }
+        public string? Instagram { get; set; }
+        public string? Github { get; set; }
+        public string? Medium { get; set; }
 
-    public record UserDto(int Id, UserBaseDto Data);
+        public UserBaseDto()
+        {
+        }
 
-    public record UserCreateDto(UserBaseDto Data);
+        public UserBaseDto(
+            string? firstName,
+            string? lastName,
+            string? email,
+            string? password,
+            string? hashedPassword,
+            string? phone,
+            string? username,
+            string? website,
+            string? facebook,
+            string? twitter,
+            string? instagram,
+            string? github,
+            string? medium
+        )
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Password = password;
+            HashedPassword = hashedPassword;
+            Phone = phone;
+            Username = username;
+            Website = website;
+            Facebook = facebook;
+            Twitter = twitter;
+            Instagram = instagram;
+            Github = github;
+            Medium = medium;
+        }
+    }
 
-    public record UserUpdateDto(int Id, UserBaseDto Data);
+    public class UserDto : UserBaseDto
+    {
+        public int Id { get; set; }
 
-    public record UserLoginDto(string? Username, string? Password);
+        public UserDto()
+        {
+        }
+    }
+
+    public class UserCreateDto: UserBaseDto
+    {
+        public UserCreateDto()
+        {
+        }
+
+    }
+
+    public class UserUpdateDto : UserBaseDto
+    {
+        public int Id { get; set; }
+
+        public UserUpdateDto()
+        {
+        }
+    }
+
+    public class UserLoginDto 
+    {
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+
+        public UserLoginDto()
+        {
+        }
+
+        public UserLoginDto(string? username, string? password)
+        {
+            Username = username;
+            Password = password;
+        }
+    }
 }

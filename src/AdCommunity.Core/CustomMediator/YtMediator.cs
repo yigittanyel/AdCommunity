@@ -1,10 +1,18 @@
 ﻿using AdCommunity.Core.CustomMediator.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 
 namespace AdCommunity.Core.CustomMediator;
 
-public class YtMediator : IYtMediator
+internal class YtMediator : IYtMediator
 {
+    private readonly IServiceProvider _serviceProvider;
+    private static readonly ConcurrentDictionary<Type, dynamic> _requestHandlers = new();
+
+    public YtMediator(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
     public Task<TResponse> Send<TResponse>(IYtRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
         if (request == null)
@@ -12,20 +20,12 @@ public class YtMediator : IYtMediator
             throw new ArgumentNullException(nameof(request));
         }
 
-        var reqType = request.GetType();
+        var requestType = request.GetType();
 
-        var reqTypeInterface = reqType.GetInterfaces()
-            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IYtRequest<>))
-            .FirstOrDefault();
-
-        var responseType = reqTypeInterface.GetGenericArguments()[0];
+        var handler = _requestHandlers.GetOrAdd(requestType, (Activator.CreateInstance(typeof(YtRequestHandlerWrapper<,>).MakeGenericType(requestType, typeof(TResponse)))
+                                             ?? throw new InvalidOperationException($"Could not create wrapper type for {requestType}")));
 
 
-        var genericType = typeof(IYtRequestHandler<,>).MakeGenericType(reqType, responseType);
-
-        var handler = YtServiceProvider.ServiceProvider.GetService(genericType);
-
-        return (Task<TResponse>)genericType.GetMethod("Handle").Invoke(handler, new object[] { request });
+        return handler.Handle(request, _serviceProvider, cancellationToken);
     }
 }
-

@@ -25,8 +25,7 @@ builder.Services.AddSingleton<Serilog.ILogger>(log);
 
 #region CustomMapper and CustomMediator Implementation
 builder.Services.AddYtMapper();
-
-builder.Services.AddCustomMediator(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddYtMeditor(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
 
 #region Repository Registration Implementation
@@ -68,13 +67,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-#region Use Custom Mediator Implementation
-app.Services.UseCustomMediator(); 
-#endregion
-
-#region Exception Middleware Implementation
-app.UseMiddleware<ExceptionMiddleware>();
-#endregion
+//#region Exception Middleware Implementation
+//app.UseMiddleware<ExceptionMiddleware>();
+//#endregion
 
 app.UseHttpsRedirection();
 

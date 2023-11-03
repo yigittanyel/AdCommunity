@@ -48,22 +48,22 @@ public class AuthenticateService : IAuthenticateService
 
     public async Task<Tokens> Register(UserCreateDto userData,CancellationToken? cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(userData.Data.Username, userData.Data.Password);
+        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(userData.Username, userData.Password);
 
         if (existingUser != null && existingUser.Any())
         {
             return null;
         }
 
-        var user = new User(userData.Data.FirstName, userData.Data.LastName, userData.Data.Email, userData.Data.Username
-            , userData.Data.Username, userData.Data.Username, userData.Data.Username, userData.Data.Username, userData.Data.Username, userData.Data.Username,
-            userData.Data.Username, userData.Data.Username);
+        var user = new User(userData.FirstName, userData.LastName, userData.Email, userData.Username
+            , userData.Username, userData.Username, userData.Username, userData.Username, userData.Username, userData.Username,
+            userData.Username, userData.Username);
 
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
-        return await Login(new UserLoginDto(userData.Data.Username,userData.Data.Password));
+        return await Login(new UserLoginDto(userData.Username,userData.Password));
     }
 
 }

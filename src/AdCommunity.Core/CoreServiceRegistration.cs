@@ -2,6 +2,7 @@
 using AdCommunity.Core.CustomMediator;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace AdCommunity.Core;
@@ -14,57 +15,35 @@ public static class CoreServiceRegistration
         return services;
     }
 
-    public static IServiceCollection AddCustomMediator(this IServiceCollection services, Assembly[] assemblies)
+    public static IServiceCollection AddYtMeditor(this IServiceCollection services, params Assembly[] assemblies)
     {
-        var types = assemblies.SelectMany(i => i.GetTypes()).Where(i => !i.IsInterface);
-
-        var requestHandlers = types
-            .Where(i => IsAssignableToGenericType(i, typeof(IYtRequestHandler<,>)))
-            .ToList();
-
-        foreach (var handler in requestHandlers)
-        {
-            var handlerInterface = handler.GetInterfaces().FirstOrDefault();
-            var requestType = handlerInterface.GetGenericArguments()[0];
-            var responseType = handlerInterface.GetGenericArguments()[1];
-
-            var genericType = typeof(IYtRequestHandler<,>).MakeGenericType(requestType, responseType);
-
-            services.AddScoped(genericType, handler);
-        }
-
-        services.AddScoped<IYtMediator, YtMediator>();
+        AddRequiredServices(services);
+        RegisterServices(services, assemblies, typeof(IYtRequestHandler<,>));
 
         return services;
     }
-
-    public static IServiceProvider UseCustomMediator(this IServiceProvider serviceProvider)
+    private static IServiceCollection RegisterServices(this IServiceCollection services, Assembly[] assemblies, Type registerationObj)
     {
-        YtServiceProvider.SetInstance(serviceProvider);
-        return serviceProvider;
+
+        foreach (var assembly in assemblies)
+        {
+            var types = assembly.GetTypes();
+            var handlers = types.Where(x => x.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == registerationObj));
+            foreach (var handle in handlers)
+            {
+                var interfaces = handle.GetInterfaces();
+                foreach (var handleInterface in interfaces)
+                {
+                    services.AddTransient(handleInterface, handle);
+                }
+            }
+        }
+
+
+        return services;
     }
-
-    private static bool IsAssignableToGenericType(Type givenType, Type genericType)
+    private static void AddRequiredServices(IServiceCollection services)
     {
-        bool IsGeneric(Type _givenType, Type _genericType)
-        {
-            return _givenType.IsGenericType && _givenType.GetGenericTypeDefinition() == _genericType;
-        }
-
-        var interfaceTypes = givenType.GetInterfaces();
-
-        foreach (var it in interfaceTypes)
-        {
-            if (IsGeneric(it, genericType))
-                return true;
-        }
-
-        if (IsGeneric(givenType, genericType))
-            return true;
-
-        Type baseType = givenType.BaseType;
-        if (baseType == null) return false;
-
-        return IsAssignableToGenericType(baseType, genericType);
+        services.TryAdd(new ServiceDescriptor(typeof(IYtMediator), typeof(YtMediator), ServiceLifetime.Transient));
     }
 }

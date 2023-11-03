@@ -31,6 +31,7 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
             throw new NotFoundException("User", request.Id);
         }
 
-        return _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserDto>(user);
+        var userDto= _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserDto>(user);
+        return userDto;
     }
 }
