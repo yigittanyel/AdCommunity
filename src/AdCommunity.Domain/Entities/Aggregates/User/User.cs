@@ -1,4 +1,6 @@
 ﻿using AdCommunity.Domain.Exceptions;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AdCommunity.Domain.Entities.Aggregates.User;
 
@@ -33,7 +35,7 @@ public partial class User
 
     public DateTime? CreatedOn { get; protected set; }
 
-    public string? HashedPassword_ { get; protected set; }
+    public string? HashedPassword { get; protected set; }
 
     public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
 
@@ -69,5 +71,35 @@ public partial class User
         Github = github;
         Medium = medium;
         CreatedOn = DateTime.UtcNow;
+        HashedPassword = HashPassword(password);
+    }
+
+    public void SetHashedPassword(string password)
+    {
+        HashedPassword = HashPassword(password);
+    }
+
+    public void SetDate()
+    {
+        CreatedOn= DateTime.UtcNow;
+    }
+
+    public string HashPassword(string password)
+    {
+        if (string.IsNullOrEmpty(password))
+            throw new ArgumentException("Password cannot be null or empty.");
+
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < hashedBytes.Length; i++)
+            {
+                builder.Append(hashedBytes[i].ToString("x2"));
+            }
+
+            return builder.ToString();
+        }
     }
 }

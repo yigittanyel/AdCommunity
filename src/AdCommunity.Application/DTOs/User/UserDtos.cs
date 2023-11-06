@@ -5,8 +5,6 @@
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
-        public string? Password { get; set; }
-        public string? HashedPassword { get; set; }
         public string? Phone { get; set; }
         public string? Username { get; set; }
         public string? Website { get; set; }
@@ -24,8 +22,6 @@
             string? firstName,
             string? lastName,
             string? email,
-            string? password,
-            string? hashedPassword,
             string? phone,
             string? username,
             string? website,
@@ -39,8 +35,6 @@
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            Password = password;
-            HashedPassword = hashedPassword;
             Phone = phone;
             Username = username;
             Website = website;
@@ -55,6 +49,12 @@
     public class UserDto : UserBaseDto
     {
         public int Id { get; set; }
+        public string HashedPassword { get; set; }
+
+        public UserDto(string hashedPassword)
+        {
+            HashedPassword = hashedPassword;
+        }
 
         public UserDto()
         {
@@ -63,6 +63,13 @@
 
     public class UserCreateDto: UserBaseDto
     {
+        public string? Password { get; set; }
+
+        public UserCreateDto(string? password)
+        {
+            Password = password;
+        }
+
         public UserCreateDto()
         {
         }
@@ -72,6 +79,12 @@
     public class UserUpdateDto : UserBaseDto
     {
         public int Id { get; set; }
+        public string? Password { get; set; }
+
+        public UserUpdateDto(string? password)
+        {
+            Password = password;
+        }
 
         public UserUpdateDto()
         {

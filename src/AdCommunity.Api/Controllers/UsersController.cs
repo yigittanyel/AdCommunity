@@ -58,5 +58,33 @@ public class UsersController : ControllerBase
 
         return Ok(createdUser);
     }
+
+    [HttpPut("[action]")]
+    public async Task<IActionResult> Update(UserUpdateDto user)
+    {
+        UpdateUserCommand command = new UpdateUserCommand { User = user };
+        bool updatedUser = await _mediator.Send(command);
+
+        if (!updatedUser)
+        {
+            return BadRequest();
+        }
+
+        return Ok(updatedUser);
+    }
+
+    [HttpDelete("[action]/{userId}")]
+    public async Task<IActionResult> Delete(int userId)
+    {
+        DeleteUserCommand command = new DeleteUserCommand { Id = userId };
+        bool deletedUser = await _mediator.Send(command);
+
+        if (!deletedUser)
+        {
+            return BadRequest();
+        }
+
+        return Ok(deletedUser);
+    }
 }
 

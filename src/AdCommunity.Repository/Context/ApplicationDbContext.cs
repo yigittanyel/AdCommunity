@@ -92,7 +92,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Facebook).HasColumnType("character varying");
             entity.Property(e => e.FirstName).HasColumnType("character varying");
             entity.Property(e => e.Github).HasColumnType("character varying");
-            entity.Property(e => e.HashedPassword_)
+            entity.Property(e => e.HashedPassword)
                 .HasColumnType("character varying")
                 .HasColumnName("HashedPassword ");
             entity.Property(e => e.Instagram).HasColumnType("character varying");

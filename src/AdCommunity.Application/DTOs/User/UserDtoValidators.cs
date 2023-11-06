@@ -39,7 +39,7 @@ public class UserUpdateDtoValidator : AbstractValidator<UserUpdateDto>
     }
 }
 
-public class UserDtoValidator : AbstractValidator<UserUpdateDto>
+public class UserDtoValidator : AbstractValidator<UserDto>
 {
     public UserDtoValidator()
     {
@@ -47,7 +47,6 @@ public class UserDtoValidator : AbstractValidator<UserUpdateDto>
         RuleFor(dto => dto.FirstName).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.LastName).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Email).NotEmpty().EmailAddress();
-        RuleFor(dto => dto.Password).NotEmpty().MinimumLength(6);
         RuleFor(dto => dto.Phone).NotEmpty().MaximumLength(15);
         RuleFor(dto => dto.Username).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Facebook).MaximumLength(50);
