@@ -19,5 +19,6 @@ public static class ApplicationServiceRegistration
             return new RedisService(configuration["Redis:ConnectionString"]);
         });
 
+        serviceCollection.AddScoped<IJwtService, JwtService>();
     }
 }

@@ -1,6 +1,4 @@
-using AdCommunity.Api.Middlewares;
 using AdCommunity.Application;
-using AdCommunity.Application.Services;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,8 +53,6 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Key)
     };
 });
-
-builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 #endregion
 
 var app = builder.Build();
