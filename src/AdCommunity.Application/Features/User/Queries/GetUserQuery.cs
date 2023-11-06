@@ -1,5 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Helpers;
+using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
@@ -15,23 +17,35 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
+    private readonly RedisService _redisService;
 
-    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper)
+    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, RedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _redisService = redisService;
     }
 
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.UserRepository.GetAsync(request.Id,cancellationToken);
+        var cacheKey = $"user:{request.Id}";
 
-        if (user == null)
+        var userDto = CacheHelper.GetFromCache<UserDto>(_redisService, cacheKey);
+
+        if (userDto == null)
         {
-            throw new NotFoundException("User", request.Id);
+            var user = await _unitOfWork.UserRepository.GetAsync(request.Id, cancellationToken);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User", request.Id);
+            }
+
+            userDto = _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserDto>(user);
+
+            CacheHelper.AddToCache(_redisService, cacheKey, userDto);
         }
 
-        var userDto= _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserDto>(user);
         return userDto;
     }
 }

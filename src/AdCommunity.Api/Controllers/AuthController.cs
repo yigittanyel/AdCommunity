@@ -1,7 +1,6 @@
 ﻿using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Features.Authenticate.Commands;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers

@@ -2,6 +2,7 @@
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.User.Commands;
 
@@ -14,11 +15,13 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
+    private readonly ConnectionFactory _rabbitMqFactory;
 
-    public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper)
+    public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, ConnectionFactory rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _rabbitMqFactory = rabbitMqFactory;
     }
 
     public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -37,6 +40,9 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
 
         _unitOfWork.UserRepository.Update(existingUser);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        Helpers.MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "update_user_queue", "User has been edited.");
+
         return true;
     }
 }

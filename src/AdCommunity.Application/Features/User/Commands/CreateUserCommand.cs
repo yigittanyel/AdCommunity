@@ -1,7 +1,11 @@
 ﻿using AdCommunity.Application.DTOs.User;
+using AdCommunity.Application.Helpers;
+using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using RabbitMQ.Client;
+using System.Text;
 
 namespace AdCommunity.Application.Features.User.Commands;
 
@@ -14,16 +18,18 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
+    private readonly ConnectionFactory _rabbitMqFactory;
 
-    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper)
+    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, ConnectionFactory rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _rabbitMqFactory = rabbitMqFactory;
     }
 
     public async Task<UserCreateDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.User.Username,request.User.Password);
+        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
 
         if (existingUser.Any())
         {
@@ -35,6 +41,9 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "create_user_queue", "New user has been created.");
+
         return _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserCreateDto>(user);
     }
 }
