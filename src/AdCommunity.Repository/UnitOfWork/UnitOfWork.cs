@@ -10,7 +10,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _context;
 
     public UnitOfWork(ApplicationDbContext context,
-        IEventRepository communityEventRepository,
+        IEventRepository eventRepository,
         ICommunityRepository communityRepository,
         ITicketRepository ticketRepository,
         IUserCommunityRepository userCommunityRepository,
@@ -19,7 +19,7 @@ public class UnitOfWork : IUnitOfWork
         IUserRepository userRepository)
     {
         _context = context;
-        CommunityEventRepository = communityEventRepository;
+        EventRepository = eventRepository;
         CommunityRepository = communityRepository;
         TicketRepository = ticketRepository;
         UserCommunityRepository = userCommunityRepository;
@@ -28,7 +28,7 @@ public class UnitOfWork : IUnitOfWork
         UserTicketRepository = userTicketRepository;
     }
 
-    public IEventRepository CommunityEventRepository { get; }
+    public IEventRepository EventRepository { get; }
     public ICommunityRepository CommunityRepository { get; }
     public ITicketRepository TicketRepository { get; }
     public IUserCommunityRepository UserCommunityRepository { get; }

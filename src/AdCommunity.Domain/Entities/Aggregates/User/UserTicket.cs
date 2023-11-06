@@ -25,8 +25,6 @@ public partial class UserTicket
             throw new ForeignKeyException(nameof(userId));
         if (ticketId <= 0)
             throw new ForeignKeyException(nameof(ticketId));
-        if (Id <= 0 || Id == null)
-            throw new Exception("Id cannot be null, zero or less than zero.");
 
         UserId = userId;
         TicketId = ticketId;

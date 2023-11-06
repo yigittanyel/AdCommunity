@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CommunityEvent\Commands\" />
-    <Folder Include="Features\CommunityEvent\Queries\" />
     <Folder Include="Features\Ticket\Commands\" />
     <Folder Include="Features\Ticket\Queries\" />
     <Folder Include="Features\UserCommunity\Commands\" />

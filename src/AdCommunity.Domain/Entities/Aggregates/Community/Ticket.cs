@@ -27,8 +27,6 @@ public partial class Ticket
             throw new ForeignKeyException(nameof(communityEventId));
         if (communityId <= 0)
             throw new ForeignKeyException(nameof(communityId));
-        if (Id <= 0 || Id == null)
-            throw new Exception("Id cannot be null, zero or less than zero.");
 
         CommunityEventId = communityEventId;
         CommunityId = communityId;

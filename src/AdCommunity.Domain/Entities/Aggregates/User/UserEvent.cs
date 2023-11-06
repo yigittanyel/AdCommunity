@@ -23,8 +23,6 @@ public partial class UserEvent
             throw new ForeignKeyException(nameof(userId));
         if (eventId <= 0)
             throw new ForeignKeyException(nameof(eventId));
-        if (Id <= 0 || Id == null)
-            throw new Exception("Id cannot be null, zero or less than zero.");
 
         UserId = userId;
         EventId = eventId;

@@ -2,7 +2,7 @@
 
 public interface IUnitOfWork
 {
-    IEventRepository CommunityEventRepository { get; }
+    IEventRepository EventRepository { get; }
     ICommunityRepository CommunityRepository { get; }
     ITicketRepository TicketRepository { get; }
     IUserCommunityRepository UserCommunityRepository { get; }

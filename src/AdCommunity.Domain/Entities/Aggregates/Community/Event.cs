@@ -38,8 +38,6 @@ public partial class Event
             throw new NullException(nameof(eventDate));
         if (communityId <= 0)
             throw new ForeignKeyException(nameof(communityId));
-        if (Id <= 0 || Id == null)
-            throw new Exception("Id cannot be null, zero or less than zero.");
 
 
         EventName = eventName;
