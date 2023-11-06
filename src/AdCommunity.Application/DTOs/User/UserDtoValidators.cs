@@ -9,9 +9,9 @@ public class UserCreateDtoValidator : AbstractValidator<UserCreateDto>
         RuleFor(dto => dto.FirstName).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.LastName).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Email).NotEmpty().EmailAddress();
-        RuleFor(dto => dto.Password).NotEmpty().MinimumLength(6);
         RuleFor(dto => dto.Phone).NotEmpty().MaximumLength(15);
         RuleFor(dto => dto.Username).NotEmpty().MaximumLength(50);
+        RuleFor(dto => dto.Website).MaximumLength(50);
         RuleFor(dto => dto.Facebook).MaximumLength(50);
         RuleFor(dto => dto.Instagram).MaximumLength(50);
         RuleFor(dto => dto.Github).MaximumLength(50);
@@ -28,7 +28,6 @@ public class UserUpdateDtoValidator : AbstractValidator<UserUpdateDto>
         RuleFor(dto => dto.FirstName).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.LastName).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Email).NotEmpty().EmailAddress();
-        RuleFor(dto => dto.Password).NotEmpty().MinimumLength(6);
         RuleFor(dto => dto.Phone).NotEmpty().MaximumLength(15);
         RuleFor(dto => dto.Username).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Facebook).MaximumLength(50);
@@ -62,6 +61,6 @@ public class UserLoginDtoValidator : AbstractValidator<UserLoginDto>
     public UserLoginDtoValidator()
     {
         RuleFor(dto => dto.Username).NotEmpty().MaximumLength(50);
-        RuleFor(dto => dto.Password).NotEmpty().MinimumLength(6);
+        RuleFor(dto => dto.Password).NotEmpty().MinimumLength(5);
     }
 }

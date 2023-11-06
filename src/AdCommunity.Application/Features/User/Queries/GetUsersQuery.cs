@@ -4,11 +4,7 @@ using AdCommunity.Application.Helpers;
 using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Entities.Aggregates.Community;
-using AdCommunity.Domain.Entities.Aggregates.User;
 using AdCommunity.Domain.Repository;
-using AdCommunity.Repository.UnitOfWork;
-using System.Threading;
 
 namespace AdCommunity.Application.Features.User.Queries;
 

@@ -31,11 +31,11 @@ public partial class Community
 
     public DateTime? CreatedOn { get; protected set; }
 
-    public virtual ICollection<Event> Events { get; protected set; } = new List<Event>();
+    public virtual ICollection<Event> Events { get; set; } = new List<Event>();
 
-    public virtual ICollection<Ticket> Tickets { get; protected set; } = new List<Ticket>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
-    public virtual ICollection<UserCommunity> UserCommunities { get; protected set; } = new List<UserCommunity>();
+    public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
 
     public Community(string name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
@@ -54,5 +54,10 @@ public partial class Community
         Github = github;
         Medium = medium;
         CreatedOn= DateTime.UtcNow;
+    }
+
+    public void SetDate()
+    {
+        CreatedOn = DateTime.UtcNow;
     }
 }

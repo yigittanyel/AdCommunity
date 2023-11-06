@@ -11,17 +11,23 @@ public static class ApplicationServiceRegistration
 {
     public static void AddApplicationRegistration(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
+        #region FluentValidation
         var ass = Assembly.GetExecutingAssembly();
-
         serviceCollection.AddValidatorsFromAssembly(ass);
+        #endregion
 
+        #region Redis
         serviceCollection.AddScoped<RedisService>(sp =>
         {
             return new RedisService(configuration["Redis:ConnectionString"]);
         });
+        #endregion
 
+        #region JWT
         serviceCollection.AddScoped<IJwtService, JwtService>();
+        #endregion
 
+        #region RABBITMQ
         var rabbitMqFactory = new ConnectionFactory()
         {
             Port = Convert.ToInt32(configuration["RabbitMQ:Port"]),
@@ -31,5 +37,6 @@ public static class ApplicationServiceRegistration
             
         };
         serviceCollection.AddSingleton(rabbitMqFactory);
+        #endregion
     }
 }

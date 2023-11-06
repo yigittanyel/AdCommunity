@@ -42,7 +42,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "create_user_queue", "New user has been created.");
+        MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "create_user_queue", $"UserName: {user.Username} has been created.");
 
         return _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserCreateDto>(user);
     }

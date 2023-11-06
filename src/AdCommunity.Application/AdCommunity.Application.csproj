@@ -9,11 +9,6 @@
   <ItemGroup>
     <Folder Include="Features\CommunityEvent\Commands\" />
     <Folder Include="Features\CommunityEvent\Queries\" />
-    <Folder Include="Features\Community\Commands\" />
-    <Folder Include="Features\Community\" />
-    <Folder Include="Features\Community\Queries\" />
-    <Folder Include="Features\Invoice\Commands\" />
-    <Folder Include="Features\Invoice\Queries\" />
     <Folder Include="Features\Ticket\Commands\" />
     <Folder Include="Features\Ticket\Queries\" />
     <Folder Include="Features\UserCommunity\Commands\" />

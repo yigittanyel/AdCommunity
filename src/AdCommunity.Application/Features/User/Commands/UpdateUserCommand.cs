@@ -41,7 +41,7 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
         _unitOfWork.UserRepository.Update(existingUser);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        Helpers.MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "update_user_queue", "User has been edited.");
+        Helpers.MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "update_user_queue", $"User with Id: {existingUser.Id}  has been edited.");
 
         return true;
     }
