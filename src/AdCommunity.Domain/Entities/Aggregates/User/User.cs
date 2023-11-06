@@ -57,6 +57,8 @@ public partial class User
             throw new NullException(nameof(phone));
         if (string.IsNullOrEmpty(username))
             throw new NullException(nameof(username));
+        if (Id <= 0 || Id == null)
+            throw new Exception("Id cannot be null, zero or less than zero.");
 
         FirstName = firstName;
         LastName = lastName;

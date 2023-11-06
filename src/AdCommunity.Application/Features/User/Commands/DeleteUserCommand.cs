@@ -1,7 +1,6 @@
 ﻿using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using RabbitMQ.Client;
-using System.Text;
 
 namespace AdCommunity.Application.Features.User.Commands;
 

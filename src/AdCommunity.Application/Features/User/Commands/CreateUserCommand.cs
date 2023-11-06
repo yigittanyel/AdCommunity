@@ -1,11 +1,10 @@
 ﻿using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Helpers;
-using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using FluentValidation;
 using RabbitMQ.Client;
-using System.Text;
 
 namespace AdCommunity.Application.Features.User.Commands;
 
@@ -38,6 +37,14 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
 
         var user = new AdCommunity.Domain.Entities.Aggregates.User.User
         (request.User.FirstName, request.User.LastName, request.User.Email, request.User.Password, request.User.Phone, request.User.Username, request.User.Website, request.User.Facebook, request.User.Twitter, request.User.Instagram, request.User.Github, request.User.Medium);
+
+        var validationResult = await new UserCreateDtoValidator().ValidateAsync(request.User);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

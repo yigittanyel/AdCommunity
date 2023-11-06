@@ -41,11 +41,6 @@ public class CommunityDto : CommunityBaseDto
     public CommunityDto()
     {
     }
-
-    public CommunityDto(int id)
-    {
-        Id = id;
-    }
 }
 
 public class CommunityCreateDto : CommunityBaseDto
@@ -62,10 +57,5 @@ public class CommunityUpdateDto : CommunityBaseDto
     public CommunityUpdateDto()
     {
         
-    }
-
-    public CommunityUpdateDto(int id)
-    {
-        Id = Id;
     }
 }

@@ -41,6 +41,8 @@ public partial class Community
     {
         if (string.IsNullOrEmpty(name))
             throw new NullException(nameof(name));
+        if (Id <= 0 || Id == null)
+            throw new Exception("Id cannot be null, zero or less than zero.");
 
         Name = name;
         Description = description;

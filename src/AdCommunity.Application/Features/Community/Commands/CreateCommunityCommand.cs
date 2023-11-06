@@ -1,9 +1,9 @@
 ﻿using AdCommunity.Application.DTOs.Community;
-using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Helpers;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using FluentValidation;
 using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.Community.Commands;
@@ -36,6 +36,14 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         }
 
         var community = new AdCommunity.Domain.Entities.Aggregates.Community.Community(request.Community.Name, request.Community.Description, request.Community.Tags, request.Community.Location, request.Community.Organizators, request.Community.Website, request.Community.Facebook, request.Community.Twitter, request.Community.Instagram, request.Community.Github, request.Community.Medium);
+
+        var validationResult = await new CommunityCreateDtoValidator().ValidateAsync(request.Community);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
 
         await _unitOfWork.CommunityRepository.AddAsync(community, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

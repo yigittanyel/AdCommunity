@@ -2,6 +2,7 @@
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using FluentValidation;
 using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.Community.Commands;
@@ -36,6 +37,13 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
         existingCommunity.SetDate();
 
         _mapper.Map(request.Community, existingCommunity);
+
+        var validationResult = await new CommunityUpdateDtoValidator().ValidateAsync(request.Community);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
 
         _unitOfWork.CommunityRepository.Update(existingCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

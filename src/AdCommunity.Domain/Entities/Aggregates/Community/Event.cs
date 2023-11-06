@@ -38,12 +38,20 @@ public partial class Event
             throw new NullException(nameof(eventDate));
         if (communityId <= 0)
             throw new ForeignKeyException(nameof(communityId));
+        if (Id <= 0 || Id == null)
+            throw new Exception("Id cannot be null, zero or less than zero.");
+
 
         EventName = eventName;
         Description = description;
         EventDate = eventDate;
         Location = location;
         CommunityId = communityId;
+        CreatedOn = DateTime.UtcNow;
+    }
+
+    public void SetDate()
+    {
         CreatedOn = DateTime.UtcNow;
     }
 }

@@ -2,6 +2,7 @@
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using FluentValidation;
 using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.User.Commands;
@@ -37,6 +38,13 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
         existingUser.SetDate();
 
         _mapper.Map(request.User, existingUser);
+
+        var validationResult = await new UserUpdateDtoValidator().ValidateAsync(request.User);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
 
         _unitOfWork.UserRepository.Update(existingUser);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
