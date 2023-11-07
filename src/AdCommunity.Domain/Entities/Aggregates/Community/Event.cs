@@ -36,7 +36,7 @@ public partial class Event
             throw new NullException(nameof(location));
         if (eventDate == null)
             throw new NullException(nameof(eventDate));
-        if (communityId <= 0)
+        if (communityId <= 0)//bunun varlığını kontrol et.
             throw new ForeignKeyException(nameof(communityId));
 
 

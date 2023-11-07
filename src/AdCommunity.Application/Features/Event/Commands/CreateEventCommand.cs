@@ -3,14 +3,26 @@ using AdCommunity.Application.Helpers;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
-using FluentValidation;
 using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.Event.Commands;
 
 public class CreateEventCommand:IYtRequest<EventCreateDto>
 {
-    public EventCreateDto Event { get; set; }
+    public string EventName { get; set; }
+    public string Description { get; set; }
+    public DateTime EventDate { get; set; }
+    public string Location { get; set; }
+    public int CommunityId { get; set; }
+
+    public CreateEventCommand(string eventName, string description, DateTime eventDate, string location, int communityId)
+    {
+        EventName = eventName;
+        Description = description;
+        EventDate = eventDate;
+        Location = location;
+        CommunityId = communityId;
+    }
 }
 
 public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, EventCreateDto>
@@ -30,21 +42,15 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
 
     public async Task<EventCreateDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        var existingEvent = await _unitOfWork.EventRepository.GetByEventNameAsync(request.Event.EventName, cancellationToken);
+        var existingEvent = await _unitOfWork.EventRepository.GetByEventNameAsync(request.EventName, cancellationToken);
 
         if (existingEvent is not null)
         {
             throw new Exception("Event already exists");
         }
 
-        var _event = new AdCommunity.Domain.Entities.Aggregates.Community.Event(request.Event.EventName, request.Event.Description, request.Event.EventDate, request.Event.Location, request.Event.CommunityId);
+        var _event = new AdCommunity.Domain.Entities.Aggregates.Community.Event(request.EventName, request.Description, request.EventDate, request.Location, request.CommunityId);
 
-        var validationResult = await new EventCreateDtoValidator().ValidateAsync(request.Event);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
 
 
         await _unitOfWork.EventRepository.AddAsync(_event, cancellationToken);

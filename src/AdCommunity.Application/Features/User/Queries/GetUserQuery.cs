@@ -1,6 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Exceptions;
-using AdCommunity.Application.Helpers;
 using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -17,9 +16,9 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
-    private readonly RedisService _redisService;
+    private readonly IRedisService _redisService;
 
-    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, RedisService redisService)
+    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -30,7 +29,7 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
     {
         var cacheKey = $"user:{request.Id}";
 
-        var userDto = CacheHelper.GetFromCache<UserDto>(_redisService, cacheKey);
+        var userDto = await _redisService.GetFromCacheAsync<UserDto>(cacheKey);
 
         if (userDto == null)
         {
@@ -43,7 +42,7 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
 
             userDto = _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.User, UserDto>(user);
 
-            CacheHelper.AddToCache(_redisService, cacheKey, userDto);
+            await _redisService.AddToCacheAsync(cacheKey, userDto,TimeSpan.FromMinutes(1));
         }
 
         return userDto;

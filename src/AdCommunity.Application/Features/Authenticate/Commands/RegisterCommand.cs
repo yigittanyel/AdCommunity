@@ -3,7 +3,6 @@ using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.Base;
 using AdCommunity.Domain.Repository;
-using Microsoft.Extensions.Configuration;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands;
 

@@ -2,6 +2,7 @@
 using AdCommunity.Application.Features.User.Commands;
 using AdCommunity.Application.Features.User.Queries;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using AdCommunity.Domain.Entities.Aggregates.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,73 +21,47 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("[action]/{userId}")]
-    public async Task<IActionResult> Get(int userId)
+    public async Task<UserDto> Get(int userId)
     {
         GetUserQuery query = new GetUserQuery { Id = userId };
         UserDto user = await _mediator.Send(query);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(user);
+        return user;
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IEnumerable<UserDto>> GetAll()
     {
         GetUsersQuery query = new GetUsersQuery();
         IEnumerable<UserDto> users = await _mediator.Send(query);
 
-        if (users == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(users);
+        return users;
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Create(UserCreateDto user)
+    public async Task<UserCreateDto> Create(UserCreateDto user)
     {
-        CreateUserCommand command = new CreateUserCommand { User = user };
+        CreateUserCommand command = new CreateUserCommand(user.FirstName,user.Password,user.LastName,user.Email,user.Phone,user.Username,user.Website,user.Facebook,user.Twitter,user.Instagram,user.Github,user.Medium);
         UserCreateDto createdUser = await _mediator.Send(command);
 
-        if (createdUser == null)
-        {
-            return BadRequest();
-        }
-
-        return Ok(createdUser);
+        return createdUser;
     }
 
     [HttpPut("[action]")]
-    public async Task<IActionResult> Update(UserUpdateDto user)
+    public async Task<bool> Update(UserUpdateDto user)
     {
-        UpdateUserCommand command = new UpdateUserCommand { User = user };
+        UpdateUserCommand command = new UpdateUserCommand(user.Id,user.FirstName, user.Password, user.LastName, user.Email, user.Phone, user.Username, user.Website, user.Facebook, user.Twitter, user.Instagram, user.Github, user.Medium);
         bool updatedUser = await _mediator.Send(command);
 
-        if (!updatedUser)
-        {
-            return BadRequest();
-        }
-
-        return Ok(updatedUser);
+        return updatedUser;
     }
 
     [HttpDelete("[action]/{userId}")]
-    public async Task<IActionResult> Delete(int userId)
+    public async Task<bool> Delete(int userId)
     {
         DeleteUserCommand command = new DeleteUserCommand { Id = userId };
         bool deletedUser = await _mediator.Send(command);
 
-        if (!deletedUser)
-        {
-            return BadRequest();
-        }
-
-        return Ok(deletedUser);
+        return deletedUser;
     }
 }
 

@@ -4,7 +4,7 @@ namespace AdCommunity.Core.CustomMapper;
 
 public class YtMapper : IYtMapper
 {
-    public TDestination Map<TSource, TDestination>(TSource source)
+    public TDestination Map<TSource, TDestination>(TSource source) //property isimleri aynı ama tipleri farklı olan nesneleri nasıl yapacak?
     {
         if (source == null)
         {

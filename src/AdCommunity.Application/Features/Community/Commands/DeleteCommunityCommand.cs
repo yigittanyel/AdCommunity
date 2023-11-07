@@ -1,4 +1,6 @@
-﻿using AdCommunity.Core.CustomMediator.Interfaces;
+﻿using AdCommunity.Application.Services.RabbitMQ;
+using AdCommunity.Core.CustomMediator.Interfaces;
+using AdCommunity.Domain.Entities.Aggregates.Community;
 using AdCommunity.Domain.Repository;
 using RabbitMQ.Client;
 
@@ -12,10 +14,10 @@ public class DeleteCommunityCommand : IYtRequest<bool>
 public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ConnectionFactory _rabbitMqFactory;
+    private readonly IMessageBrokerService _rabbitMqFactory;
 
 
-    public DeleteCommunityCommandHandler(IUnitOfWork unitOfWork, ConnectionFactory rabbitMqFactory)
+    public DeleteCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
@@ -33,7 +35,7 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
         _unitOfWork.CommunityRepository.Delete(existingCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        Helpers.MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "delete_community_queue", $"Community name: {existingCommunity.Name} has been removed.");
+        _rabbitMqFactory.PublishMessage("delete_community_queue", $"Community name: {existingCommunity.Name} has been removed.");
 
         return true;
     }

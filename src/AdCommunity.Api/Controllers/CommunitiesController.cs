@@ -1,8 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.Community;
-using AdCommunity.Application.DTOs.User;
+using AdCommunity.Application.Features.Commands;
 using AdCommunity.Application.Features.Community.Commands;
 using AdCommunity.Application.Features.Community.Queries;
-using AdCommunity.Application.Features.User.Commands;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,74 +19,49 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpGet("[action]/{communityId}")]
-        public async Task<IActionResult> Get(int communityId)
+        public async Task<CommunityDto> Get(int communityId) //IActionResult dönme.
         {
             GetCommunityQuery query = new GetCommunityQuery { Id = communityId };
             CommunityDto community = await _mediator.Send(query);
 
-            if (community == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(community);
+            return community;
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IEnumerable<CommunityDto>> GetAll()
         {
             GetCommunitiesQuery query = new GetCommunitiesQuery();
             IEnumerable<CommunityDto> communities = await _mediator.Send(query);
 
-            if (communities == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(communities);
+            return communities;
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CommunityCreateDto community)
+        public async Task<CommunityCreateDto> Create(CommunityCreateDto community)
         {
-            CreateCommunityCommand command = new CreateCommunityCommand { Community = community};
+            CreateCommunityCommand command = new CreateCommunityCommand(community.Name, community.Description, community.Tags, community.Location, community.Organizators, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
             CommunityCreateDto createdCommunity = await _mediator.Send(command);
 
-            if (createdCommunity == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(createdCommunity);
+            return createdCommunity;
         }
 
         [HttpDelete("[action]/{communityId}")]
-        public async Task<IActionResult> Delete(int communityId)
+        public async Task<bool> Delete(int communityId)
         {
             DeleteCommunityCommand command = new DeleteCommunityCommand { Id = communityId };
             bool deletedCommunity = await _mediator.Send(command);
 
-            if (!deletedCommunity)
-            {
-                return BadRequest();
-            }
-
-            return Ok(deletedCommunity);
+            return deletedCommunity;
         }
 
 
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update(CommunityUpdateDto community)
+        public async Task<bool> Update(CommunityUpdateDto community)
         {
-            UpdateCommunityCommand command = new UpdateCommunityCommand { Community = community};
+            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id,community.Name, community.Description, community.Tags, community.Location, community.Organizators, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
             bool updatedCommunity = await _mediator.Send(command);
 
-            if (!updatedCommunity)
-            {
-                return BadRequest();
-            }
-
-            return Ok(updatedCommunity);
+            return updatedCommunity;
         }
     }
 }

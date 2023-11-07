@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.Services;
+using AdCommunity.Application.Services.RabbitMQ;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ public static class ApplicationServiceRegistration
         #endregion
 
         #region Redis
-        serviceCollection.AddScoped<RedisService>(sp =>
+        serviceCollection.AddScoped<IRedisService,RedisService>(sp =>
         {
             return new RedisService(configuration["Redis:ConnectionString"]);
         });
@@ -37,6 +38,8 @@ public static class ApplicationServiceRegistration
             
         };
         serviceCollection.AddSingleton(rabbitMqFactory);
+
+        serviceCollection.AddScoped<IMessageBrokerService, MessageBrokerService>();
         #endregion
     }
 }

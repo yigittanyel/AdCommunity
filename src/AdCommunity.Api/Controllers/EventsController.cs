@@ -1,11 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.Event;
-using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Features.Event.Commands;
 using AdCommunity.Application.Features.Event.Queries;
-using AdCommunity.Application.Features.User.Commands;
-using AdCommunity.Application.Features.User.Queries;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
@@ -22,73 +18,48 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpGet("[action]/{eventId}")]
-        public async Task<IActionResult> Get(int eventId)
+        public async Task<EventDto> Get(int eventId)
         {
             GetEventQuery query = new GetEventQuery { Id = eventId };
             EventDto _event = await _mediator.Send(query);
 
-            if (_event == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(_event);
+            return _event;
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IEnumerable<EventDto>> GetAll()
         {
             GetEventsQuery query = new GetEventsQuery();
             IEnumerable<EventDto> events = await _mediator.Send(query);
 
-            if (events == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(events);
+            return events;
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(EventCreateDto _event)
+        public async Task<EventCreateDto> Create(EventCreateDto _event)
         {
-            CreateEventCommand command = new CreateEventCommand { Event = _event };
+            CreateEventCommand command = new CreateEventCommand(_event.EventName,_event.Description,_event.EventDate,_event.Location,_event.CommunityId);
             EventCreateDto createdEvent = await _mediator.Send(command);
 
-            if (createdEvent == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(createdEvent);
+            return createdEvent;
         }
 
         [HttpPut("[action]")]
-        public async Task<IActionResult> Update(EventUpdateDto _event)
+        public async Task<bool> Update(EventUpdateDto _event)
         {
-            UpdateEventCommand command = new UpdateEventCommand { Event = _event };
+            UpdateEventCommand command = new UpdateEventCommand(_event.Id,_event.EventName, _event.Description, _event.EventDate, _event.Location, _event.CommunityId);
             bool updatedEvent = await _mediator.Send(command);
 
-            if (!updatedEvent)
-            {
-                return BadRequest();
-            }
-
-            return Ok(updatedEvent);
+            return updatedEvent;
         }
 
         [HttpDelete("[action]/{eventId}")]
-        public async Task<IActionResult> Delete(int eventId)
+        public async Task<bool> Delete(int eventId)
         {
             DeleteEventCommand command = new DeleteEventCommand { Id = eventId };
             bool deletedEvent = await _mediator.Send(command);
 
-            if (!deletedEvent)
-            {
-                return BadRequest();
-            }
-
-            return Ok(deletedEvent);
+            return deletedEvent;
         }
     }
 }

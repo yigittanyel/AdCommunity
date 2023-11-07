@@ -1,16 +1,28 @@
-﻿using AdCommunity.Application.DTOs.Community;
-using AdCommunity.Application.DTOs.Event;
-using AdCommunity.Core.CustomMapper;
+﻿using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
-using FluentValidation;
 using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.Event.Commands;
 
 public class UpdateEventCommand:IYtRequest<bool>
 {
-    public EventUpdateDto Event { get; set; }
+    public int Id { get; set; }
+    public string EventName { get; set; }
+    public string Description { get; set; }
+    public DateTime EventDate { get; set; }
+    public string Location { get; set; }
+    public int CommunityId { get; set; }
+
+    public UpdateEventCommand(int id, string eventName, string description, DateTime eventDate, string location, int communityId)
+    {
+        Id = id;
+        EventName = eventName;
+        Description = description;
+        EventDate = eventDate;
+        Location = location;
+        CommunityId = communityId;
+    }
 }
 
 public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, bool>
@@ -27,7 +39,7 @@ public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, b
     }
     public async Task<bool> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
     {
-        var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Event.Id, cancellationToken);
+        var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, cancellationToken);
 
         if (existingEvent == null)
         {
@@ -36,14 +48,8 @@ public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, b
 
         existingEvent.SetDate();
 
-        _mapper.Map(request.Event, existingEvent);
+        _mapper.Map(request, existingEvent);
 
-        var validationResult = await new EventUpdateDtoValidator().ValidateAsync(request.Event);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
 
         _unitOfWork.EventRepository.Update(existingEvent);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

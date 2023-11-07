@@ -1,6 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.Community;
 using AdCommunity.Application.Exceptions;
-using AdCommunity.Application.Helpers;
 using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -17,9 +16,9 @@ public class GetCommunityQueryHandler : IYtRequestHandler<GetCommunityQuery, Com
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
-    private readonly RedisService _redisService;
+    private readonly IRedisService _redisService;
 
-    public GetCommunityQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, RedisService redisService)
+    public GetCommunityQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -30,7 +29,7 @@ public class GetCommunityQueryHandler : IYtRequestHandler<GetCommunityQuery, Com
     {
         var cacheKey = $"community:{request.Id}";
 
-        var communityDto = CacheHelper.GetFromCache<CommunityDto>(_redisService, cacheKey);
+        var communityDto = await _redisService.GetFromCacheAsync<CommunityDto>(cacheKey);
 
         if (communityDto == null)
         {
@@ -43,7 +42,7 @@ public class GetCommunityQueryHandler : IYtRequestHandler<GetCommunityQuery, Com
 
             communityDto = _mapper.Map<AdCommunity.Domain.Entities.Aggregates.Community.Community, CommunityDto>(community);
 
-            CacheHelper.AddToCache(_redisService, cacheKey, communityDto);
+            await _redisService.AddToCacheAsync(cacheKey, communityDto,TimeSpan.FromMinutes(1));
         }
 
         return communityDto;

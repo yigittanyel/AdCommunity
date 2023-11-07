@@ -9,7 +9,34 @@ namespace AdCommunity.Application.Features.Community.Commands;
 
 public class UpdateCommunityCommand:IYtRequest<bool>
 {
-    public CommunityUpdateDto Community { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
+    public string? Tags { get; set; }
+    public string? Location { get; set; }
+    public string? Organizators { get; set; }
+    public string? Website { get; set; }
+    public string? Facebook { get; set; }
+    public string? Twitter { get; set; }
+    public string? Instagram { get; set; }
+    public string? Github { get; set; }
+    public string? Medium { get; set; }
+
+    public UpdateCommunityCommand(int id, string name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        Tags = tags;
+        Location = location;
+        Organizators = organizators;
+        Website = website;
+        Facebook = facebook;
+        Twitter = twitter;
+        Instagram = instagram;
+        Github = github;
+        Medium = medium;
+    }
 }
 
 public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCommand, bool>
@@ -27,7 +54,7 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
 
     public async Task<bool> Handle(UpdateCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Community.Id, cancellationToken);
+        var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, cancellationToken);
 
         if (existingCommunity == null)
         {
@@ -36,14 +63,7 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
 
         existingCommunity.SetDate();
 
-        _mapper.Map(request.Community, existingCommunity);
-
-        var validationResult = await new CommunityUpdateDtoValidator().ValidateAsync(request.Community);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
+        _mapper.Map(request, existingCommunity);
 
         _unitOfWork.CommunityRepository.Update(existingCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

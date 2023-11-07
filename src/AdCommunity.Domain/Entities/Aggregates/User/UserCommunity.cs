@@ -30,4 +30,8 @@ public partial class UserCommunity
         JoinDate = joinDate;
         CreatedOn = DateTime.UtcNow;
     }
+    public void SetDate()
+    {
+        CreatedOn = DateTime.UtcNow;
+    }
 }

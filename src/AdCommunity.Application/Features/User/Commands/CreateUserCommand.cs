@@ -10,7 +10,34 @@ namespace AdCommunity.Application.Features.User.Commands;
 
 public class CreateUserCommand : IYtRequest<UserCreateDto>
 {
-    public UserCreateDto User { get; set; }
+    public string FirstName { get; set; }
+    public string Password { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string Username { get; set; }
+    public string? Website { get; set; }
+    public string? Facebook { get; set; }
+    public string? Twitter { get; set; }
+    public string? Instagram { get; set; }
+    public string? Github { get; set; }
+    public string? Medium { get; set; }
+
+    public CreateUserCommand(string firstName, string password, string lastName, string email, string phone, string username, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
+    {
+        FirstName = firstName;
+        Password = password;
+        LastName = lastName;
+        Email = email;
+        Phone = phone;
+        Username = username;
+        Website = website;
+        Facebook = facebook;
+        Twitter = twitter;
+        Instagram = instagram;
+        Github = github;
+        Medium = medium;
+    }
 }
 
 public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, UserCreateDto>
@@ -28,7 +55,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
 
     public async Task<UserCreateDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
+        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.Username, request.Password);
 
         if (existingUser.Any())
         {
@@ -36,15 +63,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
         }
 
         var user = new AdCommunity.Domain.Entities.Aggregates.User.User
-        (request.User.FirstName, request.User.LastName, request.User.Email, request.User.Password, request.User.Phone, request.User.Username, request.User.Website, request.User.Facebook, request.User.Twitter, request.User.Instagram, request.User.Github, request.User.Medium);
-
-        var validationResult = await new UserCreateDtoValidator().ValidateAsync(request.User);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
-
+        (request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.Username, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

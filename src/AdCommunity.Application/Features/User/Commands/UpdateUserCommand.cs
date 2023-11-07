@@ -1,15 +1,42 @@
-﻿using AdCommunity.Application.DTOs.User;
-using AdCommunity.Core.CustomMapper;
+﻿using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
-using FluentValidation;
 using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.User.Commands;
 
 public class UpdateUserCommand: IYtRequest<bool>
 {
-    public UserUpdateDto User { get; set; }
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string Username { get; set; }
+    public string? Website { get; set; }
+    public string? Facebook { get; set; }
+    public string? Twitter { get; set; }
+    public string? Instagram { get; set; }
+    public string? Github { get; set; }
+    public string? Medium { get; set; }
+    public string Password { get; set; }
+
+    public UpdateUserCommand(int id, string firstName, string lastName, string email, string phone, string username, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, string password)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Phone = phone;
+        Username = username;
+        Website = website;
+        Facebook = facebook;
+        Twitter = twitter;
+        Instagram = instagram;
+        Github = github;
+        Medium = medium;
+        Password = password;
+    }
 }
 
 public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, bool>
@@ -27,24 +54,17 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
 
     public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetAsync(request.User.Id,cancellationToken);
+        var existingUser = await _unitOfWork.UserRepository.GetAsync(request.Id,cancellationToken);
 
         if(existingUser == null)
         {
             throw new Exception("User does not exist");
         }
 
-        existingUser.SetHashedPassword(request.User.Password);
+        existingUser.SetHashedPassword(request.Password);
         existingUser.SetDate();
 
-        _mapper.Map(request.User, existingUser);
-
-        var validationResult = await new UserUpdateDtoValidator().ValidateAsync(request.User);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
+        _mapper.Map(request, existingUser);
 
         _unitOfWork.UserRepository.Update(existingUser);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,7 +1,5 @@
-﻿using AdCommunity.Application.DTOs.Community;
-using AdCommunity.Application.DTOs.Event;
+﻿using AdCommunity.Application.DTOs.Event;
 using AdCommunity.Application.Exceptions;
-using AdCommunity.Application.Helpers;
 using AdCommunity.Application.Services;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -18,9 +16,9 @@ public class GetEventQueryHandler : IYtRequestHandler<GetEventQuery, EventDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
-    private readonly RedisService _redisService;
+    private readonly IRedisService _redisService;
 
-    public GetEventQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, RedisService redisService)
+    public GetEventQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -31,7 +29,7 @@ public class GetEventQueryHandler : IYtRequestHandler<GetEventQuery, EventDto>
     {
         var cacheKey = $"event:{request.Id}";
 
-        var eventDto = CacheHelper.GetFromCache<EventDto>(_redisService, cacheKey);
+        var eventDto = await _redisService.GetFromCacheAsync<EventDto>(cacheKey);
 
         if (eventDto == null)
         {
@@ -44,7 +42,7 @@ public class GetEventQueryHandler : IYtRequestHandler<GetEventQuery, EventDto>
 
             eventDto = _mapper.Map<AdCommunity.Domain.Entities.Aggregates.Community.Event, EventDto>(_event);
 
-            CacheHelper.AddToCache(_redisService, cacheKey, eventDto);
+            await _redisService.AddToCacheAsync(cacheKey, eventDto, TimeSpan.FromMinutes(1));
         }
 
         return eventDto;
