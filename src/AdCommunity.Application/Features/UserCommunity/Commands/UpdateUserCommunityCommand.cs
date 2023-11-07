@@ -39,9 +39,16 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
         var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, cancellationToken);
 
         if (existingUserCommunity == null)
-        {
             throw new Exception("UserCommunity does not exist");
-        }
+
+        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
+        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+
+        if (user is null)
+            throw new Exception("User does not exist");
+
+        if (community is null)
+            throw new Exception("Community does not exist");
 
         existingUserCommunity.SetDate();
 

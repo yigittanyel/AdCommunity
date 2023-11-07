@@ -5,39 +5,41 @@ namespace AdCommunity.Domain.Entities.Aggregates.Community;
 
 public partial class Community
 {
-    public int Id { get; protected set; }
+    public int Id { get; set; }
 
-    public string Name { get; protected set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string? Description { get; protected set; }
+    public string? Description { get; set; }
 
-    public string? Tags { get; protected set; }
+    public string? Tags { get; set; }
 
-    public string? Location { get; protected set; }
+    public string? Location { get; set; }
 
-    public string? Organizators { get; protected set; }
+    public string? Website { get; set; }
 
-    public string? Website { get; protected set; }
+    public string? Facebook { get; set; }
 
-    public string? Facebook { get; protected set; }
+    public string? Twitter { get; set; }
 
-    public string? Twitter { get; protected set; }
+    public string? Instagram { get; set; }
 
-    public string? Instagram { get; protected set; }
+    public string? Github { get; set; }
 
-    public string? Github { get; protected set; }
+    public string? Medium { get; set; }
 
-    public string? Medium { get; protected set; }
+    public DateTime? CreatedOn { get; set; }
 
-    public DateTime? CreatedOn { get; protected set; }
+    public int UserId { get; set; }
 
     public virtual ICollection<Event> Events { get; set; } = new List<Event>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
+    public virtual AdCommunity.Domain.Entities.Aggregates.User.User User { get; set; } = null!;
+
     public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
 
-    public Community(string name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
+    public Community(string name, string? description, string? tags, string? location, int userId, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
         if (string.IsNullOrEmpty(name))
             throw new NullException(nameof(name));
@@ -46,7 +48,7 @@ public partial class Community
         Description = description;
         Tags = tags;
         Location = location;
-        Organizators = organizators;
+        UserId = userId;
         Website = website;
         Facebook = facebook;
         Twitter = twitter;

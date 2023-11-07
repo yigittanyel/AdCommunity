@@ -6,7 +6,7 @@ public class CommunityBaseDto
     public string? Description { get; set; }
     public string? Tags { get; set; }
     public string? Location { get; set; }
-    public string? Organizators { get; set; }
+    public int UserId { get; set; }
     public string? Website { get;  set; }
     public string? Facebook { get;  set; }
     public string? Twitter { get;  set; }
@@ -14,13 +14,13 @@ public class CommunityBaseDto
     public string? Github { get;  set; }
     public string? Medium { get;  set; }
 
-    public CommunityBaseDto(string name, string? description, string? tags, string? location, string? organizators, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
+    public CommunityBaseDto(string name, string? description, string? tags, string? location, int userId, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
         Name = name;
         Description = description;
         Tags = tags;
         Location = location;
-        Organizators = organizators;
+        UserId = userId;
         Website = website;
         Facebook = facebook;
         Twitter = twitter;

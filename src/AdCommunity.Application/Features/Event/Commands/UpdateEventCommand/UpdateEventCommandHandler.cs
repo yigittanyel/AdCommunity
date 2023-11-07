@@ -22,9 +22,12 @@ public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, b
         var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, cancellationToken);
 
         if (existingEvent == null)
-        {
             throw new Exception("Event does not exist");
-        }
+
+        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+
+        if (community is null)
+            throw new Exception("Community does not exist");
 
         existingEvent.SetDate();
 

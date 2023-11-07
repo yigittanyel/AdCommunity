@@ -41,7 +41,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPost("[action]")]
         public async Task<CommunityCreateDto> Create(CommunityCreateDto community)
         {
-            CreateCommunityCommand command = new CreateCommunityCommand(community.Name, community.Description, community.Tags, community.Location, community.Organizators, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
+            CreateCommunityCommand command = new CreateCommunityCommand(community.Name, community.Description, community.Tags, community.Location, community.UserId, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
             CommunityCreateDto createdCommunity = await _mediator.Send(command);
 
             return createdCommunity;
@@ -60,7 +60,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPut("[action]")]
         public async Task<bool> Update(CommunityUpdateDto community)
         {
-            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id,community.Name, community.Description, community.Tags, community.Location, community.Organizators, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
+            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id,community.Name, community.Description, community.Tags, community.Location, community.UserId, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
             bool updatedCommunity = await _mediator.Send(command);
 
             return updatedCommunity;

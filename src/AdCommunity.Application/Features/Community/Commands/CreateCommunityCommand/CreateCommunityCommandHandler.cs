@@ -24,11 +24,14 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         var existingCommunity = await _unitOfWork.CommunityRepository.GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)
-        {
             throw new Exception("Community already exists");
-        }
 
-        var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.Organizators, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
+        var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.UserId, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
+
+        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
+
+        if (user is null)
+            throw new Exception("User does not exist");
 
         await _unitOfWork.CommunityRepository.AddAsync(community, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

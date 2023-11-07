@@ -37,6 +37,8 @@ public partial class User
 
     public string? HashedPassword { get; protected set; }
 
+    public virtual ICollection<AdCommunity.Domain.Entities.Aggregates.Community.Community> Communities { get; set; } = new List<AdCommunity.Domain.Entities.Aggregates.Community.Community>();
+
     public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
 
     public virtual ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();

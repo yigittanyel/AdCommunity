@@ -38,11 +38,18 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
         var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetUserCommunitiesByUserAndCommunityAsync(request.UserId,request.CommunityId, cancellationToken);
 
         if (existingUserCommunity is not null)
-        {
             throw new Exception("UserCommunity already exists");
-        }
 
         var userCommunity = new AdCommunity.Domain.Entities.Aggregates.User.UserCommunity(request.UserId, request.CommunityId,request.JoinDate); 
+
+        var user= await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
+        var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+
+        if (user is null)
+            throw new Exception("User does not exist");
+
+        if (community is null)
+            throw new Exception("Community does not exist");
 
         await _unitOfWork.UserCommunityRepository.AddAsync(userCommunity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
