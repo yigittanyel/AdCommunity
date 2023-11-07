@@ -1,10 +1,10 @@
 ﻿using StackExchange.Redis;
 
-namespace AdCommunity.Application.Services;
+namespace AdCommunity.Application.Services.Redis;
 
 public interface IRedisService
 {
-    StackExchange.Redis.IDatabase GetDb(int db);
-    Task AddToCacheAsync<T>(string cacheKey, T data,TimeSpan? expireTime=null);
+    IDatabase GetDb(int db);
+    Task AddToCacheAsync<T>(string cacheKey, T data, TimeSpan? expireTime = null);
     Task<T> GetFromCacheAsync<T>(string cacheKey);
 }

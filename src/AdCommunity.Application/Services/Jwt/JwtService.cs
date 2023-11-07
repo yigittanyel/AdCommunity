@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AdCommunity.Application.Services;
+namespace AdCommunity.Application.Services.Jwt;
 
 public class JwtService : IJwtService
 {

@@ -1,6 +1,9 @@
 ﻿using AdCommunity.Application.DTOs.Event;
-using AdCommunity.Application.Features.Event.Commands;
-using AdCommunity.Application.Features.Event.Queries;
+using AdCommunity.Application.Features.Event.Commands.CreateEventCommand;
+using AdCommunity.Application.Features.Event.Commands.DeleteEventCommand;
+using AdCommunity.Application.Features.Event.Commands.UpdateEventCommand;
+using AdCommunity.Application.Features.Event.Queries.GetEventQuery;
+using AdCommunity.Application.Features.Event.Queries.GetEventsQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,9 +1,8 @@
 ﻿using AdCommunity.Application.DTOs.UserCommunity;
-using AdCommunity.Application.Helpers;
+using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
-using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.UserCommunity.Commands;
 
@@ -25,9 +24,9 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
-    private readonly ConnectionFactory _rabbitMqFactory;
+    private readonly IMessageBrokerService _rabbitMqFactory;
 
-    public CreateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, ConnectionFactory rabbitMqFactory)
+    public CreateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -48,7 +47,7 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
         await _unitOfWork.UserCommunityRepository.AddAsync(userCommunity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "create_userCommunity_queue", $"UserCommunity has been created.");
+        _rabbitMqFactory.PublishMessage("create_userCommunity_queue", $"UserCommunity has been created.");
 
         return _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.UserCommunity, UserCommunityCreateDto>(userCommunity);
     }

@@ -1,6 +1,6 @@
 ﻿using AdCommunity.Application.DTOs.UserCommunity;
 using AdCommunity.Application.Exceptions;
-using AdCommunity.Application.Services;
+using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;

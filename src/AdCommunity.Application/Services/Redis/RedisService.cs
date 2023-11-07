@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace AdCommunity.Application.Services;
+namespace AdCommunity.Application.Services.Redis;
 
 public class RedisService : IRedisService
 {
@@ -12,15 +12,15 @@ public class RedisService : IRedisService
         _connectionMultiplexer = ConnectionMultiplexer.Connect(url);
     }
 
-    public StackExchange.Redis.IDatabase GetDb(int db)
+    public IDatabase GetDb(int db)
     {
         return _connectionMultiplexer.GetDatabase(db);
     }
 
-    public async Task AddToCacheAsync<T>(string cacheKey, T data,TimeSpan? expireTime)
+    public async Task AddToCacheAsync<T>(string cacheKey, T data, TimeSpan? expireTime)
     {
         var serializedData = JsonConvert.SerializeObject(data);
-        await GetDb(0).StringSetAsync(cacheKey, serializedData,TimeSpan.FromMinutes(1));
+        await GetDb(0).StringSetAsync(cacheKey, serializedData, TimeSpan.FromMinutes(1));
     }
 
     public async Task<T> GetFromCacheAsync<T>(string cacheKey)
@@ -31,7 +31,7 @@ public class RedisService : IRedisService
             return JsonConvert.DeserializeObject<T>(cachedData);
         }
 
-        return default(T);
+        return default;
     }
 
 }

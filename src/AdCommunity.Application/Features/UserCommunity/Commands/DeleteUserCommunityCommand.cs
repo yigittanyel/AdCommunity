@@ -1,6 +1,6 @@
-﻿using AdCommunity.Core.CustomMediator.Interfaces;
+﻿using AdCommunity.Application.Services.RabbitMQ;
+using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
-using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.UserCommunity.Commands;
 
@@ -12,10 +12,10 @@ public class DeleteUserCommunityCommand:IYtRequest<bool>
 public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCommunityCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ConnectionFactory _rabbitMqFactory;
+    private readonly IMessageBrokerService _rabbitMqFactory;
 
 
-    public DeleteUserCommunityCommandHandler(IUnitOfWork unitOfWork, ConnectionFactory rabbitMqFactory)
+    public DeleteUserCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
@@ -33,7 +33,8 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
         _unitOfWork.UserCommunityRepository.Delete(existingUserCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        Helpers.MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "delete_userCommunity_queue", $"The UserCommunity with ID: {request.Id} has been removed.");
+        _rabbitMqFactory.PublishMessage("delete_userCommunity_queue", $"The UserCommunity with ID: {request.Id} has been removed.");
+
         return true;
     }
 }

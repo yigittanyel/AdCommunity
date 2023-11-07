@@ -1,7 +1,7 @@
-﻿using AdCommunity.Core.CustomMapper;
+﻿using AdCommunity.Application.Services.RabbitMQ;
+using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
-using RabbitMQ.Client;
 
 namespace AdCommunity.Application.Features.UserCommunity.Commands;
 
@@ -25,9 +25,9 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
-    private readonly ConnectionFactory _rabbitMqFactory;
+    private readonly IMessageBrokerService _rabbitMqFactory;
 
-    public UpdateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, ConnectionFactory rabbitMqFactory)
+    public UpdateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -50,7 +50,7 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
         _unitOfWork.UserCommunityRepository.Update(existingUserCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        Helpers.MessageBrokerHelper.PublishMessage(_rabbitMqFactory, "update_userCommunity_queue", $"UserCommunity with Id: {existingUserCommunity.Id}  has been edited.");
+        _rabbitMqFactory.PublishMessage("update_userCommunity_queue", $"UserCommunity with Id: {existingUserCommunity.Id}  has been edited.");
 
         return true;
     }

@@ -1,5 +1,6 @@
 ﻿using AdCommunity.Application.DTOs.User;
-using AdCommunity.Application.Features.Authenticate.Commands;
+using AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
+using AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
