@@ -1,19 +1,17 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.Community;
+using AdCommunity.Domain.Entities.Base;
 using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.User;
 
-public partial class UserTicket
+public partial class UserTicket:BaseEntity
 {
-    public int Id { get; protected set; }
 
     public int UserId { get; protected set; }
 
     public int TicketId { get; protected set; }
 
     public string? Pnr { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Ticket Ticket { get; protected set; } = null!;
 

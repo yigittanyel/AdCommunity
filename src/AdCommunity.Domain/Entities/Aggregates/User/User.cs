@@ -1,13 +1,13 @@
-﻿using AdCommunity.Domain.Exceptions;
+﻿using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Exceptions;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace AdCommunity.Domain.Entities.Aggregates.User;
 
 
-public partial class User
+public partial class User: BaseEntity,IAggregateRoot
 {
-    public int Id { get; protected set; }
 
     public string FirstName { get; protected set; } = null!;
 
@@ -32,9 +32,6 @@ public partial class User
     public string? Github { get; protected set; }
 
     public string? Medium { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
-
     public string? HashedPassword { get; protected set; }
 
     public virtual ICollection<AdCommunity.Domain.Entities.Aggregates.Community.Community> Communities { get; set; } = new List<AdCommunity.Domain.Entities.Aggregates.Community.Community>();

@@ -1,13 +1,12 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
+using AdCommunity.Domain.Entities.Base;
 using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 
 
-public partial class Event
+public partial class Event:BaseEntity
 {
-    public int Id { get; protected set; }
-
     public string EventName { get; protected set; } = null!;
 
     public string Description { get; protected set; } = null!;
@@ -17,8 +16,6 @@ public partial class Event
     public string Location { get; protected set; } = null!;
 
     public int CommunityId { get; protected set; }
-
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Community Community { get; protected set; } = null!;
 

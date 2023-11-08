@@ -1,11 +1,11 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
+using AdCommunity.Domain.Entities.Base;
 using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 
-public partial class Community
+public partial class Community:BaseEntity,IAggregateRoot
 {
-    public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -26,8 +26,6 @@ public partial class Community
     public string? Github { get; set; }
 
     public string? Medium { get; set; }
-
-    public DateTime? CreatedOn { get; set; }
 
     public int UserId { get; set; }
 

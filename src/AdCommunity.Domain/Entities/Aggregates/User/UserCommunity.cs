@@ -1,10 +1,10 @@
-﻿using AdCommunity.Domain.Exceptions;
+﻿using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.User;
 
-public partial class UserCommunity
+public partial class UserCommunity:BaseEntity
 {
-    public int Id { get; protected set; }
 
     public int UserId { get; protected set; }
 
@@ -12,7 +12,6 @@ public partial class UserCommunity
 
     public DateTime? JoinDate { get; protected set; }
 
-    public DateTime? CreatedOn { get; protected set; }
 
     public virtual Entities.Aggregates.Community.Community Community { get; protected set; } = null!;
 
