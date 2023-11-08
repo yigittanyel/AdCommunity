@@ -17,8 +17,6 @@ internal class YtRequestHandlerWrapper<TRequest, TResponse>
 CancellationToken cancellationToken)
     {
         Task<TResponse> Handler() => serviceProvider.GetRequiredService<IYtRequestHandler<TRequest, TResponse>>().Handle((TRequest)request, cancellationToken);
-        var a = serviceProvider
-            .GetServices<IYtPipelineBehavior<TRequest, TResponse>>();
         return serviceProvider
             .GetServices<IYtPipelineBehavior<TRequest, TResponse>>()
             .Reverse()

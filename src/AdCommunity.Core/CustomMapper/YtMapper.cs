@@ -4,7 +4,7 @@ namespace AdCommunity.Core.CustomMapper;
 
 public class YtMapper : IYtMapper
 {
-    public TDestination Map<TSource, TDestination>(TSource source) //property isimleri aynı ama tipleri farklı olan nesneleri nasıl yapacak?
+    public TDestination Map<TSource, TDestination>(TSource source)
     {
         if (source == null)
         {
@@ -77,3 +77,40 @@ public class YtMapper : IYtMapper
         return destinationList;
     }
 }
+
+
+//if we need to casting for 2 types we need to use them 
+//        foreach (PropertyInfo sourceProperty in sourceProperties)
+//        {
+//            PropertyInfo destinationProperty = destinationProperties.FirstOrDefault(p => p.Name == sourceProperty.Name);
+
+//            if (destinationProperty != null)
+//            {
+//                object sourceValue = sourceProperty.GetValue(source);
+//destinationType = destinationProperty.PropertyType;
+
+//                // Eğer tipler eşleşmiyorsa, dönüşüm yapmaya çalış
+//                if (sourceValue != null && !destinationType.IsAssignableFrom(sourceValue.GetType()))
+//                {
+//                    // Burada uygun bir dönüşüm metodu veya algoritması kullanarak
+//                    // dönüşümü yapmanız gerekecek.
+//                    if (destinationType == typeof(int) && sourceValue is string stringValue)
+//                    {
+//                        if (int.TryParse(stringValue, out int intValue))
+//                        {
+//                            sourceValue = intValue;
+//                        }
+//                    }
+//                    else if (destinationType == typeof(DateTime) && sourceValue is string stringValuee)
+//{
+//    if (DateTime.TryParse(stringValuee, out DateTime dateTimeValue))
+//    {
+//        sourceValue = dateTimeValue;
+//    }
+//}
+//                    // ... Diğer tipler için gerekli dönüşümleri ekleyebilirsiniz.
+//                }
+
+//                destinationProperty.SetValue(destination, sourceValue);
+//            }
+//        }

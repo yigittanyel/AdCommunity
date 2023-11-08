@@ -21,7 +21,7 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpGet("[action]/{communityId}")]
-        public async Task<CommunityDto> Get(int communityId) //IActionResult dönme.
+        public async Task<CommunityDto> Get(int communityId)
         {
             GetCommunityQuery query = new GetCommunityQuery { Id = communityId };
             CommunityDto community = await _mediator.Send(query);

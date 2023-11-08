@@ -8,54 +8,36 @@ namespace AdCommunity.Domain.Entities.Aggregates.User;
 
 public partial class User: BaseEntity,IAggregateRoot
 {
-
     public string FirstName { get; protected set; } = null!;
-
     public string LastName { get; protected set; } = null!;
-
     public string Email { get; protected set; } = null!;
-
     public string Password { get; protected set; } = null!;
-
     public string Phone { get; protected set; } = null!;
-
     public string Username { get; protected set; } = null!;
-
     public string? Website { get; protected set; }
-
     public string? Facebook { get; protected set; }
-
     public string? Twitter { get; protected set; }
-
     public string? Instagram { get; protected set; }
-
     public string? Github { get; protected set; }
-
     public string? Medium { get; protected set; }
     public string? HashedPassword { get; protected set; }
-
-    public virtual ICollection<AdCommunity.Domain.Entities.Aggregates.Community.Community> Communities { get; set; } = new List<AdCommunity.Domain.Entities.Aggregates.Community.Community>();
-
-    public virtual ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
-
-    public virtual ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
-
-    public virtual ICollection<UserTicket> UserTickets { get; set; } = new List<UserTicket>();
-
+    public virtual ICollection<AdCommunity.Domain.Entities.Aggregates.Community.Community> Communities { get; protected set; } = new List<AdCommunity.Domain.Entities.Aggregates.Community.Community>();
+    public virtual ICollection<UserCommunity> UserCommunities { get; protected set; } = new List<UserCommunity>();
+    public virtual ICollection<UserEvent> UserEvents { get; protected set; } = new List<UserEvent>();
+    public virtual ICollection<UserTicket> UserTickets { get; protected set; } = new List<UserTicket>();
     public User(string firstName, string lastName, string email, string password, string phone, string username, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
-        if (string.IsNullOrEmpty(firstName))
-            throw new NullException(nameof(firstName));
-        if (string.IsNullOrEmpty(lastName))
-            throw new NullException(nameof(lastName));
-        if (string.IsNullOrEmpty(email))
-            throw new NullException(nameof(email));
-        if (string.IsNullOrEmpty(password))
-            throw new NullException(nameof(password));
-        if (string.IsNullOrEmpty(phone))
-            throw new NullException(nameof(phone));
-        if (string.IsNullOrEmpty(username))
-            throw new NullException(nameof(username));
+        ArgumentException.ThrowIfNullOrEmpty(firstName, nameof(firstName));
+        ArgumentException.ThrowIfNullOrEmpty(lastName, nameof(lastName));
+        ArgumentException.ThrowIfNullOrEmpty(email, nameof(email));
+        ArgumentException.ThrowIfNullOrEmpty(password, nameof(password));
+        ArgumentException.ThrowIfNullOrEmpty(phone, nameof(phone));
+        ArgumentException.ThrowIfNullOrEmpty(username, nameof(username));
+
+        if (IsValidEmail(email) == false)
+        {
+            throw new ArgumentException("This email address is not valid.", nameof(email));
+        }
 
         FirstName = firstName;
         LastName = lastName;
@@ -82,6 +64,20 @@ public partial class User: BaseEntity,IAggregateRoot
     {
         CreatedOn= DateTime.UtcNow;
     }
+
+    public bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
 
     public string HashPassword(string password)
     {

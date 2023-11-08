@@ -25,16 +25,15 @@ public partial class Event:BaseEntity
 
     public Event(string eventName, string description, DateTime eventDate, string location, int communityId)
     {
-        if(string.IsNullOrWhiteSpace(eventName))
-            throw new NullException(nameof(eventName));
-        if (string.IsNullOrWhiteSpace(description))
-            throw new NullException(nameof(description));
-        if (string.IsNullOrWhiteSpace(location))
-            throw new NullException(nameof(location));
-        if (eventDate == null)
-            throw new NullException(nameof(eventDate));
-        if (communityId <= 0)//bunun varlığını kontrol et.
-            throw new ForeignKeyException(nameof(communityId));
+        ArgumentException.ThrowIfNullOrEmpty(eventName, nameof(eventName));
+        ArgumentException.ThrowIfNullOrEmpty(description, nameof(description));
+        ArgumentException.ThrowIfNullOrEmpty(location, nameof(location));
+
+        if (communityId <= 0)
+        {
+            throw new ArgumentException("Community ID must be greater than 0.", nameof(communityId));
+        }
+
 
 
         EventName = eventName;

@@ -39,8 +39,7 @@ public partial class Community:BaseEntity,IAggregateRoot
 
     public Community(string name, string? description, string? tags, string? location, int userId, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
-        if (string.IsNullOrEmpty(name))
-            throw new NullException(nameof(name));
+        ArgumentException.ThrowIfNullOrEmpty(name, nameof(name));
 
         Name = name;
         Description = description;
