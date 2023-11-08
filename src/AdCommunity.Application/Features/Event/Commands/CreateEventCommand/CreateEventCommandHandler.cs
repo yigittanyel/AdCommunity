@@ -30,7 +30,7 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
             throw new Exception("Event already exists");
         }
 
-        var _event = new Domain.Entities.Aggregates.Community.Event(request.EventName, request.Description, request.EventDate, request.Location, request.CommunityId);
+        var _event =  Domain.Entities.Aggregates.Community.Event.Create(request.EventName, request.Description, request.EventDate, request.Location, request.CommunityId);
 
         var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
 

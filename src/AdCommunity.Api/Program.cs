@@ -1,9 +1,11 @@
 using AdCommunity.Application;
 using AdCommunity.Core;
 using AdCommunity.Repository;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,8 +1,10 @@
 ﻿using AdCommunity.Application.DTOs.Community;
 using AdCommunity.Application.Services.RabbitMQ;
+using AdCommunity.Application.Validators;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using FluentValidation;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 
@@ -26,7 +28,7 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         if (existingCommunity is not null)
             throw new Exception("Community already exists");
 
-        var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.UserId, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
+        var community= Domain.Entities.Aggregates.Community.Community.Create(request.Name, request.Description, request.Tags, request.Location, request.UserId, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
 

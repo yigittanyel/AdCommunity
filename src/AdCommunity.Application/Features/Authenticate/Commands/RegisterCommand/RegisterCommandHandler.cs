@@ -26,7 +26,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
             throw new Exception("User already exists");
         }
 
-        var user = new Domain.Entities.Aggregates.User.User(
+        var user = Domain.Entities.Aggregates.User.User.Create(
             request.User.FirstName,
             request.User.LastName,
             request.User.Email,

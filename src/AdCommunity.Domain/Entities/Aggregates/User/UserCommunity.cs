@@ -26,4 +26,8 @@ public partial class UserCommunity:BaseEntity
     {
         CreatedOn = DateTime.UtcNow;
     }
+    public static UserCommunity Create(int userId, int communityId, DateTime? joinDate)
+    {
+        return new UserCommunity(userId, communityId, joinDate);
+    }
 }

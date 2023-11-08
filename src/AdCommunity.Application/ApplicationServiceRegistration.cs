@@ -1,6 +1,7 @@
 ﻿using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
+using AdCommunity.Application.Validators;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +15,7 @@ public static class ApplicationServiceRegistration
     public static void AddApplicationRegistration(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         #region FluentValidation
-        var ass = Assembly.GetExecutingAssembly();
-        serviceCollection.AddValidatorsFromAssembly(ass);
+        serviceCollection.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         #endregion
 
         #region Redis

@@ -40,7 +40,7 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
         if (existingUserCommunity is not null)
             throw new Exception("UserCommunity already exists");
 
-        var userCommunity = new AdCommunity.Domain.Entities.Aggregates.User.UserCommunity(request.UserId, request.CommunityId,request.JoinDate); 
+        var userCommunity = AdCommunity.Domain.Entities.Aggregates.User.UserCommunity.Create(request.UserId, request.CommunityId,request.JoinDate); 
 
         var user= await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
         var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
