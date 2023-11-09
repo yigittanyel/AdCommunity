@@ -28,7 +28,7 @@ public class YtMapper : IYtMapper
         {
             PropertyInfo destinationProperty = destinationProperties.FirstOrDefault(p => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
 
-            if (destinationProperty != null)
+            if (destinationProperty is not null)
             {
                 destinationProperty.SetValue(destination, sourceProperty.GetValue(source));
             }

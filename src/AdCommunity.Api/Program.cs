@@ -16,7 +16,6 @@ builder.Services.AddSwaggerGen();
 
 #region Serilog Implementation
 using var log = new LoggerConfiguration()
-    .WriteTo.Console()
     .WriteTo.File("./logs.txt")
     .CreateLogger();
 
