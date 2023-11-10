@@ -13,6 +13,8 @@ public class EventRepository : GenericRepository<Event>, IEventRepository
 
     public async Task<Event> GetByEventNameAsync(string eventName, CancellationToken? cancellationToken)
     {
-        return await _dbContext.Events.FirstOrDefaultAsync(x => x.EventName == eventName, (CancellationToken)(cancellationToken));      
+        return await _dbContext.Events
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(x => x.EventName == eventName, (CancellationToken)(cancellationToken));      
     }
 }

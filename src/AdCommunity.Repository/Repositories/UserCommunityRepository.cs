@@ -15,6 +15,7 @@ public class UserCommunityRepository : GenericRepository<UserCommunity>,IUserCom
     {
         return await _dbContext.UserCommunities
             .Where(x => x.UserId == userId && x.CommunityId == communityId)
+            .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken ?? CancellationToken.None);   
     }
 }

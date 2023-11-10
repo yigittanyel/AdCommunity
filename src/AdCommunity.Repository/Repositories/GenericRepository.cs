@@ -20,7 +20,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
 
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken? cancellationToken)
     {
-        return await _dbContext.Set<T>().ToListAsync((CancellationToken)(cancellationToken));
+        return await _dbContext.Set<T>().AsNoTracking().ToListAsync((CancellationToken)(cancellationToken));
     }
 
     public async Task AddAsync(T entity, CancellationToken? cancellationToken)

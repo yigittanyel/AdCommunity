@@ -13,7 +13,9 @@ public class CommunityRepository : GenericRepository<Community>, ICommunityRepos
 
     public async Task<Community> GetByCommunityNameAsync(string communityName, CancellationToken? cancellationToken)
     {
-        var community= await _dbContext.Communities.FirstOrDefaultAsync(x => x.Name == communityName, (CancellationToken)(cancellationToken));
+        var community= await _dbContext.Communities
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync(x => x.Name == communityName, (CancellationToken)(cancellationToken));
         return community;
     }
 }
