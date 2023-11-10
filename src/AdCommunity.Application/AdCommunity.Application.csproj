@@ -11,6 +11,8 @@
     <Folder Include="Features\Ticket\Queries\" />
     <Folder Include="Features\UserEvent\Commands\" />
     <Folder Include="Features\UserEvent\Queries\" />
+    <Folder Include="Features\UserTicket\Commands\" />
+    <Folder Include="Features\UserTicket\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
