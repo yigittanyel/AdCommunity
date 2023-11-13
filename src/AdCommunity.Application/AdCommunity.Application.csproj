@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Ticket\Commands\" />
-    <Folder Include="Features\Ticket\Queries\" />
+    <Folder Include="Features\Ticket\Commands\CreateTicketCommand\" />
+    <Folder Include="Features\Ticket\Commands\DeleteTicketCommand\" />
+    <Folder Include="Features\Ticket\Commands\UpdateTicketCommand\" />
     <Folder Include="Features\UserEvent\Commands\" />
     <Folder Include="Features\UserEvent\Queries\" />
     <Folder Include="Features\UserTicket\Commands\" />
