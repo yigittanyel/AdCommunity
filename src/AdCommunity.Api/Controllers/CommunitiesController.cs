@@ -60,7 +60,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPut("[action]")]
         public async Task<bool> Update(CommunityUpdateDto community)
         {
-            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id,community.Name, community.Description, community.Tags, community.Location, community.UserId, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
+            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id, community.Name, community.Description, community.Tags, community.Location, community.UserId, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium);
             bool updatedCommunity = await _mediator.Send(command);
 
             return updatedCommunity;

@@ -1,11 +1,10 @@
+using AdCommunity.Api.Middlewares;
 using AdCommunity.Application;
 using AdCommunity.Core;
 using AdCommunity.Repository;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+#region Exception Middleware Implementation
+builder.Services.AddTransient<ExceptionMiddleware>();
+#endregion
 
 #region Serilog Implementation
 using var log = new LoggerConfiguration()
@@ -64,9 +67,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//#region Exception Middleware Implementation
-//app.UseMiddleware<ExceptionMiddleware>();
-//#endregion
+#region Exception Middleware Implementation
+app.UseMiddleware<ExceptionMiddleware>();
+#endregion
 
 app.UseHttpsRedirection();
 

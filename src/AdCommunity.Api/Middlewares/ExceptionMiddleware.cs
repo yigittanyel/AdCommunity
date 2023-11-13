@@ -1,34 +1,33 @@
 ﻿using AdCommunity.Domain.Entities.Base;
-using Serilog;
 using System.Net;
 
 namespace AdCommunity.Api.Middlewares;
 
-public class ExceptionMiddleware
+public class ExceptionMiddleware:IMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly Serilog.ILogger _logger;
 
-    public ExceptionMiddleware(RequestDelegate next)
+    public ExceptionMiddleware(Serilog.ILogger logger)
     {
-        _next = next;
+        _logger = logger;
     }
 
-    public async Task Invoke(HttpContext httpContext)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
         {
-            await _next(httpContext);
+            await next(context);
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "An error occurred: {ErrorMessage}", ex.Message);
+            _logger.Error(ex, "An error occurred: {ErrorMessage}", ex.Message);
 
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            await httpContext.Response.WriteAsync(new ErrorInfo()
+            await context.Response.WriteAsync(new ErrorInfo()
             {
-                StatusCode = httpContext.Response.StatusCode,
+                StatusCode = context.Response.StatusCode,
                 Message = "Internal Server Error from the custom middleware. Check logs for details."
             }.ToString());
         }

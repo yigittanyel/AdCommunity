@@ -23,6 +23,14 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
 
     public async Task<CommunityCreateDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
     {
+        var validator = new CreateCommunityCommandValidator();
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
         var existingCommunity = await _unitOfWork.CommunityRepository.GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)

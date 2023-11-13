@@ -5,7 +5,6 @@ using AdCommunity.Application.Features.User.Commands.UpdateUserCommand;
 using AdCommunity.Application.Features.User.Queries.GetUserQuery;
 using AdCommunity.Application.Features.User.Queries.GetUsersQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Entities.Aggregates.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
