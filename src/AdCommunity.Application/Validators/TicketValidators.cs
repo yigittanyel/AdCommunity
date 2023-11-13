@@ -1,4 +1,6 @@
 ﻿using AdCommunity.Application.DTOs.Ticket;
+using AdCommunity.Application.Features.Ticket.Commands.CreateTicketCommand;
+using AdCommunity.Application.Features.Ticket.Commands.UpdateTicketCommand;
 using FluentValidation;
 
 namespace AdCommunity.Application.Validators;
@@ -24,7 +26,7 @@ public class CreateTicketCommandValidator:AbstractValidator<CreateTicketCommand>
     }
 }
 
-public class UpdateTicketCommandValidator:AbstractValidator<UpdateTicketCommand>
+public class UpdateTicketCommandValidator : AbstractValidator<UpdateTicketCommand>
 {
     public UpdateTicketCommandValidator()
     {
