@@ -1,6 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.UserCommunity;
 using AdCommunity.Application.Features.User.Commands;
-using AdCommunity.Application.Features.UserCommunity.Commands;
+using AdCommunity.Application.Features.UserCommunity.Commands.CreateUserCommunityCommand;
+using AdCommunity.Application.Features.UserCommunity.Commands.UpdateUserCommunityCommand;
 using FluentValidation;
 
 namespace AdCommunity.Application.Validators;

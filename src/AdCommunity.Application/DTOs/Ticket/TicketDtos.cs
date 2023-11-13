@@ -2,9 +2,9 @@
 
 public class TicketBaseDto
 {
-    public int CommunityEventId { get; protected set; }
-    public int CommunityId { get; protected set; }
-    public decimal? Price { get; protected set; }
+    public int CommunityEventId { get; set; }
+    public int CommunityId { get; set; }
+    public decimal? Price { get; set; }
 
     public TicketBaseDto()
     { 

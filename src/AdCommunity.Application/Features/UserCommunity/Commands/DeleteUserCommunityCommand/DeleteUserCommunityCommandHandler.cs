@@ -2,12 +2,7 @@
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
-namespace AdCommunity.Application.Features.UserCommunity.Commands;
-
-public class DeleteUserCommunityCommand:IYtRequest<bool>
-{
-    public int Id { get; set; }
-}
+namespace AdCommunity.Application.Features.UserCommunity.Commands.DeleteUserCommunityCommand;
 
 public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCommunityCommand, bool>
 {

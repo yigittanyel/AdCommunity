@@ -5,12 +5,7 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
-namespace AdCommunity.Application.Features.UserCommunity.Queries;
-
-public class GetUserCommunityQuery:IYtRequest<UserCommunityDto>
-{
-    public int Id { get; set; }
-}
+namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunityQuery;
 
 public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQuery, UserCommunityDto>
 {
@@ -41,9 +36,9 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
                 throw new NotFoundException("userCommunity", request.Id);
             }
 
-            userCommunityDto = _mapper.Map<AdCommunity.Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunity);
+            userCommunityDto = _mapper.Map<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunity);
 
-            await _redisService.AddToCacheAsync(cacheKey, userCommunityDto,TimeSpan.FromMinutes(1));
+            await _redisService.AddToCacheAsync(cacheKey, userCommunityDto, TimeSpan.FromMinutes(1));
         }
 
         return userCommunityDto;

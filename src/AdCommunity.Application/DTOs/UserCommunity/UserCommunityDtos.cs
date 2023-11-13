@@ -25,6 +25,11 @@ public class UserCommunityDto : UserCommunityBaseDto
     {
         Id = id;
     }
+
+    public UserCommunityDto()
+    {
+        
+    }
 }
 
 public class UserCommunityCreateDto : UserCommunityBaseDto

@@ -67,6 +67,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 #region Exception Middleware Implementation
 app.UseMiddleware<ExceptionMiddleware>();
 #endregion

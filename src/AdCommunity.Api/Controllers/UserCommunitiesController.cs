@@ -1,6 +1,9 @@
 ﻿using AdCommunity.Application.DTOs.UserCommunity;
-using AdCommunity.Application.Features.UserCommunity.Commands;
-using AdCommunity.Application.Features.UserCommunity.Queries;
+using AdCommunity.Application.Features.UserCommunity.Commands.CreateUserCommunityCommand;
+using AdCommunity.Application.Features.UserCommunity.Commands.DeleteUserCommunityCommand;
+using AdCommunity.Application.Features.UserCommunity.Commands.UpdateUserCommunityCommand;
+using AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunitiesQuery;
+using AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunityQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
