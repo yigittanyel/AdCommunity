@@ -28,8 +28,8 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
 
         var userCommunity = Domain.Entities.Aggregates.User.UserCommunity.Create(request.UserId, request.CommunityId, request.JoinDate);
 
-        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
-        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
 
         if (user is null)
             throw new Exception("User does not exist");

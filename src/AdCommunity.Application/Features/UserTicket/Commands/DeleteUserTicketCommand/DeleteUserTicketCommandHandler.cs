@@ -18,7 +18,7 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
 
     public async Task<bool> Handle(DeleteUserTicketCommand request, CancellationToken cancellationToken)
     {
-        var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, cancellationToken);
+        var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket == null)
         {

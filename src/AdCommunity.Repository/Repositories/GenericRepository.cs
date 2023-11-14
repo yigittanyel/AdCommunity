@@ -1,6 +1,7 @@
 ﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AdCommunity.Repository.Repositories;
 
@@ -12,16 +13,35 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
     {
         _dbContext = context;
     }
-
-    public async Task<T> GetAsync(int id, CancellationToken? cancellationToken)
+    public async Task<T> GetAsync(int id, Func<IQueryable<T>, IQueryable<T>> includeFunc, CancellationToken? cancellationToken = null)
     {
-        return await _dbContext.Set<T>().FindAsync(id,cancellationToken);
+        var query = _dbContext.Set<T>().AsQueryable();
+
+        if (includeFunc != null)
+        {
+            query = includeFunc(query);
+        }
+
+        return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken ?? CancellationToken.None);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken? cancellationToken)
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IQueryable<T>> includeFunc, CancellationToken? cancellationToken)
     {
-        return await _dbContext.Set<T>().AsNoTracking().ToListAsync((CancellationToken)(cancellationToken));
+        var query = _dbContext.Set<T>().AsQueryable();
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        query = includeFunc(query);
+
+        var result = await query.AsNoTracking()
+                                .ToListAsync(cancellationToken ?? CancellationToken.None);
+
+        return result;
     }
+
 
     public async Task AddAsync(T entity, CancellationToken? cancellationToken)
     {
@@ -37,4 +57,5 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
     {
         _dbContext.Set<T>().Update(entity);
     }
+
 }

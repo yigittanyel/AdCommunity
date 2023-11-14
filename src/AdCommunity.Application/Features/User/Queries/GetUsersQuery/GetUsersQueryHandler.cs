@@ -28,7 +28,7 @@ public class GetUsersQueryHandler : IYtRequestHandler<GetUsersQuery, List<UserDt
 
         if (usersDto == null)
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync(cancellationToken);
+            var users = await _unitOfWork.UserRepository.GetAllAsync(null, null, cancellationToken);
 
             if (users == null || !users.Any())
             {

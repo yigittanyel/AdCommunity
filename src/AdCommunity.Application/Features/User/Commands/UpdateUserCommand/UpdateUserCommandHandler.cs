@@ -20,7 +20,7 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
 
     public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetAsync(request.Id, cancellationToken);
+        var existingUser = await _unitOfWork.UserRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUser == null)
         {

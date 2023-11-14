@@ -20,13 +20,13 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
 
     public async Task<bool> Handle(UpdateUserCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, cancellationToken);
+        var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserCommunity == null)
             throw new Exception("UserCommunity does not exist");
 
-        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
-        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
 
         if (user is null)
             throw new Exception("User does not exist");

@@ -11,12 +11,11 @@ public class CreateEventCommand : IYtRequest<EventCreateDto>
     public string Location { get; set; }
     public int CommunityId { get; set; }
 
-    public CreateEventCommand(string eventName, string description, DateTime eventDate, string location, int communityId)
+    public CreateEventCommand(string eventName, string description, DateTime eventDate, string location)
     {
         EventName = eventName;
         Description = description;
         EventDate = eventDate;
         Location = location;
-        CommunityId = communityId;
     }
 }

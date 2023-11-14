@@ -1,4 +1,6 @@
-﻿namespace AdCommunity.Application.DTOs.Community;
+﻿using AdCommunity.Application.DTOs.User;
+
+namespace AdCommunity.Application.DTOs.Community;
 
 public class CommunityBaseDto
 {
@@ -12,9 +14,9 @@ public class CommunityBaseDto
     public string? Instagram { get; set; }
     public string? Github { get; set; }
     public string? Medium { get; set; }
-    public AdCommunity.Domain.Entities.Aggregates.User.User User { get; set; }
+    public UserCreateDto UserDto { get; set; }
 
-    public CommunityBaseDto(string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, AdCommunity.Domain.Entities.Aggregates.User.User communityUser)
+    public CommunityBaseDto(string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium, UserCreateDto userDto)
     {
         Name = name;
         Description = description;
@@ -26,7 +28,7 @@ public class CommunityBaseDto
         Instagram = instagram;
         Github = github;
         Medium = medium;
-        User = communityUser;
+        UserDto = userDto;
     }
 
     public CommunityBaseDto()

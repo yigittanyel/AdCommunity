@@ -18,7 +18,7 @@ public class DeleteUserCommandHandler : IYtRequestHandler<DeleteUserCommand, boo
 
     public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetAsync(request.Id, cancellationToken);
+        var existingUser = await _unitOfWork.UserRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUser == null)
         {

@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.Community.Queries.GetCommunitiesQuery;
 
@@ -28,7 +29,14 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
 
         if (communitiesDto == null)
         {
-            var communities = await _unitOfWork.CommunityRepository.GetAllWithIncludeAsync(cancellationToken);
+            var communities = await _unitOfWork.CommunityRepository
+                        .GetAllAsync(
+                            null,
+                            query => query.Include(x => x.User.UserCommunities)
+                                           .Include(x => x.User.UserEvents)
+                                           .Include(x => x.User.UserTickets),
+                            cancellationToken);
+            
             if (communities == null || !communities.Any())
             {
                 throw new NotFoundException("Community");

@@ -28,7 +28,7 @@ public class GetUserCommunitiesQueryHandler : IYtRequestHandler<GetUserCommuniti
 
         if (userCommunitiesDto == null)
         {
-            var userCommunities = await _unitOfWork.UserCommunityRepository.GetAllAsync(cancellationToken);
+            var userCommunities = await _unitOfWork.UserCommunityRepository.GetAllAsync(null, null, cancellationToken);
 
             if (userCommunities == null || !userCommunities.Any())
             {

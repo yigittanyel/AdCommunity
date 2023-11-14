@@ -30,18 +30,20 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
             throw new Exception("Event already exists");
         }
 
-        var _event =  Domain.Entities.Aggregates.Community.Event.Create(request.EventName, request.Description, request.EventDate, request.Location, request.CommunityId);
-
-        var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
-
-        if (community is null)
+        var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
+        if (community is null) 
             throw new Exception("Community does not exist");
 
-        await _unitOfWork.EventRepository.AddAsync(_event, cancellationToken);
+        var @event = new Domain.Entities.Aggregates.Community.Event(request.EventName, request.Description, request.EventDate, request.Location);
+        @event.AssignCommunity(community);
+
+        community.AddEvent(@event);
+            
+        await _unitOfWork.EventRepository.AddAsync(@event, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        _rabbitMqFactory.PublishMessage("create_event_queue", $"Event name: {_event.EventName} has been created.");
+        _rabbitMqFactory.PublishMessage("create_event_queue", $"Event name: {@event.EventName} has been created.");
 
-        return _mapper.Map<Domain.Entities.Aggregates.Community.Event, EventCreateDto>(_event);
+        return _mapper.Map<Domain.Entities.Aggregates.Community.Event, EventCreateDto>(@event);
     }
 }

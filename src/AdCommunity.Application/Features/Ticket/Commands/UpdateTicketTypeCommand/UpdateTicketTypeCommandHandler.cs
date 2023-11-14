@@ -21,17 +21,17 @@ public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketType
 
     public async Task<bool> Handle(UpdateTicketTypeCommand request, CancellationToken cancellationToken)
     {
-        var existingTicket = await _unitOfWork.TicketRepository.GetAsync(request.Id, cancellationToken);
+        var existingTicket = await _unitOfWork.TicketRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingTicket == null)
             throw new Exception("Ticket does not exist");
 
-        var communityEvent = await _unitOfWork.EventRepository.GetAsync(request.CommunityEventId, cancellationToken);
+        var communityEvent = await _unitOfWork.EventRepository.GetAsync(request.CommunityEventId, null, cancellationToken);
 
         if (communityEvent is null)
             throw new Exception("Event does not exist");
 
-        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null,cancellationToken);
 
         if (community is null)
             throw new Exception("Community does not exist");

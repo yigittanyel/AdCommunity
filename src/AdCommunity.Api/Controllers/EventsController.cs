@@ -41,7 +41,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPost("[action]")]
         public async Task<EventCreateDto> Create(EventCreateDto _event)
         {
-            CreateEventCommand command = new CreateEventCommand(_event.EventName,_event.Description,_event.EventDate,_event.Location,_event.CommunityId);
+            CreateEventCommand command = new CreateEventCommand(_event.EventName,_event.Description,_event.EventDate,_event.Location);
             EventCreateDto createdEvent = await _mediator.Send(command);
 
             return createdEvent;
@@ -50,7 +50,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPut("[action]")]
         public async Task<bool> Update(EventUpdateDto _event)
         {
-            UpdateEventCommand command = new UpdateEventCommand(_event.Id,_event.EventName, _event.Description, _event.EventDate, _event.Location, _event.CommunityId);
+            UpdateEventCommand command = new UpdateEventCommand(_event.Id,_event.EventName, _event.Description, _event.EventDate, _event.Location);
             bool updatedEvent = await _mediator.Send(command);
 
             return updatedEvent;

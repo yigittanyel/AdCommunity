@@ -1,6 +1,4 @@
-﻿using AdCommunity.Application.DTOs.Community;
-
-namespace AdCommunity.Application.DTOs.Event;
+﻿namespace AdCommunity.Application.DTOs.Event;
 
 public class EventBaseDto
 {

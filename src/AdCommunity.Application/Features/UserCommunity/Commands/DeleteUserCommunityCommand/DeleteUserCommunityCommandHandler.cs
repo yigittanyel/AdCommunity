@@ -18,7 +18,7 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
 
     public async Task<bool> Handle(DeleteUserCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, cancellationToken);
+        var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserCommunity == null)
         {

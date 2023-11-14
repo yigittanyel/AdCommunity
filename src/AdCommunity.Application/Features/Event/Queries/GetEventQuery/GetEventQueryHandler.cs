@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.Event.Queries.GetEventQuery;
 
@@ -26,16 +27,16 @@ public class GetEventQueryHandler : IYtRequestHandler<GetEventQuery, EventDto>
 
         var eventDto = await _redisService.GetFromCacheAsync<EventDto>(cacheKey);
 
-        if (eventDto == null)
+        if (eventDto is null)
         {
-            var _event = await _unitOfWork.EventRepository.GetAsync(request.Id, cancellationToken);
+            var @event = await _unitOfWork.EventRepository.GetAsync(request.Id, query=>query.Include(x=>x.Community), cancellationToken);
 
-            if (_event == null)
+            if (@event is null)
             {
                 throw new NotFoundException("event", request.Id);
             }
 
-            eventDto = _mapper.Map<Domain.Entities.Aggregates.Community.Event, EventDto>(_event);
+            eventDto = _mapper.Map<Domain.Entities.Aggregates.Community.Event, EventDto>(@event);
 
             await _redisService.AddToCacheAsync(cacheKey, eventDto, TimeSpan.FromMinutes(1));
         }

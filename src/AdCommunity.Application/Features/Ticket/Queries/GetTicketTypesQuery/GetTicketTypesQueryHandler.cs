@@ -28,7 +28,7 @@ public class GetTicketTypesQueryHandler : IYtRequestHandler<GetTicketTypesQuery,
 
         if (ticketsDto == null)
         {
-            var tickets = await _unitOfWork.TicketRepository.GetAllAsync(cancellationToken);
+            var tickets = await _unitOfWork.TicketRepository.GetAllAsync(null,null, cancellationToken);
 
             if (tickets == null || !tickets.Any())
             {

@@ -11,13 +11,12 @@ public class UpdateEventCommand : IYtRequest<bool>
     public string Location { get; set; }
     public int CommunityId { get; set; }
 
-    public UpdateEventCommand(int id, string eventName, string description, DateTime eventDate, string location, int communityId)
+    public UpdateEventCommand(int id, string eventName, string description, DateTime eventDate, string location)
     {
         Id = id;
         EventName = eventName;
         Description = description;
         EventDate = eventDate;
         Location = location;
-        CommunityId = communityId;
     }
 }

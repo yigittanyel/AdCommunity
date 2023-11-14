@@ -13,23 +13,25 @@ public partial class Event:BaseEntity
     public virtual Community Community { get; protected set; } = null!;
     public virtual ICollection<TicketType> Tickets { get; protected set; } = new List<TicketType>();
     public virtual ICollection<UserEvent> UserEvents { get; protected set; } = new List<UserEvent>();
-    public Event(string eventName, string description, DateTime eventDate, string location, int communityId)
+    public Event(string eventName, string description, DateTime eventDate, string location)
     {
         ArgumentException.ThrowIfNullOrEmpty(eventName, nameof(eventName));
         ArgumentException.ThrowIfNullOrEmpty(description, nameof(description));
         ArgumentException.ThrowIfNullOrEmpty(location, nameof(location));
 
-        if (communityId <= 0)
-        {
-            throw new ArgumentException("Community ID must be greater than 0.", nameof(communityId));
-        }
-
         EventName = eventName;
         Description = description;
         EventDate = eventDate;
         Location = location;
-        CommunityId = communityId;
         CreatedOn = DateTime.UtcNow;
+    }
+
+    public void AssignCommunity(Community community)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(nameof(community));
+
+        Community = community;
+        CommunityId = community.Id;
     }
 
     public void CreateTicket(TicketType ticket) // or addticket
@@ -43,8 +45,4 @@ public partial class Event:BaseEntity
         CreatedOn = DateTime.UtcNow;
     }
 
-    public static Event Create(string eventName, string description, DateTime eventDate, string location, int communityId)
-    {
-        return new Event(eventName, description, eventDate, location, communityId);
-    }
 }

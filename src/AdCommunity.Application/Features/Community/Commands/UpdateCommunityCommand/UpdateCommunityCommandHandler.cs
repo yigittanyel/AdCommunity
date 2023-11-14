@@ -20,7 +20,7 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
 
     public async Task<bool> Handle(UpdateCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, cancellationToken);
+        var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingCommunity == null)
             throw new Exception("Community does not exist");

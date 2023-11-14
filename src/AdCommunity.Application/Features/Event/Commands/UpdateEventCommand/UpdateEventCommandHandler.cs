@@ -19,12 +19,12 @@ public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, b
     }
     public async Task<bool> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
     {
-        var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, cancellationToken);
+        var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingEvent == null)
             throw new Exception("Event does not exist");
 
-        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, cancellationToken);
+        var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
 
         if (community is null)
             throw new Exception("Community does not exist");

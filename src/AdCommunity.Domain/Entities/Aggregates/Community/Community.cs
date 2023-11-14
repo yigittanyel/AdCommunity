@@ -1,6 +1,5 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
 using AdCommunity.Domain.Entities.Base;
-using System.Text.Json.Serialization;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 
@@ -40,16 +39,19 @@ public partial class Community:BaseEntity,IAggregateRoot
     }
     public void AssignUser(AdCommunity.Domain.Entities.Aggregates.User.User user)
     {
-        if (user == null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(nameof(user));
 
-        UserId = user.Id;
         User = user;
+        UserId = user.Id;
     }
     public void SetDate()
     {
         CreatedOn = DateTime.UtcNow;
     }
+
+    public void AddEvent(Event @event)
+    {
+        Events.Add(@event);
+    }
+    
 }

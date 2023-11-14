@@ -28,7 +28,7 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
 
         if (userTicketDto == null)
         {
-            var userTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, cancellationToken);
+            var userTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
 
             if (userTicket == null)
             {

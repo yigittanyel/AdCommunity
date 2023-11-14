@@ -15,7 +15,7 @@ public class DeleteEventCommandHandler : IYtRequestHandler<DeleteEventCommand, b
     }
     public async Task<bool> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
-        var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, cancellationToken);
+        var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingEvent == null)
         {
