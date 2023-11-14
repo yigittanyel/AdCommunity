@@ -6,20 +6,20 @@ using AdCommunity.Domain.Repository;
 
 namespace AdCommunity.Application.Features.Ticket.Commands.UpdateTicketCommand;
 
-public class UpdateTicketCommandHandler : IYtRequestHandler<UpdateTicketCommand, bool>
+public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketTypeCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
 
-    public UpdateTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
+    public UpdateTicketTypeCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
     }
 
-    public async Task<bool> Handle(UpdateTicketCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(UpdateTicketTypeCommand request, CancellationToken cancellationToken)
     {
         var existingTicket = await _unitOfWork.TicketRepository.GetAsync(request.Id, cancellationToken);
 

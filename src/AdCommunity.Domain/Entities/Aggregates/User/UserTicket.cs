@@ -9,7 +9,7 @@ public partial class UserTicket:BaseEntity
     public int UserId { get; protected set; }
     public int TicketId { get; protected set; }
     public string? Pnr { get; protected set; }
-    public virtual Ticket Ticket { get; protected set; } = null!;
+    public virtual TicketType Ticket { get; protected set; } = null!;
     public virtual User User { get; protected set; } = null!;
     public UserTicket(int userId, int ticketId, string? pnr)
     {

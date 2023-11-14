@@ -59,6 +59,17 @@ builder.Services.AddAuthentication(x =>
 });
 #endregion
 
+builder.Services.AddControllers().AddNewtonsoftJson(opt => {
+    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -66,7 +77,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

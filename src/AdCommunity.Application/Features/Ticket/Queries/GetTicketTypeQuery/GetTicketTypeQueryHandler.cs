@@ -1,4 +1,4 @@
-﻿using AdCommunity.Application.DTOs.Ticket;
+﻿using AdCommunity.Application.DTOs.TicketTypes;
 using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
@@ -7,23 +7,23 @@ using AdCommunity.Domain.Repository;
 
 namespace AdCommunity.Application.Features.Ticket.Queries.GetTicketsQuery;
 
-public class GetTicketQueryHandler : IYtRequestHandler<GetTicketQuery, TicketDto>
+public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, TicketTypesDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
 
-    public GetTicketQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
+    public GetTicketTypeQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
     }
-    public async Task<TicketDto> Handle(GetTicketQuery request, CancellationToken cancellationToken)
+    public async Task<TicketTypesDto> Handle(GetTicketTypeQuery request, CancellationToken cancellationToken)
     {
         var cacheKey = $"ticket:{request.Id}";
 
-        var ticketDto = await _redisService.GetFromCacheAsync<TicketDto>(cacheKey);
+        var ticketDto = await _redisService.GetFromCacheAsync<TicketTypesDto>(cacheKey);
 
         if (ticketDto == null)
         {
@@ -34,7 +34,7 @@ public class GetTicketQueryHandler : IYtRequestHandler<GetTicketQuery, TicketDto
                 throw new NotFoundException("community", request.Id);
             }
 
-            ticketDto = _mapper.Map<Domain.Entities.Aggregates.Community.Ticket, TicketDto>(ticket);
+            ticketDto = _mapper.Map<Domain.Entities.Aggregates.Community.TicketType, TicketTypesDto>(ticket);
 
             await _redisService.AddToCacheAsync(cacheKey, ticketDto, TimeSpan.FromMinutes(1));
         }

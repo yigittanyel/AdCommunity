@@ -11,7 +11,7 @@ public partial class Event:BaseEntity
     public string Location { get; protected set; } = null!;
     public int CommunityId { get; protected set; }
     public virtual Community Community { get; protected set; } = null!;
-    public virtual ICollection<Ticket> Tickets { get; protected set; } = new List<Ticket>();
+    public virtual ICollection<TicketType> Tickets { get; protected set; } = new List<TicketType>();
     public virtual ICollection<UserEvent> UserEvents { get; protected set; } = new List<UserEvent>();
     public Event(string eventName, string description, DateTime eventDate, string location, int communityId)
     {
@@ -32,7 +32,7 @@ public partial class Event:BaseEntity
         CreatedOn = DateTime.UtcNow;
     }
 
-    public void CreateTicket(Ticket ticket) // or addticket
+    public void CreateTicket(TicketType ticket) // or addticket
     {
         //check if ticket is null
         Tickets.Add(ticket);

@@ -19,7 +19,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<Ticket> Tickets { get; set; }
+    public virtual DbSet<TicketType> Tickets { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -72,7 +72,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_CommunityEvent_Community");
         });
 
-        modelBuilder.Entity<Ticket>(entity =>
+        modelBuilder.Entity<TicketType>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("Tickets_pkey");
 

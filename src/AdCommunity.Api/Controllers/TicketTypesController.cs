@@ -1,4 +1,4 @@
-﻿using AdCommunity.Application.DTOs.Ticket;
+﻿using AdCommunity.Application.DTOs.TicketTypes;
 using AdCommunity.Application.Features.Ticket.Commands.CreateTicketCommand;
 using AdCommunity.Application.Features.Ticket.Commands.DeleteTicketCommand;
 using AdCommunity.Application.Features.Ticket.Commands.UpdateTicketCommand;
@@ -11,39 +11,39 @@ namespace AdCommunity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TicketsController : ControllerBase
+    public class TicketTypesController : ControllerBase
     {
         private readonly IYtMediator _mediator;
 
-        public TicketsController(IYtMediator mediator)
+        public TicketTypesController(IYtMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet("[action]/{ticketId}")]
-        public async Task<TicketDto> Get(int ticketId)
+        public async Task<TicketTypesDto> Get(int ticketId)
         {
-            GetTicketQuery query = new GetTicketQuery { Id = ticketId };
-            TicketDto ticket = await _mediator.Send(query);
+            GetTicketTypeQuery query = new GetTicketTypeQuery { Id = ticketId };
+            TicketTypesDto ticket = await _mediator.Send(query);
 
             return ticket;
         }
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<TicketDto>> GetAll()
+        public async Task<IEnumerable<TicketTypesDto>> GetAll()
         {
-            GetTicketsQuery query = new GetTicketsQuery();
-            IEnumerable<TicketDto> tickets = await _mediator.Send(query);
+            GetTicketTypesQuery query = new GetTicketTypesQuery();
+            IEnumerable<TicketTypesDto> ticketTypes = await _mediator.Send(query);
 
-            return tickets;
+            return ticketTypes;
         }
 
         [HttpPost("[action]")]
-        public async Task<TicketCreateDto> Create(TicketCreateDto ticket)
+        public async Task<TicketTypesCreateDto> Create(TicketTypesCreateDto ticket)
         {
-            CreateTicketCommand command = new CreateTicketCommand(ticket.CommunityEventId,ticket.CommunityId,ticket.Price);
+            CreateTicketTypesCommand command = new CreateTicketTypesCommand(ticket.CommunityEventId,ticket.CommunityId,ticket.Price);
 
-            TicketCreateDto createdTicket = await _mediator.Send(command);
+            TicketTypesCreateDto createdTicket = await _mediator.Send(command);
 
             return createdTicket;
         }
@@ -59,9 +59,9 @@ namespace AdCommunity.Api.Controllers
 
 
         [HttpPut("[action]")]
-        public async Task<bool> Update(TicketUpdateDto ticket)
+        public async Task<bool> Update(TicketTypesUpdateDto ticket)
         {
-            UpdateTicketCommand command = new UpdateTicketCommand(ticket.Id,ticket.CommunityEventId,ticket.CommunityId,ticket.Price);
+            UpdateTicketTypeCommand command = new UpdateTicketTypeCommand(ticket.Id,ticket.CommunityEventId,ticket.CommunityId,ticket.Price);
             bool updatedTicket = await _mediator.Send(command);
 
             return updatedTicket;

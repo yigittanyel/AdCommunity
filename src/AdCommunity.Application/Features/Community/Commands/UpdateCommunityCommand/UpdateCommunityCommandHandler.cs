@@ -25,11 +25,6 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
         if (existingCommunity == null)
             throw new Exception("Community does not exist");
 
-        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, cancellationToken);
-
-        if (user is null)
-            throw new Exception("User does not exist");
-
         existingCommunity.SetDate();
 
         _mapper.Map(request, existingCommunity);

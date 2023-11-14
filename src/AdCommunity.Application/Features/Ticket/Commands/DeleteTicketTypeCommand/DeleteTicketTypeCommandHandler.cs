@@ -4,13 +4,13 @@ using AdCommunity.Domain.Repository;
 
 namespace AdCommunity.Application.Features.Ticket.Commands.DeleteTicketCommand;
 
-public class DeleteTicketCommandHandler : IYtRequestHandler<DeleteTicketCommand, bool>
+public class DeleteTicketTypeCommandHandler : IYtRequestHandler<DeleteTicketCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
 
 
-    public DeleteTicketCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
+    public DeleteTicketTypeCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;

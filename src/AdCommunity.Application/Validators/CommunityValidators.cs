@@ -10,7 +10,6 @@ public class CommunityDtoValidator : AbstractValidator<CommunityDto>
     public CommunityDtoValidator()
     {
         RuleFor(dto => dto.Id).NotEmpty().GreaterThan(0);
-        RuleFor(dto => dto.UserId).NotEmpty().GreaterThan(0);
         RuleFor(dto => dto.Name).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Description).MaximumLength(500);
         RuleFor(dto => dto.Location).MinimumLength(2).MaximumLength(100);
@@ -44,7 +43,6 @@ public class UpdateCommunityCommandValidator : AbstractValidator<UpdateCommunity
     public UpdateCommunityCommandValidator()
     {
         RuleFor(dto => dto.Id).NotEmpty().GreaterThan(0);
-        RuleFor(dto => dto.UserId).NotEmpty().GreaterThan(0);
         RuleFor(dto => dto.Name).NotEmpty().MaximumLength(50);
         RuleFor(dto => dto.Description).MaximumLength(500);
         RuleFor(dto => dto.Location).MinimumLength(2).MaximumLength(100);

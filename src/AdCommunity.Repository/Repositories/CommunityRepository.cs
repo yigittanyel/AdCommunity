@@ -11,6 +11,16 @@ public class CommunityRepository : GenericRepository<Community>, ICommunityRepos
     {
     }
 
+    public async Task<IEnumerable<Community>> GetAllWithIncludeAsync(CancellationToken? cancellationToken)
+    {
+        var communities = await _dbContext.Communities
+                                            .Include(x => x.User)
+                                            .AsNoTracking()
+                                            .ToListAsync((CancellationToken)cancellationToken);
+        return communities;
+        
+    }
+
     public async Task<Community> GetByCommunityNameAsync(string communityName, CancellationToken? cancellationToken)
     {
         var community= await _dbContext.Communities

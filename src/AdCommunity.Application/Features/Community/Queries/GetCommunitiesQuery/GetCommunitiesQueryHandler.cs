@@ -28,8 +28,7 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
 
         if (communitiesDto == null)
         {
-            var communities = await _unitOfWork.CommunityRepository.GetAllAsync(cancellationToken);
-
+            var communities = await _unitOfWork.CommunityRepository.GetAllWithIncludeAsync(cancellationToken);
             if (communities == null || !communities.Any())
             {
                 throw new NotFoundException("Community");
