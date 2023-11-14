@@ -14,8 +14,7 @@ public class TicketRepository : GenericRepository<Ticket>, ITicketRepository
     public async Task<Ticket> GetTicketByEventAndCommunityIdsAsync(int eventId, int communityId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Tickets
-            .Include(t => t.CommunityEvent)
-            .Include(t => t.Community)
+            .AsNoTracking()
             .FirstOrDefaultAsync(t => t.CommunityEventId == eventId && t.CommunityId == communityId, cancellationToken);      
     }
 }

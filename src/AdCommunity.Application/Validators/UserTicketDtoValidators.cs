@@ -1,4 +1,6 @@
 ﻿using AdCommunity.Application.DTOs.UserTicket;
+using AdCommunity.Application.Features.UserTicket.Commands.CreateUserTicketCommand;
+using AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketCommand;
 using FluentValidation;
 
 namespace AdCommunity.Application.Validators;

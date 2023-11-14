@@ -3,7 +3,6 @@ using AdCommunity.Domain.Entities.Base;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 
-
 public partial class Event:BaseEntity
 {
     public string EventName { get; protected set; } = null!;
@@ -31,6 +30,12 @@ public partial class Event:BaseEntity
         Location = location;
         CommunityId = communityId;
         CreatedOn = DateTime.UtcNow;
+    }
+
+    public void CreateTicket(Ticket ticket) // or addticket
+    {
+        //check if ticket is null
+        Tickets.Add(ticket);
     }
 
     public void SetDate()

@@ -21,7 +21,7 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
     {
         var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
 
-        if (existingUser == null || !existingUser.Any())
+        if (existingUser == null)
         {
             throw new Exception("Invalid username or password");
         }

@@ -23,7 +23,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
     {
         var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.Username, request.Password);
 
-        if (existingUser.Any())
+        if (existingUser is not null)
         {
             throw new Exception("User already exists");
         }
