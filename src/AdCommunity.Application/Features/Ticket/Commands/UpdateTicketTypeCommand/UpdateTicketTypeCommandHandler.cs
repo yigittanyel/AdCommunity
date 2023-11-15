@@ -31,10 +31,14 @@ public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketType
         if (communityEvent is null)
             throw new Exception("Event does not exist");
 
+        existingTicket.AssignEvent(communityEvent);
+
         var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null,cancellationToken);
 
         if (community is null)
             throw new Exception("Community does not exist");
+
+        existingTicket.AssignCommunity(community);
 
         existingTicket.SetDate();
 

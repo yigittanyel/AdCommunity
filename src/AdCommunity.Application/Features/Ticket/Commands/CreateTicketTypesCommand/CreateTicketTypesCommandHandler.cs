@@ -25,18 +25,24 @@ public class CreateTicketTypesCommandHandler : IYtRequestHandler<CreateTicketTyp
         if (existingTicket is not null)
             throw new Exception("Ticket already exists");
 
-        var ticket = Domain.Entities.Aggregates.Community.TicketType.Create(request.CommunityEventId, request.CommunityId, request.Price);
+        var ticket = new Domain.Entities.Aggregates.Community.TicketType(request.Price);
 
         var communityEvent = await _unitOfWork.EventRepository.GetAsync(request.CommunityEventId,null, cancellationToken);
 
         if (communityEvent is null)
             throw new Exception("Event does not exist");
 
+        ticket.AssignEvent(communityEvent);
+
         var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId,null, cancellationToken);
 
         if (community is null)
             throw new Exception("Community does not exist");
 
+        ticket.AssignCommunity(community);
+
+        community.AddTicket(ticket);
+        
         await _unitOfWork.TicketRepository.AddAsync(ticket, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

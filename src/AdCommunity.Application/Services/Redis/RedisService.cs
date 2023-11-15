@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using StackExchange.Redis;
-using System.Text.Json.Serialization;
+﻿using StackExchange.Redis;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AdCommunity.Application.Services.Redis;
 
@@ -27,19 +26,28 @@ public class RedisService : IRedisService
         };
 
         var serializedData = System.Text.Json.JsonSerializer.Serialize(data, options);
-        await GetDb(0).StringSetAsync(cacheKey, serializedData, TimeSpan.FromMinutes(1));
+
+        var db = GetDb(0);
+        await db.StringSetAsync(cacheKey, serializedData);
+
+        if (expireTime.HasValue)
+        {
+            await db.KeyExpireAsync(cacheKey, expireTime);
+        }
     }
-
-
     public async Task<T> GetFromCacheAsync<T>(string cacheKey)
     {
         var cachedData = await GetDb(0).StringGetAsync(cacheKey);
         if (!cachedData.IsNullOrEmpty)
         {
-            return JsonConvert.DeserializeObject<T>(cachedData);
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
+            return System.Text.Json.JsonSerializer.Deserialize<T>(cachedData, options);
         }
 
         return default;
     }
-
 }

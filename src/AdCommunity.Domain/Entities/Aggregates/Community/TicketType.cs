@@ -12,17 +12,11 @@ public partial class TicketType:BaseEntity
     public virtual Community Community { get; protected set; } = null!;
     public virtual Event CommunityEvent { get; protected set; } = null!;
     public virtual ICollection<UserTicket> UserTickets { get; protected set; } = new List<UserTicket>();
-    public TicketType(int communityEventId, int communityId, decimal? price)
+    public TicketType(decimal? price)
     {
-        if (communityEventId <= 0)
-            throw new ForeignKeyException(nameof(communityEventId));
-        if (communityId <= 0)
-            throw new ForeignKeyException(nameof(communityId));
         if(price < 0)
             throw new ArgumentException("Price cannot be less than zero.", nameof(price));
 
-        CommunityEventId = communityEventId;
-        CommunityId = communityId;
         Price = price;
         CreatedOn = DateTime.UtcNow;
     }
@@ -31,8 +25,21 @@ public partial class TicketType:BaseEntity
         CreatedOn = DateTime.UtcNow;
     }
 
-    public static TicketType Create(int communityEventId, int communityId, decimal? price)
+    public void AssignCommunity(Community community)
     {
-        return new TicketType(communityEventId, communityId, price);
+        ArgumentException.ThrowIfNullOrEmpty(nameof(community));
+
+        Community = community;
+        CommunityId = community.Id;
     }
+
+    public void AssignEvent(Event @event)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(nameof(@event));
+
+        CommunityEvent = @event;
+        CommunityEventId = @event.Id;
+    }
+
+
 }

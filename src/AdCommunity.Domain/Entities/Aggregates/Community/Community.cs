@@ -53,6 +53,25 @@ public partial class Community : BaseEntity, IAggregateRoot
         if (!Events.Contains(@event))
             Events.Add(@event);
     }
+
+    public void AddTicket(TicketType ticket)
+    {
+        if (ticket is null)
+            throw new ArgumentNullException(nameof(ticket));
+
+        if (!Tickets.Contains(ticket))
+            Tickets.Add(ticket);
+    }
+
+    public void AddUserCommunity(UserCommunity userCommunity)
+    {
+        if (userCommunity is null)
+            throw new ArgumentNullException(nameof(userCommunity));
+
+        if (!UserCommunities.Contains(userCommunity))
+            UserCommunities.Add(userCommunity);
+    }
+
     public void SetDate()
     {
         CreatedOn = DateTime.UtcNow;

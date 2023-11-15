@@ -27,6 +27,9 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
 
         existingCommunity.SetDate();
 
+        var user= await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        existingCommunity.AssignUser(user);
+
         _mapper.Map(request, existingCommunity);
 
         _unitOfWork.CommunityRepository.Update(existingCommunity);

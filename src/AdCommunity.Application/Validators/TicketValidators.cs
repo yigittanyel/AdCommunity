@@ -10,8 +10,6 @@ public class TicketDtoValidator:AbstractValidator<TicketTypesDto>
     public TicketDtoValidator()
     {
         RuleFor(dto => dto.Id).NotEmpty().GreaterThan(0);
-        RuleFor(dto => dto.CommunityEventId).NotEmpty().GreaterThan(0);
-        RuleFor(dto => dto.CommunityId).NotEmpty().GreaterThan(0);
         RuleFor(dto => dto.Price).NotEmpty().GreaterThan(0);
     }
 }

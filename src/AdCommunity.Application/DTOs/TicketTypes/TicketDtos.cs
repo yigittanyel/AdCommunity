@@ -2,8 +2,6 @@
 
 public class TicketTypesBaseDto
 {
-    public int CommunityEventId { get; set; }
-    public int CommunityId { get; set; }
     public decimal? Price { get; set; }
 
     public TicketTypesBaseDto()
@@ -14,6 +12,8 @@ public class TicketTypesBaseDto
 public class TicketTypesDto : TicketTypesBaseDto
 {
     public int Id { get; set; }
+    public Domain.Entities.Aggregates.Community.Community Community { get; set; }
+    public Domain.Entities.Aggregates.Community.Event Event { get; set; }
 
     public TicketTypesDto()
     {
@@ -22,6 +22,8 @@ public class TicketTypesDto : TicketTypesBaseDto
 
 public class TicketTypesCreateDto : TicketTypesBaseDto
 {
+    public int CommunityEventId { get; set; }
+    public int CommunityId { get; set; }
     public TicketTypesCreateDto()
     {
     }
@@ -30,7 +32,8 @@ public class TicketTypesCreateDto : TicketTypesBaseDto
 public class TicketTypesUpdateDto : TicketTypesBaseDto
 {
     public int Id { get; set; }
-
+    public int CommunityEventId { get; set; }
+    public int CommunityId { get; set; }
     public TicketTypesUpdateDto()
     {
 
