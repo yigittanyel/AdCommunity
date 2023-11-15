@@ -1,4 +1,4 @@
-﻿namespace AdCommunity.Domain.Entities.Base;
+﻿namespace AdCommunity.Domain.Entities.SharedKernel;
 
 public class Tokens
 {

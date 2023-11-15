@@ -36,8 +36,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
 
         query = includeFunc(query);
 
-        var result = await query.AsNoTracking()
-                                .ToListAsync(cancellationToken ?? CancellationToken.None);
+        var result = await query.ToListAsync(cancellationToken ?? CancellationToken.None);
 
         return result;
     }

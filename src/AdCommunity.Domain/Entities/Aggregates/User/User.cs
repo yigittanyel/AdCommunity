@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Entities.Base;
+﻿using AdCommunity.Domain.Entities.SharedKernel;
 using System.Security.Cryptography;
 using System.Text;
 

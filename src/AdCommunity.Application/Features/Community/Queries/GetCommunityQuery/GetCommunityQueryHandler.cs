@@ -1,9 +1,11 @@
 ﻿using AdCommunity.Application.DTOs.Community;
+using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.Community.Queries.GetCommunityQuery;
 
@@ -28,7 +30,10 @@ public class GetCommunityQueryHandler : IYtRequestHandler<GetCommunityQuery, Com
 
         if (communityDto == null)
         {
-            var community = await _unitOfWork.CommunityRepository.GetAsync(request.Id, null, cancellationToken);
+            var community = await _unitOfWork.CommunityRepository
+                .GetAsync(request.Id, 
+                    query=>query.Include(x=>x.User),
+                    cancellationToken);
 
             if (community == null)
             {

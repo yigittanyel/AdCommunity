@@ -1,9 +1,9 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
-using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Entities.SharedKernel;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 
-public partial class Community:BaseEntity,IAggregateRoot
+public partial class Community : BaseEntity, IAggregateRoot
 {
     public string Name { get; protected set; } = null!;
     public string? Description { get; protected set; }
@@ -44,14 +44,26 @@ public partial class Community:BaseEntity,IAggregateRoot
         User = user;
         UserId = user.Id;
     }
+
+    public void AddEvent(Event @event)
+    {
+        if (@event is null)
+            throw new ArgumentNullException(nameof(@event));
+
+        if (!Events.Contains(@event))
+            Events.Add(@event);
+    }
+
+    public void RemoveEvent(Event @event)
+    {
+        if (@event is null)
+            throw new ArgumentNullException(nameof(@event));
+
+        if (Events.Contains(@event))
+            Events.Remove(@event);
+    }
     public void SetDate()
     {
         CreatedOn = DateTime.UtcNow;
     }
-
-    public void AddEvent(Event @event)
-    {
-        Events.Add(@event);
-    }
-    
 }

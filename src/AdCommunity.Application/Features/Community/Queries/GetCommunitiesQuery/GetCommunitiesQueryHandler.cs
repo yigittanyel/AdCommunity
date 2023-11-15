@@ -30,12 +30,7 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
         if (communitiesDto == null)
         {
             var communities = await _unitOfWork.CommunityRepository
-                        .GetAllAsync(
-                            null,
-                            query => query.Include(x => x.User.UserCommunities)
-                                           .Include(x => x.User.UserEvents)
-                                           .Include(x => x.User.UserTickets),
-                            cancellationToken);
+                                .GetAllAsync(null,query => query.Include(x => x.User), cancellationToken);
             
             if (communities == null || !communities.Any())
             {

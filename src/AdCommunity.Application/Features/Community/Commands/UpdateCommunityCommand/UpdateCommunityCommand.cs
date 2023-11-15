@@ -17,7 +17,7 @@ public class UpdateCommunityCommand : IYtRequest<bool>
     public string? Medium { get; set; }
     public int UserId { get; set; }
 
-    public UpdateCommunityCommand(int id, string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
+    public UpdateCommunityCommand(int id, string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium,int userId)
     {
         Id = id;
         Name = name;
@@ -30,5 +30,6 @@ public class UpdateCommunityCommand : IYtRequest<bool>
         Instagram = instagram;
         Github = github;
         Medium = medium;
+        UserId = userId;
     }
 }

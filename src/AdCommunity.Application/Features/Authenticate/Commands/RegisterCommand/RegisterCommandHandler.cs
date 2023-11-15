@@ -1,7 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand;

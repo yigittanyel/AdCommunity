@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using StackExchange.Redis;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace AdCommunity.Application.Services.Redis;
 
@@ -19,9 +21,15 @@ public class RedisService : IRedisService
 
     public async Task AddToCacheAsync<T>(string cacheKey, T data, TimeSpan? expireTime)
     {
-        var serializedData = JsonConvert.SerializeObject(data);
+        var options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+
+        var serializedData = System.Text.Json.JsonSerializer.Serialize(data, options);
         await GetDb(0).StringSetAsync(cacheKey, serializedData, TimeSpan.FromMinutes(1));
     }
+
 
     public async Task<T> GetFromCacheAsync<T>(string cacheKey)
     {

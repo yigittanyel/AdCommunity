@@ -1,5 +1,5 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
-using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Entities.SharedKernel;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 

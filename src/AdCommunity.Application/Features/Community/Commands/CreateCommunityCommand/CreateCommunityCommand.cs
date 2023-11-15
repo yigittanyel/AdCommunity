@@ -1,5 +1,7 @@
 ﻿using AdCommunity.Application.DTOs.Community;
+using AdCommunity.Application.DTOs.User;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using AdCommunity.Domain.Entities.Aggregates.User;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 
@@ -16,7 +18,7 @@ public class CreateCommunityCommand : IYtRequest<CommunityCreateDto>
     public string? Github { get; set; }
     public string? Medium { get; set; }
     public int UserId { get; set; }
-    public CreateCommunityCommand(string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
+    public CreateCommunityCommand(string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium,int userId)
     {
         Name = name;
         Description = description;
@@ -28,5 +30,6 @@ public class CreateCommunityCommand : IYtRequest<CommunityCreateDto>
         Instagram = instagram;
         Github = github;
         Medium = medium;
+        UserId = userId;
     }
 }

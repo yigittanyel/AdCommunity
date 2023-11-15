@@ -1,6 +1,6 @@
 ﻿using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Entities.Base;
+using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
 using Microsoft.Extensions.Configuration;
 
