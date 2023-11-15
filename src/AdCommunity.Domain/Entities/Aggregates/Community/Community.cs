@@ -53,15 +53,6 @@ public partial class Community : BaseEntity, IAggregateRoot
         if (!Events.Contains(@event))
             Events.Add(@event);
     }
-
-    public void RemoveEvent(Event @event)
-    {
-        if (@event is null)
-            throw new ArgumentNullException(nameof(@event));
-
-        if (Events.Contains(@event))
-            Events.Remove(@event);
-    }
     public void SetDate()
     {
         CreatedOn = DateTime.UtcNow;

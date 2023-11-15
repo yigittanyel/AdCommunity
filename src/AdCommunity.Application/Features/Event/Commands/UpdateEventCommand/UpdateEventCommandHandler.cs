@@ -30,7 +30,6 @@ public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, b
             throw new Exception("Community does not exist");
 
         existingEvent.SetDate();
-
         _mapper.Map(request, existingEvent);
 
         _unitOfWork.EventRepository.Update(existingEvent);

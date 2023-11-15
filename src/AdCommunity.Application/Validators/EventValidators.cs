@@ -14,7 +14,6 @@ public class EventDtoValidator : AbstractValidator<EventDto>
         RuleFor(dto => dto.Description).NotEmpty().MaximumLength(500);
         RuleFor(dto => dto.EventDate).NotEmpty();
         RuleFor(dto => dto.Location).NotEmpty().MaximumLength(50);
-        RuleFor(dto => dto.CommunityId).GreaterThan(0).NotNull();
     }
 }
 

@@ -1,5 +1,4 @@
 ﻿using AdCommunity.Application.DTOs.Community;
-using AdCommunity.Application.DTOs.User;
 using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
