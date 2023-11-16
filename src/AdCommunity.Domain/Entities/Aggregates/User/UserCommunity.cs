@@ -1,5 +1,4 @@
 ﻿using AdCommunity.Domain.Entities.SharedKernel;
-using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.User;
 
@@ -10,15 +9,8 @@ public partial class UserCommunity:BaseEntity
     public DateTime? JoinDate { get; protected set; }
     public virtual Entities.Aggregates.Community.Community Community { get; protected set; } = null!;
     public virtual User User { get; protected set; } = null!;
-    public UserCommunity(int userId, int communityId, DateTime? joinDate)
+    public UserCommunity(DateTime? joinDate)
     {
-        if(userId <= 0)
-            throw new ForeignKeyException(nameof(userId));
-        if (communityId <= 0)
-            throw new ForeignKeyException(nameof(communityId));
-
-        UserId = userId;
-        CommunityId = communityId;
         JoinDate = joinDate;
         CreatedOn = DateTime.UtcNow;
     }
@@ -26,8 +18,23 @@ public partial class UserCommunity:BaseEntity
     {
         CreatedOn = DateTime.UtcNow;
     }
-    public static UserCommunity Create(int userId, int communityId, DateTime? joinDate)
+
+    public void AssignUser(User user)
     {
-        return new UserCommunity(userId, communityId, joinDate);
+        if (user is null)
+            throw new ArgumentNullException(nameof(user));
+
+        User = user;
+        UserId = user.Id;
     }
+
+    public void AssignCommunity(Entities.Aggregates.Community.Community community)
+    {
+        if (community is null)
+            throw new ArgumentNullException(nameof(community));
+
+        Community = community;
+        CommunityId = community.Id;
+    }
+
 }

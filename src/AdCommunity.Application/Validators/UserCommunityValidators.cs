@@ -1,5 +1,4 @@
 ﻿using AdCommunity.Application.DTOs.UserCommunity;
-using AdCommunity.Application.Features.User.Commands;
 using AdCommunity.Application.Features.UserCommunity.Commands.CreateUserCommunityCommand;
 using AdCommunity.Application.Features.UserCommunity.Commands.UpdateUserCommunityCommand;
 using FluentValidation;
@@ -11,8 +10,6 @@ public class UserCommunityDtoValidator : AbstractValidator<UserCommunityDto>
     public UserCommunityDtoValidator()
     {
         RuleFor(dto => dto.Id).NotEmpty().GreaterThan(0);
-        RuleFor(dto => dto.UserId).NotEmpty().GreaterThan(0);
-        RuleFor(dto => dto.CommunityId).NotEmpty().GreaterThan(0);
     }
 }
 

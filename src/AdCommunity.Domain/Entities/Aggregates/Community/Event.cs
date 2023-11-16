@@ -34,12 +34,6 @@ public partial class Event:BaseEntity
         CommunityId = community.Id;
     }
 
-    public void CreateTicket(TicketType ticket) // or addticket
-    {
-        //check if ticket is null
-        Tickets.Add(ticket);
-    }
-
     public void SetDate()
     {
         CreatedOn = DateTime.UtcNow;

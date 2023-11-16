@@ -2,14 +2,11 @@
 
 public class UserCommunityBaseDto
 {
-    public int UserId { get; set; }
-    public int CommunityId { get; set; }
+
     public DateTime? JoinDate { get; set; }
 
-    public UserCommunityBaseDto(int userId, int communityId, DateTime? joinDate)
+    public UserCommunityBaseDto(DateTime? joinDate)
     {
-        UserId = userId;
-        CommunityId = communityId;
         JoinDate = joinDate;
     }
     public UserCommunityBaseDto()
@@ -20,6 +17,8 @@ public class UserCommunityBaseDto
 public class UserCommunityDto : UserCommunityBaseDto
 {
     public int Id { get; set; }
+    public Domain.Entities.Aggregates.User.User User { get; set; }
+    public Domain.Entities.Aggregates.Community.Community Community { get; set; }
 
     public UserCommunityDto(int id)
     {
@@ -34,6 +33,8 @@ public class UserCommunityDto : UserCommunityBaseDto
 
 public class UserCommunityCreateDto : UserCommunityBaseDto
 {
+    public int UserId { get; set; }
+    public int CommunityId { get; set; }
     public UserCommunityCreateDto()
     {
         
@@ -43,7 +44,8 @@ public class UserCommunityCreateDto : UserCommunityBaseDto
 public class UserCommunityUpdateDto : UserCommunityBaseDto
 {
     public int Id { get; set; }
-
+    public int UserId { get; set; }
+    public int CommunityId { get; set; }
     public UserCommunityUpdateDto(int id)
     {
         Id = id;
