@@ -1,6 +1,5 @@
 ﻿using AdCommunity.Domain.Entities.Aggregates.User;
 using AdCommunity.Domain.Entities.SharedKernel;
-using AdCommunity.Domain.Exceptions;
 
 namespace AdCommunity.Domain.Entities.Aggregates.Community;
 

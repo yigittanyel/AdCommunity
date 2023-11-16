@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.Features.PipelineExample;
+using AdCommunity.Application.Services.ElasticSearch;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
@@ -42,6 +43,10 @@ public static class ApplicationServiceRegistration
         serviceCollection.AddSingleton(rabbitMqFactory);
 
         serviceCollection.AddScoped<IMessageBrokerService, MessageBrokerService>();
+        #endregion
+
+        #region ELASTICSEARCH
+        serviceCollection.AddScoped<IElasticSearchService, ElasticSearchService>();
         #endregion
 
         serviceCollection.AddTransient(typeof(IYtPipelineBehavior<,>), typeof(LoggingBehavior<,>));
