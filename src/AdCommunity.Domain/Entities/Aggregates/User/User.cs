@@ -95,11 +95,6 @@ public partial class User: BaseEntity,IAggregateRoot
         }
     }
 
-    public static User Create(string firstName, string lastName, string email, string password, string phone, string username, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
-    {
-        return new User(firstName, lastName, email, password, phone, username, website, facebook, twitter, instagram, github, medium);
-    }
-
     public void AddCommunity(AdCommunity.Domain.Entities.Aggregates.Community.Community community)
     {
         if (community == null)
@@ -107,33 +102,6 @@ public partial class User: BaseEntity,IAggregateRoot
 
         if (!Communities.Contains(community))
             Communities.Add(community);
-    }
-
-    public void RemoveCommunity(AdCommunity.Domain.Entities.Aggregates.Community.Community community)
-    {
-        if (community == null)
-            throw new ArgumentNullException(nameof(community));
-
-        if (Communities.Contains(community))
-            Communities.Remove(community);
-    }
-
-    public void AddUserCommunity(UserCommunity userCommunity)
-    {
-        if (userCommunity == null)
-            throw new ArgumentNullException(nameof(userCommunity));
-
-        if (!UserCommunities.Contains(userCommunity))
-            UserCommunities.Add(userCommunity);
-    }
-
-    public void RemoveUserCommunity(UserCommunity userCommunity)
-    {
-        if (userCommunity == null)
-            throw new ArgumentNullException(nameof(userCommunity));
-
-        if (UserCommunities.Contains(userCommunity))
-            UserCommunities.Remove(userCommunity);
     }
 
     public void AddUserEvent(UserEvent userEvent)
@@ -145,15 +113,6 @@ public partial class User: BaseEntity,IAggregateRoot
             UserEvents.Add(userEvent);
     }
 
-    public void RemoveUserEvent(UserEvent userEvent)
-    {
-        if (userEvent == null)
-            throw new ArgumentNullException(nameof(userEvent));
-
-        if (UserEvents.Contains(userEvent))
-            UserEvents.Remove(userEvent);
-    }
-
     public void AddUserTicket(UserTicket userTicket)
     {
         if (userTicket == null)
@@ -161,14 +120,5 @@ public partial class User: BaseEntity,IAggregateRoot
 
         if (!UserTickets.Contains(userTicket))
             UserTickets.Add(userTicket);
-    }
-
-    public void RemoveUserTicket(UserTicket userTicket)
-    {
-        if (userTicket == null)
-            throw new ArgumentNullException(nameof(userTicket));
-
-        if (UserTickets.Contains(userTicket))
-            UserTickets.Remove(userTicket);
     }
 }

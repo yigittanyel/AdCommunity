@@ -28,7 +28,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
             throw new Exception("User already exists");
         }
 
-        var user = Domain.Entities.Aggregates.User.User.Create
+        var user = new Domain.Entities.Aggregates.User.User
         (request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.Username, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
