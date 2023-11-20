@@ -36,6 +36,8 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
         if (ticket is null)
             throw new Exception("Ticket does not exist");
 
+        existingUserTicket.AssignUser(user);
+        existingUserTicket.AssignTicket(ticket);
         existingUserTicket.SetDate();
 
         _mapper.Map(request, existingUserTicket);

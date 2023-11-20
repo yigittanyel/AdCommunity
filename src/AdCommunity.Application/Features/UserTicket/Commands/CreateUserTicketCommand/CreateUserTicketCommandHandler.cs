@@ -27,15 +27,23 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
             throw new Exception("User Ticket already exists");
 
         var userTicket = Domain.Entities.Aggregates.User.UserTicket.Create(request.UserId,request.TicketId,request.Pnr);
+           
+        if (userTicket is null)
+            throw new Exception("User Ticket does not exist");
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
             throw new Exception("User does not exist");
 
+        userTicket.AssignUser(user);
+
         var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
         if (ticket is null)
             throw new Exception("Ticket does not exist");
+        userTicket.AssignTicket(ticket);
+
+        user.AddUserTicket(userTicket);
 
         await _unitOfWork.UserTicketRepository.AddAsync(userTicket, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

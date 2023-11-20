@@ -28,6 +28,9 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
 
         var userCommunity = new Domain.Entities.Aggregates.User.UserCommunity(request.JoinDate);
 
+        if (userCommunity is null)
+            throw new Exception("UserCommunity does not exist");
+
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)

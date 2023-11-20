@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketQuery;
 
@@ -28,7 +29,7 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
 
         if (userTicketDto == null)
         {
-            var userTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
+            var userTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Ticket), cancellationToken);
 
             if (userTicket == null)
             {

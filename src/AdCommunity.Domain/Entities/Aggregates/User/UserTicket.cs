@@ -31,4 +31,22 @@ public partial class UserTicket:BaseEntity
     {
         return new UserTicket(userId, ticketId, pnr);
     }
+
+    public void AssignUser(User user)
+    {
+        if (user is null)
+            throw new ArgumentNullException(nameof(user));
+
+        User = user;
+        UserId = user.Id;
+    }
+
+    public void AssignTicket(TicketType ticket)
+    {
+        if (ticket is null)
+            throw new ArgumentNullException(nameof(ticket));
+
+        Ticket = ticket;
+        TicketId = ticket.Id;
+    }
 }

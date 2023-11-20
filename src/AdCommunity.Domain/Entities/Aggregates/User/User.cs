@@ -95,15 +95,6 @@ public partial class User: BaseEntity,IAggregateRoot
         }
     }
 
-    public void AddCommunity(AdCommunity.Domain.Entities.Aggregates.Community.Community community)
-    {
-        if (community == null)
-            throw new ArgumentNullException(nameof(community));
-
-        if (!Communities.Contains(community))
-            Communities.Add(community);
-    }
-
     public void AddUserEvent(UserEvent userEvent)
     {
         if (userEvent == null)

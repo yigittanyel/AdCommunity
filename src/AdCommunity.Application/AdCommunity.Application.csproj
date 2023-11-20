@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\UserEvent\Commands\" />
-    <Folder Include="Features\UserEvent\Queries\" />
+    <Folder Include="DTOs\UserEvent\" />
+    <Folder Include="Features\UserEvent\Commands\CreateUserEventCommand\" />
+    <Folder Include="Features\UserEvent\Commands\DeleteUserEventCommand\" />
+    <Folder Include="Features\UserEvent\Commands\UpdateUserEventCommand\" />
+    <Folder Include="Features\UserEvent\Queries\GetUserEventQuery\" />
+    <Folder Include="Features\UserEvent\Queries\GetUserEventsQuery\" />
   </ItemGroup>
 
   <ItemGroup>
