@@ -25,6 +25,13 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
             throw new Exception("UserCommunity does not exist");
         }
 
+        var community= await _unitOfWork.CommunityRepository.GetAsync(existingUserCommunity.CommunityId, null, cancellationToken);
+
+        if(community is null)
+            throw new Exception("Community does not exist");
+
+        community.RemoveUserCommunity(existingUserCommunity);
+
         _unitOfWork.UserCommunityRepository.Delete(existingUserCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

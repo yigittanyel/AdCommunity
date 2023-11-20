@@ -7,15 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\UserEvent\" />
-    <Folder Include="Features\UserEvent\Commands\CreateUserEventCommand\" />
-    <Folder Include="Features\UserEvent\Commands\DeleteUserEventCommand\" />
-    <Folder Include="Features\UserEvent\Commands\UpdateUserEventCommand\" />
-    <Folder Include="Features\UserEvent\Queries\GetUserEventQuery\" />
-    <Folder Include="Features\UserEvent\Queries\GetUserEventsQuery\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
     <PackageReference Include="FluentValidation" Version="11.8.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />

@@ -72,6 +72,33 @@ public partial class Community : BaseEntity, IAggregateRoot
             UserCommunities.Add(userCommunity);
     }
 
+    public void RemoveEvent(Event @event)
+    {
+        if (@event is null)
+            throw new ArgumentNullException(nameof(@event));
+
+        if (Events.Contains(@event))
+            Events.Remove(@event);
+    }
+
+    public void RemoveTicket(TicketType ticket)
+    {
+        if (ticket is null)
+            throw new ArgumentNullException(nameof(ticket));
+
+        if (Tickets.Contains(ticket))
+            Tickets.Remove(ticket);
+    }
+
+    public void RemoveUserCommunity(UserCommunity userCommunity)
+    {
+        if (userCommunity is null)
+            throw new ArgumentNullException(nameof(userCommunity));
+
+        if (UserCommunities.Contains(userCommunity))
+            UserCommunities.Remove(userCommunity);
+    }
+
     public void SetDate()
     {
         CreatedOn = DateTime.UtcNow;

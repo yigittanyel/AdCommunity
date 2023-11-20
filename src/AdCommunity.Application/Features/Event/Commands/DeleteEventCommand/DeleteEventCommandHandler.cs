@@ -22,6 +22,13 @@ public class DeleteEventCommandHandler : IYtRequestHandler<DeleteEventCommand, b
             throw new Exception("Event does not exist");
         }
 
+        var community = await _unitOfWork.CommunityRepository.GetAsync(existingEvent.CommunityId, null, cancellationToken);
+
+        if (community is null)
+            throw new Exception("Community does not exist");
+
+        community.RemoveEvent(existingEvent);
+
         _unitOfWork.EventRepository.Delete(existingEvent);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

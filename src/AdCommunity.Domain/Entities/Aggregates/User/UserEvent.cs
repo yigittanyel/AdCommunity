@@ -31,4 +31,21 @@ public partial class UserEvent:BaseEntity
         return new UserEvent(userId, eventId);
     }
 
+    public void AssignUser(User user)
+    {
+        if (user is null)
+            throw new ArgumentNullException(nameof(user));
+
+        User = user;
+        UserId = user.Id;
+    }
+
+    public void AssignEvent(Event @event)
+    {
+        if (@event is null)
+            throw new ArgumentNullException(nameof(@event));
+
+        Event = @event;
+        EventId = @event.Id;
+    }
 }

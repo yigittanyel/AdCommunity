@@ -25,6 +25,14 @@ public class DeleteTicketTypeCommandHandler : IYtRequestHandler<DeleteTicketComm
             throw new Exception("Ticket does not exist");
         }
 
+
+        var community = await _unitOfWork.CommunityRepository.GetAsync(existingTicket.CommunityId, null, cancellationToken);
+
+        if (community is null)
+            throw new Exception("Community does not exist");
+
+        community.RemoveTicket(existingTicket);
+
         _unitOfWork.TicketRepository.Delete(existingTicket);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

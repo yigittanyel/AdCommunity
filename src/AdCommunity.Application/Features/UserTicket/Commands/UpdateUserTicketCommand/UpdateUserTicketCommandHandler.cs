@@ -25,7 +25,7 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
         var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket == null)
-            throw new Exception("Community does not exist");
+            throw new Exception("User Ticket does not exist");
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
