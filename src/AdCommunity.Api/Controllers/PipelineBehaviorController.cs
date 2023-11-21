@@ -1,6 +1,5 @@
 ﻿using AdCommunity.Application.Features.PipelineExample;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers

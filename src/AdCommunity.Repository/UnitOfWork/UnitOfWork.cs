@@ -1,7 +1,5 @@
 ﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 namespace AdCommunity.Repository.UnitOfWork;
 
