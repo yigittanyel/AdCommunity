@@ -26,6 +26,13 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
             throw new Exception("User Event does not exist");
         }
 
+        var user = await _unitOfWork.UserRepository.GetAsync(existingUserEvent.UserId, null, cancellationToken);
+
+        if (user is null)
+            throw new Exception("User does not exist");
+
+        user.RemoveUserEvent(existingUserEvent);
+
         _unitOfWork.UserEventRepository.Delete(existingUserEvent);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

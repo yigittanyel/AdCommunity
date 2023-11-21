@@ -25,6 +25,13 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
             throw new Exception("User Ticket does not exist");
         }
 
+        var user = await _unitOfWork.UserRepository.GetAsync(existingUserTicket.UserId, null, cancellationToken);
+
+        if (user is null)
+            throw new Exception("User does not exist");
+
+        user.RemoveUserTicket(existingUserTicket);
+
         _unitOfWork.UserTicketRepository.Delete(existingUserTicket);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

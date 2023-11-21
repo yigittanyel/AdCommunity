@@ -112,4 +112,22 @@ public partial class User: BaseEntity,IAggregateRoot
         if (!UserTickets.Contains(userTicket))
             UserTickets.Add(userTicket);
     }
+
+    public void RemoveUserEvent(UserEvent userEvent)
+    {
+        if (userEvent == null)
+            throw new ArgumentNullException(nameof(userEvent));
+
+        if (UserEvents.Contains(userEvent))
+            UserEvents.Remove(userEvent);
+    }
+
+    public void RemoveUserTicket(UserTicket userTicket)
+    {
+        if (userTicket == null)
+            throw new ArgumentNullException(nameof(userTicket));
+
+        if (UserTickets.Contains(userTicket))
+            UserTickets.Remove(userTicket);
+    }
 }
