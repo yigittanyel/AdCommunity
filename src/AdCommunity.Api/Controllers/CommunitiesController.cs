@@ -5,10 +5,12 @@ using AdCommunity.Application.Features.Community.Commands.UpdateCommunityCommand
 using AdCommunity.Application.Features.Community.Queries.GetCommunitiesQuery;
 using AdCommunity.Application.Features.Community.Queries.GetCommunityQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommunitiesController : ControllerBase
@@ -41,7 +43,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPost("[action]")]
         public async Task<CommunityCreateDto> Create(CommunityCreateDto community)
         {
-            CreateCommunityCommand command = new CreateCommunityCommand(community.Name, community.Description, community.Tags, community.Location, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium,community.UserId);
+            CreateCommunityCommand command = new CreateCommunityCommand(community.Name, community.Description, community.Tags, community.Location, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium, community.UserId);
             CommunityCreateDto createdCommunity = await _mediator.Send(command);
 
             return createdCommunity;
@@ -60,7 +62,7 @@ namespace AdCommunity.Api.Controllers
         [HttpPut("[action]")]
         public async Task<bool> Update(CommunityUpdateDto community)
         {
-            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id, community.Name, community.Description, community.Tags, community.Location, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium,community.UserId);
+            UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id, community.Name, community.Description, community.Tags, community.Location, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium, community.UserId);
             bool updatedCommunity = await _mediator.Send(command);
 
             return updatedCommunity;

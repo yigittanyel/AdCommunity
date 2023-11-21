@@ -5,10 +5,12 @@ using AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketComma
 using AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketQuery;
 using AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketsQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserTicketsController : ControllerBase

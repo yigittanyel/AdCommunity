@@ -5,10 +5,12 @@ using AdCommunity.Application.Features.Event.Commands.UpdateEventCommand;
 using AdCommunity.Application.Features.Event.Queries.GetEventQuery;
 using AdCommunity.Application.Features.Event.Queries.GetEventsQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EventsController : ControllerBase

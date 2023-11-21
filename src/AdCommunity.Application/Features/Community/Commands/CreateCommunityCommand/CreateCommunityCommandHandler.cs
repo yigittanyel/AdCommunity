@@ -23,21 +23,18 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
 
     public async Task<CommunityCreateDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
     {
-        var validator = new CreateCommunityCommandValidator();
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
-
         var existingCommunity = await _unitOfWork.CommunityRepository.GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)
             throw new Exception("Community already exists");
 
         var user= await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+
+        if(user is null)
+            throw new Exception("User does not exist");
+
         var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
+
         community.AssignUser(user);
 
         await _unitOfWork.CommunityRepository.AddAsync(community, cancellationToken);

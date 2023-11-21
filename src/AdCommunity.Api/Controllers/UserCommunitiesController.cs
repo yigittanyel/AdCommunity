@@ -5,10 +5,12 @@ using AdCommunity.Application.Features.UserCommunity.Commands.UpdateUserCommunit
 using AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunitiesQuery;
 using AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunityQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserCommunitiesController : ControllerBase

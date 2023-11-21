@@ -31,10 +31,15 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
         }
 
         var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
+
         if (community is null) 
             throw new Exception("Community does not exist");
 
         var @event = new Domain.Entities.Aggregates.Community.Event(request.EventName, request.Description, request.EventDate, request.Location);
+
+        if (@event is null)
+            throw new Exception("Event does not exist");
+
         @event.AssignCommunity(community);
 
         community.AddEvent(@event);

@@ -5,10 +5,12 @@ using AdCommunity.Application.Features.Ticket.Commands.UpdateTicketCommand;
 using AdCommunity.Application.Features.Ticket.Queries.GetTicketQuery;
 using AdCommunity.Application.Features.Ticket.Queries.GetTicketsQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TicketTypesController : ControllerBase

@@ -21,7 +21,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
     {
         var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
 
-        if (existingUser != null)
+        if (existingUser is not null)
         {
             throw new Exception("User already exists");
         }

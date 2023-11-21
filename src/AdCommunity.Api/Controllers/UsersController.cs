@@ -8,62 +8,63 @@ using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdCommunity.Api.Controllers;
-
-[Authorize]
-[Route("api/[controller]")]
-[ApiController]
-public class UsersController : ControllerBase
+namespace AdCommunity.Api.Controllers
 {
-    private readonly IYtMediator _mediator;
-
-    public UsersController(IYtMediator mediator)
+    [Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController : ControllerBase
     {
-        _mediator = mediator;
-    }
+        private readonly IYtMediator _mediator;
 
-    [HttpGet("[action]/{userId}")]
-    public async Task<UserDto> Get(int userId)
-    {
-        GetUserQuery query = new GetUserQuery { Id = userId };
-        UserDto user = await _mediator.Send(query);
-        return user;
-    }
+        public UsersController(IYtMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
-    [HttpGet("[action]")]
-    public async Task<IEnumerable<UserDto>> GetAll()
-    {
-        GetUsersQuery query = new GetUsersQuery();
-        IEnumerable<UserDto> users = await _mediator.Send(query);
+        [HttpGet("[action]/{userId}")]
+        public async Task<UserDto> Get(int userId)
+        {
+            GetUserQuery query = new GetUserQuery { Id = userId };
+            UserDto user = await _mediator.Send(query);
+            return user;
+        }
 
-        return users;
-    }
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<UserDto>> GetAll()
+        {
+            GetUsersQuery query = new GetUsersQuery();
+            IEnumerable<UserDto> users = await _mediator.Send(query);
 
-    [HttpPost("[action]")]
-    public async Task<UserCreateDto> Create(UserCreateDto user)
-    {
-        CreateUserCommand command = new CreateUserCommand(user.FirstName,user.Password,user.LastName,user.Email,user.Phone,user.Username,user.Website,user.Facebook,user.Twitter,user.Instagram,user.Github,user.Medium);
-        UserCreateDto createdUser = await _mediator.Send(command);
+            return users;
+        }
 
-        return createdUser;
-    }
+        [HttpPost("[action]")]
+        public async Task<UserCreateDto> Create(UserCreateDto user)
+        {
+            CreateUserCommand command = new CreateUserCommand(user.FirstName, user.Password, user.LastName, user.Email, user.Phone, user.Username, user.Website, user.Facebook, user.Twitter, user.Instagram, user.Github, user.Medium);
+            UserCreateDto createdUser = await _mediator.Send(command);
 
-    [HttpPut("[action]")]
-    public async Task<bool> Update(UserUpdateDto user)
-    {
-        UpdateUserCommand command = new UpdateUserCommand(user.Id,user.FirstName, user.Password, user.LastName, user.Email, user.Phone, user.Username, user.Website, user.Facebook, user.Twitter, user.Instagram, user.Github, user.Medium);
-        bool updatedUser = await _mediator.Send(command);
+            return createdUser;
+        }
 
-        return updatedUser;
-    }
+        [HttpPut("[action]")]
+        public async Task<bool> Update(UserUpdateDto user)
+        {
+            UpdateUserCommand command = new UpdateUserCommand(user.Id, user.FirstName, user.Password, user.LastName, user.Email, user.Phone, user.Username, user.Website, user.Facebook, user.Twitter, user.Instagram, user.Github, user.Medium);
+            bool updatedUser = await _mediator.Send(command);
 
-    [HttpDelete("[action]/{userId}")]
-    public async Task<bool> Delete(int userId)
-    {
-        DeleteUserCommand command = new DeleteUserCommand { Id = userId };
-        bool deletedUser = await _mediator.Send(command);
+            return updatedUser;
+        }
 
-        return deletedUser;
+        [HttpDelete("[action]/{userId}")]
+        public async Task<bool> Delete(int userId)
+        {
+            DeleteUserCommand command = new DeleteUserCommand { Id = userId };
+            bool deletedUser = await _mediator.Send(command);
+
+            return deletedUser;
+        }
     }
 }
 
