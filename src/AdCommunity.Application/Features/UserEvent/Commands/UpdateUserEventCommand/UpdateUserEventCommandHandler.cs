@@ -1,4 +1,4 @@
-﻿using AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketCommand;
+﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -23,19 +23,21 @@ public class UpdateUserEventCommandHandler : IYtRequestHandler<UpdateUserEventCo
     {
         var existingUserEvent = await _unitOfWork.UserEventRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingUserEvent == null)
-            throw new Exception("User Event does not exist");
+        if (existingUserEvent is null)
+            throw new NotExistException("User Ticket");
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new Exception("User does not exist");
-
-        var @event = await _unitOfWork.EventRepository.GetAsync(request.EventId, null, cancellationToken);
-        if (@event is null)
-            throw new Exception("Event does not exist");
+            throw new NotExistException("User");
 
         existingUserEvent.AssignUser(user);
+
+        var @event = await _unitOfWork.EventRepository.GetAsync(request.EventId, null, cancellationToken);
+
+        if (@event is null)
+            throw new NotExistException("Event");
+
         existingUserEvent.AssignEvent(@event);
         existingUserEvent.SetDate();
 

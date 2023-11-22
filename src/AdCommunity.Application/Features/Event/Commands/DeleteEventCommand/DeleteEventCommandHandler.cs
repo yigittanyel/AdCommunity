@@ -1,4 +1,5 @@
-﻿using AdCommunity.Application.Services.RabbitMQ;
+﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
@@ -17,15 +18,13 @@ public class DeleteEventCommandHandler : IYtRequestHandler<DeleteEventCommand, b
     {
         var existingEvent = await _unitOfWork.EventRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingEvent == null)
-        {
-            throw new Exception("Event does not exist");
-        }
+        if (existingEvent is null)
+            throw new NotExistException("Event");
 
         var community = await _unitOfWork.CommunityRepository.GetAsync(existingEvent.CommunityId, null, cancellationToken);
 
         if (community is null)
-            throw new Exception("Community does not exist");
+            throw new NotExistException("Community");
 
         community.RemoveEvent(existingEvent);
 

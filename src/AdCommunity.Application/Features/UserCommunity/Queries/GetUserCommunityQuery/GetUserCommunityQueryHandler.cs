@@ -28,16 +28,14 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
 
         var userCommunityDto = await _redisService.GetFromCacheAsync<UserCommunityDto>(cacheKey);
 
-        if (userCommunityDto == null)
+        if (userCommunityDto is null)
         {
             var userCommunity = await _unitOfWork.UserCommunityRepository.
                 GetAsync(request.Id, query => query.Include(x => x.Community).Include(x => x.User),
                 cancellationToken);
 
-            if (userCommunity == null)
-            {
-                throw new NotFoundException("userCommunity", request.Id);
-            }
+            if (userCommunity is null)
+                throw new NotExistException("UserCommunity");
 
             userCommunityDto = _mapper.Map<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunity);
 

@@ -32,9 +32,7 @@ public class GetEventQueryHandler : IYtRequestHandler<GetEventQuery, EventDto>
             var @event = await _unitOfWork.EventRepository.GetAsync(request.Id, query=>query.Include(x=>x.Community), cancellationToken);
 
             if (@event is null)
-            {
-                throw new NotFoundException("event", request.Id);
-            }
+                throw new NotExistException("Event");
 
             eventDto = _mapper.Map<Domain.Entities.Aggregates.Community.Event, EventDto>(@event);
 

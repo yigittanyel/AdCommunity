@@ -1,12 +1,10 @@
-﻿using AdCommunity.Application.Features.Community.Commands.UpdateCommunityCommand;
+﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketCommand;
-
-
 public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicketCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -24,19 +22,21 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
     {
         var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingUserTicket == null)
-            throw new Exception("User Ticket does not exist");
+        if (existingUserTicket is null)
+            throw new NotExistException("User Ticket");
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new Exception("User does not exist");
-
-        var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
-        if (ticket is null)
-            throw new Exception("Ticket does not exist");
+            throw new NotExistException("User");
 
         existingUserTicket.AssignUser(user);
+
+        var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
+
+        if (ticket is null)
+            throw new NotExistException("Ticket does not exist");
+
         existingUserTicket.AssignTicket(ticket);
         existingUserTicket.SetDate();
 

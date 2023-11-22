@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.TicketTypes;
+using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -23,21 +24,21 @@ public class CreateTicketTypesCommandHandler : IYtRequestHandler<CreateTicketTyp
         var existingTicket = await _unitOfWork.TicketRepository.GetTicketByEventAndCommunityIdsAsync(request.CommunityEventId, request.CommunityId, cancellationToken);
 
         if (existingTicket is not null)
-            throw new Exception("Ticket already exists");
+            throw new AlreadyExistsException("Ticket");
 
         var ticket = new Domain.Entities.Aggregates.Community.TicketType(request.Price);
 
         var communityEvent = await _unitOfWork.EventRepository.GetAsync(request.CommunityEventId,null, cancellationToken);
 
         if (communityEvent is null)
-            throw new Exception("Event does not exist");
+            throw new NotExistException("Event");
 
         ticket.AssignEvent(communityEvent);
 
         var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId,null, cancellationToken);
 
         if (community is null)
-            throw new Exception("Community does not exist");
+            throw new NotExistException("Community");
 
         ticket.AssignCommunity(community);
 

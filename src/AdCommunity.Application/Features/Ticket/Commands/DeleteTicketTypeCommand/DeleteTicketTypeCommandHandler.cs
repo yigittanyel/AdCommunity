@@ -1,4 +1,5 @@
-﻿using AdCommunity.Application.Services.RabbitMQ;
+﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
@@ -18,18 +19,16 @@ public class DeleteTicketTypeCommandHandler : IYtRequestHandler<DeleteTicketComm
 
     public async Task<bool> Handle(DeleteTicketCommand request, CancellationToken cancellationToken)
     {
-        var existingTicket= await _unitOfWork.TicketRepository.GetAsync(request.Id, null, cancellationToken);
+        var existingTicket = await _unitOfWork.TicketRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingTicket == null)
-        {
-            throw new Exception("Ticket does not exist");
-        }
+        if (existingTicket is null)
+            throw new NotExistException("Ticket");
 
 
         var community = await _unitOfWork.CommunityRepository.GetAsync(existingTicket.CommunityId, null, cancellationToken);
 
         if (community is null)
-            throw new Exception("Community does not exist");
+            throw new NotExistException("Community");
 
         community.RemoveTicket(existingTicket);
 

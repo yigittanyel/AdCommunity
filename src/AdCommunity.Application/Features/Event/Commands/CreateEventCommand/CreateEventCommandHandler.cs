@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.Event;
+using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -26,19 +27,14 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
         var existingEvent = await _unitOfWork.EventRepository.GetByEventNameAsync(request.EventName, cancellationToken);
 
         if (existingEvent is not null)
-        {
-            throw new Exception("Event already exists");
-        }
+            throw new AlreadyExistsException(existingEvent.EventName);
 
         var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
 
         if (community is null) 
-            throw new Exception("Community does not exist");
+            throw new NotExistException("Community");
 
         var @event = new Domain.Entities.Aggregates.Community.Event(request.EventName, request.Description, request.EventDate, request.Location);
-
-        if (@event is null)
-            throw new Exception("Event does not exist");
 
         @event.AssignCommunity(community);
 

@@ -1,4 +1,4 @@
-﻿using AdCommunity.Application.Features.User.Commands.DeleteUserCommand;
+﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
@@ -20,15 +20,13 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
     {
         var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingUserTicket == null)
-        {
-            throw new Exception("User Ticket does not exist");
-        }
+        if (existingUserTicket is null)
+            throw new NotExistException("User Ticket");
 
         var user = await _unitOfWork.UserRepository.GetAsync(existingUserTicket.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new Exception("User does not exist");
+            throw new NotExistException("User");
 
         user.RemoveUserTicket(existingUserTicket);
 

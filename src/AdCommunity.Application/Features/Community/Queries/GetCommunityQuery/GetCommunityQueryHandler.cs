@@ -27,14 +27,14 @@ public class GetCommunityQueryHandler : IYtRequestHandler<GetCommunityQuery, Com
 
         var communityDto = await _redisService.GetFromCacheAsync<CommunityDto>(cacheKey);
 
-        if (communityDto == null)
+        if (communityDto is null)
         {
             var community = await _unitOfWork.CommunityRepository
                 .GetAsync(request.Id, 
                     query=>query.Include(x=>x.User),
                     cancellationToken);
 
-            if (community == null)
+            if (community is null)
             {
                 throw new NotFoundException("community", request.Id);
             }

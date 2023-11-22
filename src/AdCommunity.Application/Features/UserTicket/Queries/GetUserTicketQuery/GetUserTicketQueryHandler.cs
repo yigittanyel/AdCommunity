@@ -7,7 +7,6 @@ using AdCommunity.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketQuery;
-
 public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, UserTicketDto>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -27,14 +26,12 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
 
         var userTicketDto = await _redisService.GetFromCacheAsync<UserTicketDto>(cacheKey);
 
-        if (userTicketDto == null)
+        if (userTicketDto is null)
         {
             var userTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Ticket), cancellationToken);
 
-            if (userTicket == null)
-            {
-                throw new NotFoundException("userTicket", request.Id);
-            }
+            if (userTicket is null)
+                throw new NotExistException("User Ticket");
 
             userTicketDto = _mapper.Map<Domain.Entities.Aggregates.User.UserTicket, UserTicketDto>(userTicket);
 

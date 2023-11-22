@@ -27,14 +27,12 @@ public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, Use
 
         var userEventDto = await _redisService.GetFromCacheAsync<UserEventDto>(cacheKey);
 
-        if (userEventDto == null)
+        if (userEventDto is null)
         {
             var userEvent = await _unitOfWork.UserEventRepository.GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Event), cancellationToken);
 
-            if (userEvent == null)
-            {
-                throw new NotFoundException("userEvent", request.Id);
-            }
+            if (userEvent is null)
+                throw new NotExistException("User Event");
 
             userEventDto = _mapper.Map<Domain.Entities.Aggregates.User.UserEvent, UserEventDto>(userEvent);
 

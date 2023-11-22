@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.UserEvent;
+using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -24,23 +25,22 @@ public class CreateUserEventCommandHandler : IYtRequestHandler<CreateUserEventCo
         var existingUserEvent = await _unitOfWork.UserEventRepository.GetUserEventsByUserAndEventAsync(request.UserId, request.EventId, cancellationToken);
 
         if (existingUserEvent is not null)
-            throw new Exception("User Event already exists");
+            throw new AlreadyExistsException("User Event");
 
         var userEvent = Domain.Entities.Aggregates.User.UserEvent.Create(request.UserId, request.EventId);
-
-        if (userEvent is null)
-            throw new Exception("User Event does not exist");
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new Exception("User does not exist");
+            throw new NotExistException("User");
 
         userEvent.AssignUser(user);
 
         var @event = await _unitOfWork.EventRepository.GetAsync(request.EventId, null, cancellationToken);
+
         if (@event is null)
-            throw new Exception("Event does not exist");
+            throw new NotExistException("Event");
+
         userEvent.AssignEvent(@event);
 
         user.AddUserEvent(userEvent);

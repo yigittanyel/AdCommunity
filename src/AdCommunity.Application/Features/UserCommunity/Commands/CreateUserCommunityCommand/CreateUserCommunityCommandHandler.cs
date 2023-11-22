@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.UserCommunity;
+using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -24,17 +25,13 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
         var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetUserCommunitiesByUserAndCommunityAsync(request.UserId, request.CommunityId, cancellationToken);
 
         if (existingUserCommunity is not null)
-            throw new Exception("UserCommunity already exists");
+            throw new AlreadyExistsException("User Community");
 
         var userCommunity = new Domain.Entities.Aggregates.User.UserCommunity(request.JoinDate);
-
-        if (userCommunity is null)
-            throw new Exception("UserCommunity does not exist");
-
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new Exception("User does not exist");
+            throw new NotExistException("User");
 
         userCommunity.AssignUser(user);
 

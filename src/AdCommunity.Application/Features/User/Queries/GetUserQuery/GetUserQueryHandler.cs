@@ -26,11 +26,11 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
 
         var userDto = await _redisService.GetFromCacheAsync<UserDto>(cacheKey);
 
-        if (userDto == null)
+        if (userDto is null)
         {
             var user = await _unitOfWork.UserRepository.GetAsync(request.Id, null, cancellationToken);
 
-            if (user == null)
+            if (user is null)
             {
                 throw new NotFoundException("User", request.Id);
             }

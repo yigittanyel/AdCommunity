@@ -26,14 +26,14 @@ public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, T
 
         var ticketDto = await _redisService.GetFromCacheAsync<TicketTypesDto>(cacheKey);
 
-        if (ticketDto == null)
+        if (ticketDto is null)
         {
             var ticket = await _unitOfWork.TicketRepository.
                 GetAsync(request.Id, query => query.Include(x => x.Community).Include(x => x.CommunityEvent),
                 cancellationToken);
 
 
-            if (ticket == null)
+            if (ticket is null)
             {
                 throw new NotFoundException("community", request.Id);
             }

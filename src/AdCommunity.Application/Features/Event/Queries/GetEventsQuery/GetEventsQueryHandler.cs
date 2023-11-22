@@ -7,7 +7,6 @@ using AdCommunity.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.Event.Queries.GetEventsQuery;
-
 public class GetEventsQueryHandler : IYtRequestHandler<GetEventsQuery, List<EventDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -27,14 +26,13 @@ public class GetEventsQueryHandler : IYtRequestHandler<GetEventsQuery, List<Even
 
         var eventsDto = await _redisService.GetFromCacheAsync<List<EventDto>>(cacheKey);
 
-        if (eventsDto == null)
+        if (eventsDto is null)
         {
             var events = await _unitOfWork.EventRepository.GetAllAsync(null,query=>query.Include(x=>x.Community),cancellationToken);
 
-            if (events == null || !events.Any())
-            {
-                throw new NotFoundException("Event");
-            }
+            if (events is null || !events.Any())
+                throw new NotExistException("Event");
+
 
             eventsDto = _mapper.MapList<Domain.Entities.Aggregates.Community.Event, EventDto>((List<Domain.Entities.Aggregates.Community.Event>)events);
 

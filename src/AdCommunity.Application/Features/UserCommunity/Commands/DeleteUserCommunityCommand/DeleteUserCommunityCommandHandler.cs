@@ -1,4 +1,5 @@
-﻿using AdCommunity.Application.Services.RabbitMQ;
+﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
@@ -20,15 +21,13 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
     {
         var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingUserCommunity == null)
-        {
-            throw new Exception("UserCommunity does not exist");
-        }
+        if (existingUserCommunity is null)
+            throw new NotExistException("UserCommunity");
 
         var community= await _unitOfWork.CommunityRepository.GetAsync(existingUserCommunity.CommunityId, null, cancellationToken);
 
         if(community is null)
-            throw new Exception("Community does not exist");
+            throw new NotExistException("Community");
 
         community.RemoveUserCommunity(existingUserCommunity);
 

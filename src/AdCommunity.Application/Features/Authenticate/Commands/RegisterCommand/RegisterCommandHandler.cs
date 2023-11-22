@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.User;
+using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
@@ -23,7 +24,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 
         if (existingUser is not null)
         {
-            throw new Exception("User already exists");
+            throw new AlreadyExistsException(existingUser.Username);
         }
 
         var user = new Domain.Entities.Aggregates.User.User(

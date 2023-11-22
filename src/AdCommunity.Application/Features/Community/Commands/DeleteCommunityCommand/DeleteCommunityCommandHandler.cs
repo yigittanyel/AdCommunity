@@ -1,9 +1,9 @@
-﻿using AdCommunity.Application.Services.RabbitMQ;
+﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 
 namespace AdCommunity.Application.Features.Community.Commands.DeleteCommunityCommand;
-
 public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -20,10 +20,8 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
     {
         var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingCommunity == null)
-        {
-            throw new Exception("Community does not exist");
-        }
+        if (existingCommunity is null)
+            throw new NotExistException("Community");
 
         _unitOfWork.CommunityRepository.Delete(existingCommunity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

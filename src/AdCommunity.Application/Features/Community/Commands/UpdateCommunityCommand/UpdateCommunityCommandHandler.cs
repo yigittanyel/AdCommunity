@@ -1,4 +1,5 @@
-﻿using AdCommunity.Application.Services.RabbitMQ;
+﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
@@ -22,12 +23,16 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
     {
         var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingCommunity == null)
-            throw new Exception("Community does not exist");
+        if (existingCommunity is null)
+            throw new NotExistException("Community");
 
         existingCommunity.SetDate();
 
         var user= await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        
+        if (user is null)
+            throw new NotExistException("User");
+
         existingCommunity.AssignUser(user);
 
         _mapper.Map(request, existingCommunity);

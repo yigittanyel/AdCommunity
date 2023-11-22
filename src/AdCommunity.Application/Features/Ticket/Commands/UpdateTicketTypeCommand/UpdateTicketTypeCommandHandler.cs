@@ -1,4 +1,4 @@
-﻿using AdCommunity.Application.Features.Community.Commands.UpdateCommunityCommand;
+﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
@@ -23,20 +23,20 @@ public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketType
     {
         var existingTicket = await _unitOfWork.TicketRepository.GetAsync(request.Id, null, cancellationToken);
 
-        if (existingTicket == null)
-            throw new Exception("Ticket does not exist");
+        if (existingTicket is null)
+            throw new NotExistException("Ticket");
 
         var communityEvent = await _unitOfWork.EventRepository.GetAsync(request.CommunityEventId, null, cancellationToken);
 
         if (communityEvent is null)
-            throw new Exception("Event does not exist");
+            throw new NotExistException("Event");
 
         existingTicket.AssignEvent(communityEvent);
 
         var community = await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null,cancellationToken);
 
         if (community is null)
-            throw new Exception("Community does not exist");
+            throw new NotExistException("Community");
 
         existingTicket.AssignCommunity(community);
 

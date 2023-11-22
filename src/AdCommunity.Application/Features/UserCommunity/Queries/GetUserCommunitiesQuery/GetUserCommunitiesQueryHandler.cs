@@ -6,11 +6,6 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunitiesQuery
 {
@@ -51,16 +46,16 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
                 }");
             }
 
-            if (userCommunitiesDto == null || userCommunitiesDto.Count == 0)
+            if (userCommunitiesDto is null || userCommunitiesDto.Count == 0)
             {
                 // Elasticsearch'te veri yoksa veritabanından al
                 var userCommunities = await _unitOfWork.UserCommunityRepository
                     .GetAllAsync(null, query => query.Include(x => x.Community).Include(x => x.User),
                         cancellationToken);
 
-                if (userCommunities == null || !userCommunities.Any())
+                if (userCommunities is null || !userCommunities.Any())
                 {
-                    throw new NotFoundException("UserCommunity");
+                    throw new NotExistException("UserCommunity");
                 }
 
                 userCommunitiesDto = _mapper.MapList<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunities.ToList());

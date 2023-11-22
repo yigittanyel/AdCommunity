@@ -1,4 +1,5 @@
-﻿using AdCommunity.Application.Services.Jwt;
+﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
@@ -23,7 +24,7 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 
         if (existingUser is null)
         {
-            throw new Exception("Invalid username or password");
+            throw new InvalidCredentialsException();
         }
 
         var tokenService = new JwtService(_configuration);
