@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+#region Swagger Authentication Implementation
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -40,6 +42,7 @@ builder.Services.AddSwaggerGen(c =>
     }
   });
 });
+#endregion
 
 #region Exception Middleware Implementation
 builder.Services.AddTransient<ExceptionMiddleware>();
