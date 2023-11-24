@@ -52,7 +52,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Communities)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Communities_User");
         });
 
@@ -68,7 +68,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Community).WithMany(p => p.Events)
                 .HasForeignKey(d => d.CommunityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_CommunityEvent_Community");
         });
 
@@ -78,12 +78,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.CommunityEvent).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.CommunityEventId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Tickets_CommunityEvent");
 
             entity.HasOne(d => d.Community).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.CommunityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Tickets_Community");
         });
 
@@ -119,12 +119,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Community).WithMany(p => p.UserCommunities)
                 .HasForeignKey(d => d.CommunityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserCommunity_Community");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserCommunities)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserCommunity_Users");
         });
 
@@ -136,12 +136,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Event).WithMany(p => p.UserEvents)
                 .HasForeignKey(d => d.EventId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserEvents_CommunityEvent");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserEvents)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserEvents_Users");
         });
 
@@ -154,12 +154,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.UserTickets)
                 .HasForeignKey(d => d.TicketId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserTickets_Tickets");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserTickets)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_UserTickets_Users");
         });
 

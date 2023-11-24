@@ -30,7 +30,7 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
 
         user.RemoveUserTicket(existingUserTicket);
 
-        _unitOfWork.UserTicketRepository.Delete(existingUserTicket);
+        _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_userTicket_queue", $"User Ticket with Id: {existingUserTicket.Id}  has been removed.");

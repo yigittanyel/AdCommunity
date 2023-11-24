@@ -31,7 +31,7 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
 
         user.RemoveUserEvent(existingUserEvent);
 
-        _unitOfWork.UserEventRepository.Delete(existingUserEvent);
+        _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_userEvent_queue", $"User Ticket with Id: {existingUserEvent.Id}  has been removed.");

@@ -44,7 +44,7 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
 
         user.AddUserTicket(userTicket);
 
-        await _unitOfWork.UserTicketRepository.AddAsync(userTicket, cancellationToken);
+        _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_userTicket_queue", $"User Ticket has been created.");

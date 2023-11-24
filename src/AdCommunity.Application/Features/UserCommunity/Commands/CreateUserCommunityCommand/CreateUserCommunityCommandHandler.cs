@@ -44,7 +44,7 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
 
         community.AddUserCommunity(userCommunity);
 
-        await _unitOfWork.UserCommunityRepository.AddAsync(userCommunity, cancellationToken);
+        _unitOfWork.CommunityRepository.Update(community);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_userCommunity_queue", $"UserCommunity has been created.");

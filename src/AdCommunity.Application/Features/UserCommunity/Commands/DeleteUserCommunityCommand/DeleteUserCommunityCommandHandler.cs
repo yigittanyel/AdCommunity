@@ -31,7 +31,7 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
 
         community.RemoveUserCommunity(existingUserCommunity);
 
-        _unitOfWork.UserCommunityRepository.Delete(existingUserCommunity);
+        _unitOfWork.CommunityRepository.Update(community);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_userCommunity_queue", $"The UserCommunity with ID: {request.Id} has been removed.");

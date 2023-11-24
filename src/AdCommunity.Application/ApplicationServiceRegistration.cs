@@ -55,7 +55,5 @@ public static class ApplicationServiceRegistration
         #endregion
 
         serviceCollection.AddTransient(typeof(IYtPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-        serviceCollection.AddTransient<IYtRequestHandler<ExampleReq, string>, ExampleReqHandler>();
-
     }
 }

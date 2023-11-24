@@ -1,7 +1,6 @@
-﻿using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.CustomMediator;
+﻿using AdCommunity.Core.CustomMediator;
+using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Reflection.Metadata;
 
 namespace AdCommunity.Application.Features.PipelineExample;
 

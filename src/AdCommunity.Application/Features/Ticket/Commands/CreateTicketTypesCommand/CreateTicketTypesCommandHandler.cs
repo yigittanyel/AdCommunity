@@ -44,7 +44,7 @@ public class CreateTicketTypesCommandHandler : IYtRequestHandler<CreateTicketTyp
 
         community.AddTicket(ticket);
         
-        await _unitOfWork.TicketRepository.AddAsync(ticket, cancellationToken);
+        _unitOfWork.CommunityRepository.Update(community);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_ticket_queue", $"Ticket has been created.");
