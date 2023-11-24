@@ -26,7 +26,7 @@ public class CreateCommunityCommandValidator : AbstractValidator<CreateCommunity
 {
     public CreateCommunityCommandValidator()
     {
-        RuleFor(dto => dto.Name).NotEmpty().MaximumLength(50);
+        RuleFor(dto => dto.Name).NotEmpty().WithMessage("Community name cannot be empty.").MaximumLength(50);
         RuleFor(dto => dto.Description).MaximumLength(500);
         RuleFor(dto => dto.Location).MinimumLength(2).MaximumLength(100);
         RuleFor(dto => dto.Website).MaximumLength(50);

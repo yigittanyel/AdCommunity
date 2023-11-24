@@ -1,7 +1,5 @@
 ﻿using AdCommunity.Application.DTOs.Community;
-using AdCommunity.Application.DTOs.User;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Entities.Aggregates.User;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 

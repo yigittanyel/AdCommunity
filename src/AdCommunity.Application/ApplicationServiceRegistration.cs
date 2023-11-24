@@ -1,8 +1,10 @@
-﻿using AdCommunity.Application.Features.PipelineExample;
+﻿using AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
+using AdCommunity.Application.Features.PipelineExample;
 using AdCommunity.Application.Services.ElasticSearch;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
+using AdCommunity.Application.Validators;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +19,10 @@ public static class ApplicationServiceRegistration
     public static void AddApplicationRegistration(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         #region FluentValidation
-        serviceCollection.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        //serviceCollection.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        serviceCollection.AddScoped<IValidator<CreateCommunityCommand>, CreateCommunityCommandValidator>();
+
+
         #endregion
 
         #region Redis

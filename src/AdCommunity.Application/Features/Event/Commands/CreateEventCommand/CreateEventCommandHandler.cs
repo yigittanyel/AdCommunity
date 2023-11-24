@@ -39,6 +39,10 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
         @event.AssignCommunity(community);
 
         community.AddEvent(@event);
+
+
+        //update et ve updateasync ekle
+        //await _unitOfWork.CommunityRepository.Update(community, cancellationToken);
             
         await _unitOfWork.EventRepository.AddAsync(@event, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

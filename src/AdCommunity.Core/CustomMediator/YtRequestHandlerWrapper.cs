@@ -8,7 +8,7 @@ public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();
 internal class YtRequestHandlerWrapper<TRequest, TResponse>
     where TRequest : IYtRequest<TResponse>
 {
-
+    
     public YtRequestHandlerWrapper()
     {
     }

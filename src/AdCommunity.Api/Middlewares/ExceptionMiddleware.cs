@@ -28,7 +28,7 @@ public class ExceptionMiddleware:IMiddleware
             await context.Response.WriteAsync(new ErrorInfo()
             {
                 StatusCode = context.Response.StatusCode,
-                Message = "Internal Server Error from the custom middleware. Check logs for details."
+                Message = ex.Message ?? "Internal Server Error from the custom middleware. Check logs for details."
             }.ToString());
         }
     }

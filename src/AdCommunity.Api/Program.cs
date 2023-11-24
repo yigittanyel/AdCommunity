@@ -66,7 +66,7 @@ RepositoryServiceRegistration.AddRepositoryRegistration(builder.Services, builde
 #endregion
 
 #region Application Registration Implementation
-ApplicationServiceRegistration.AddApplicationRegistration(builder.Services, builder.Configuration);
+builder.Services.AddApplicationRegistration(builder.Configuration);
 #endregion
 
 #region JWT Implementation
