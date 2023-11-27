@@ -6,7 +6,9 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Application.Validators;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using AdCommunity.Domain.Repository;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
@@ -19,14 +21,11 @@ public static class ApplicationServiceRegistration
     public static void AddApplicationRegistration(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         #region FluentValidation
-        //serviceCollection.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        serviceCollection.AddScoped<IValidator<CreateCommunityCommand>, CreateCommunityCommandValidator>();
-
-
+        serviceCollection.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         #endregion
 
         #region Redis
-        serviceCollection.AddScoped<IRedisService,RedisService>(sp =>
+        serviceCollection.AddScoped<IRedisService, RedisService>(sp =>
         {
             return new RedisService(configuration["Redis:ConnectionString"]);
         });
@@ -42,8 +41,8 @@ public static class ApplicationServiceRegistration
             Port = Convert.ToInt32(configuration["RabbitMQ:Port"]),
             UserName = configuration["RabbitMQ:UserName"],
             Password = configuration["RabbitMQ:Password"],
-            Uri= new System.Uri(configuration["RabbitMQ:Url"]),
-            
+            Uri = new System.Uri(configuration["RabbitMQ:Url"]),
+
         };
         serviceCollection.AddSingleton(rabbitMqFactory);
 
@@ -56,4 +55,37 @@ public static class ApplicationServiceRegistration
 
         serviceCollection.AddTransient(typeof(IYtPipelineBehavior<,>), typeof(LoggingBehavior<,>));
     }
+
+    //public static void AddTransactionalDecorators(this IServiceCollection services)
+    //{
+    //    services.Scan(scan => scan
+    //        .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+    //        .AddClasses(classes => classes.AssignableTo(typeof(IYtRequestHandler<,>)))
+    //        .AsImplementedInterfaces()
+    //        .WithScopedLifetime());
+
+    //    var handlerTypes = AppDomain.CurrentDomain.GetAssemblies()
+    //        .SelectMany(s => s.GetTypes())
+    //        .Where(p => typeof(Core.CustomMediator.Interfaces.IYtRequestHandler<,>).IsAssignableFrom(p) && !p.IsInterface);
+
+    //    foreach (var handlerType in handlerTypes)
+    //    {
+    //        var interfaceType = handlerType.GetInterfaces()
+    //            .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IYtRequestHandler<,>));
+
+    //        if (interfaceType != null)
+    //        {
+    //            var requestType = interfaceType.GetGenericArguments()[0];
+    //            var responseType = interfaceType.GetGenericArguments()[1];
+    //            var decoratorType = typeof(TransactionalRequestHandlerDecorator<,>).MakeGenericType(requestType, responseType);
+
+    //            services.Decorate(interfaceType, (inner, provider) =>
+    //            {
+    //                var unitOfWork = provider.GetRequiredService<IUnitOfWork>();
+    //                var decorator = Activator.CreateInstance(decoratorType, inner, unitOfWork);
+    //                return decorator;
+    //            });
+    //        }
+    //    }
+    //}
 }

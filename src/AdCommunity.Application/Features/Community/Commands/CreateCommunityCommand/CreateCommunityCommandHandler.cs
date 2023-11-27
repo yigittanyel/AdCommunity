@@ -6,6 +6,7 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using FluentValidation;
+using System;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 
@@ -24,6 +25,7 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
 
     public async Task<CommunityCreateDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
     {
+
         var existingCommunity = await _unitOfWork.CommunityRepository.GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)
@@ -38,8 +40,15 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
 
         community.AssignUser(user);
 
+        //var validationResult = await new CreateCommunityCommandValidator().ValidateAsync(request);
+
+        //if (!validationResults.IsValid)
+        //{
+        //    throw new ValidationException(validationResults.Errors.Select(e => e.ErrorMessage).ToList());
+        //}
+
         await _unitOfWork.CommunityRepository.AddAsync(community, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        //await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_community_queue", $"Community name: {community.Name} has been created.");
 

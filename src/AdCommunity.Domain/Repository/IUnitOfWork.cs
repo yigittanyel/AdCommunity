@@ -1,4 +1,6 @@
-﻿namespace AdCommunity.Domain.Repository;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace AdCommunity.Domain.Repository;
 
 public interface IUnitOfWork
 {
@@ -11,7 +13,7 @@ public interface IUnitOfWork
     IUserTicketRepository UserTicketRepository { get; }
 
     Task<int> SaveChangesAsync(CancellationToken? cancellationToken);
-    Task BeginTransactionAsync(CancellationToken? cancellationToken);
+    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken? cancellationToken);
     Task CommitTransactionAsync(CancellationToken? cancellationToken);
     Task RollbackTransactionAsync(CancellationToken? cancellationToken);
 }

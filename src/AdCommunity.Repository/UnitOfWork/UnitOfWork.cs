@@ -1,5 +1,7 @@
 ﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Repository.UnitOfWork;
 
@@ -39,9 +41,9 @@ public class UnitOfWork : IUnitOfWork
         return await _context.SaveChangesAsync((CancellationToken)cancellationToken);
     }
 
-    public async Task BeginTransactionAsync(CancellationToken? cancellationToken)
+    public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken? cancellationToken = null)
     {
-        await _context.Database.BeginTransactionAsync((CancellationToken)cancellationToken);
+        return await _context.Database.BeginTransactionAsync(cancellationToken ?? CancellationToken.None);
     }
 
     public async Task CommitTransactionAsync(CancellationToken? cancellationToken)
