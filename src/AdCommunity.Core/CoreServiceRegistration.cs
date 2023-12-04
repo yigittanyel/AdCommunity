@@ -39,7 +39,6 @@ public static class CoreServiceRegistration
             }
         }
 
-
         return services;
     }
     private static void AddRequiredServices(IServiceCollection services)

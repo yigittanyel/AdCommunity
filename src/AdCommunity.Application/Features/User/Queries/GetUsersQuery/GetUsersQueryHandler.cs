@@ -9,6 +9,7 @@ namespace AdCommunity.Application.Features.User.Queries.GetUsersQuery;
 
 public class GetUsersQueryHandler : IYtRequestHandler<GetUsersQuery, List<UserDto>>
 {
+    private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(1);
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
@@ -37,7 +38,7 @@ public class GetUsersQueryHandler : IYtRequestHandler<GetUsersQuery, List<UserDt
 
             usersDto = _mapper.MapList<Domain.Entities.Aggregates.User.User, UserDto>((List<Domain.Entities.Aggregates.User.User>)users);
 
-            await _redisService.AddToCacheAsync(cacheKey, usersDto, TimeSpan.FromMinutes(1));
+            await _redisService.AddToCacheAsync(cacheKey, usersDto, CacheTime);
         }
 
         return usersDto;

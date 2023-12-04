@@ -10,6 +10,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
 
 public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQuery, UserCommunityDto>
 {
+    private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(1);
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
@@ -39,7 +40,7 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
 
             userCommunityDto = _mapper.Map<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunity);
 
-            await _redisService.AddToCacheAsync(cacheKey, userCommunityDto, TimeSpan.FromMinutes(1));
+            await _redisService.AddToCacheAsync(cacheKey, userCommunityDto, CacheTime);
         }
 
         return userCommunityDto;

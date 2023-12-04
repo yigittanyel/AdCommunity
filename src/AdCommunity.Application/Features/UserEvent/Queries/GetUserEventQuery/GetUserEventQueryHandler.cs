@@ -10,6 +10,7 @@ namespace AdCommunity.Application.Features.UserEvent.Queries.GetUserEventQuery;
 
 public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, UserEventDto>
 {
+    private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(1);
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
@@ -36,7 +37,7 @@ public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, Use
 
             userEventDto = _mapper.Map<Domain.Entities.Aggregates.User.UserEvent, UserEventDto>(userEvent);
 
-            await _redisService.AddToCacheAsync(cacheKey, userEventDto, TimeSpan.FromMinutes(1));
+            await _redisService.AddToCacheAsync(cacheKey, userEventDto, CacheTime);
         }
 
         return userEventDto;

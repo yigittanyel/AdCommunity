@@ -2,13 +2,10 @@ using AdCommunity.Api.Middlewares;
 using AdCommunity.Application;
 using AdCommunity.Core;
 using AdCommunity.Repository;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

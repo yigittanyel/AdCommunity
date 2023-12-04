@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketQuery;
 public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, UserTicketDto>
 {
+    private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(1);
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
@@ -35,7 +36,7 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
 
             userTicketDto = _mapper.Map<Domain.Entities.Aggregates.User.UserTicket, UserTicketDto>(userTicket);
 
-            await _redisService.AddToCacheAsync(cacheKey, userTicketDto, TimeSpan.FromMinutes(1));
+            await _redisService.AddToCacheAsync(cacheKey, userTicketDto, CacheTime);
         }
 
         return userTicketDto;

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AdCommunity.Repository\AdCommunity.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>

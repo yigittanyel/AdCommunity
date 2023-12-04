@@ -10,6 +10,7 @@ namespace AdCommunity.Application.Features.Ticket.Queries.GetTicketsQuery;
 
 public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, TicketTypesDto>
 {
+    private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(1);
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
@@ -40,7 +41,7 @@ public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, T
 
             ticketDto = _mapper.Map<Domain.Entities.Aggregates.Community.TicketType, TicketTypesDto>(ticket);
 
-            await _redisService.AddToCacheAsync(cacheKey, ticketDto, TimeSpan.FromMinutes(1));
+            await _redisService.AddToCacheAsync(cacheKey, ticketDto, CacheTime);
         }
 
         return ticketDto;

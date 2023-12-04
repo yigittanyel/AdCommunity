@@ -11,6 +11,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
 {
     public class GetUserCommunitiesQueryHandler : IYtRequestHandler<GetUserCommunitiesQuery, List<UserCommunityDto>>
     {
+        private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(1);
         private readonly IUnitOfWork _unitOfWork;
         private readonly IYtMapper _mapper;
         private readonly IRedisService _redisService;
@@ -66,7 +67,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
                     await _elasticSearchService.SyncSingleToElastic<UserCommunityDto>(IndexName, userCommunity);
                 }
 
-                await _redisService.AddToCacheAsync(cacheKey, userCommunitiesDto, TimeSpan.FromMinutes(1));
+                await _redisService.AddToCacheAsync(cacheKey, userCommunitiesDto, CacheTime);
             }
 
             return userCommunitiesDto;
