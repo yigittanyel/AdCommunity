@@ -24,7 +24,6 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
             throw new NotExistException("Community");
 
         _unitOfWork.CommunityRepository.Delete(existingCommunity);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_community_queue", $"Community name: {existingCommunity.Name} has been removed.");
 

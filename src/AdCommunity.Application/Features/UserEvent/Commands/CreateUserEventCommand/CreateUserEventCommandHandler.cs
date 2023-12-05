@@ -46,7 +46,6 @@ public class CreateUserEventCommandHandler : IYtRequestHandler<CreateUserEventCo
         user.AddUserEvent(userEvent);
 
         _unitOfWork.UserRepository.Update(user);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_userEvent_queue", $"User Event has been created.");
 

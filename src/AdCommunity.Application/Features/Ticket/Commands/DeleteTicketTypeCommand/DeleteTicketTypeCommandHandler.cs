@@ -33,7 +33,6 @@ public class DeleteTicketTypeCommandHandler : IYtRequestHandler<DeleteTicketComm
         community.RemoveTicket(existingTicket);
 
         _unitOfWork.CommunityRepository.Update(community);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_ticket_queue", $"Ticket has been removed.");
 

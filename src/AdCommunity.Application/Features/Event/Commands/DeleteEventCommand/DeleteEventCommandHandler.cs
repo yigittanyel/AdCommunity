@@ -29,7 +29,6 @@ public class DeleteEventCommandHandler : IYtRequestHandler<DeleteEventCommand, b
         community.RemoveEvent(existingEvent);
 
         _unitOfWork.CommunityRepository.Update(community);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_event_queue", $"Event name: {existingEvent.EventName} has been removed.");
         return true;

@@ -32,7 +32,6 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
         (request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.Username, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 
         await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
-        //await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_user_queue", $"UserName: {user.Username} has been created.");
 

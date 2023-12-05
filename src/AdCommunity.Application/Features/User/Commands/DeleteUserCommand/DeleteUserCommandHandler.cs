@@ -26,7 +26,6 @@ public class DeleteUserCommandHandler : IYtRequestHandler<DeleteUserCommand, boo
         }
 
         _unitOfWork.UserRepository.Delete(existingUser);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("delete_user_queue", $"User with Id: {existingUser.Id}  has been removed.");
 

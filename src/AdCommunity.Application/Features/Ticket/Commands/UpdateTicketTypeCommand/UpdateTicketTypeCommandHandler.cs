@@ -45,7 +45,6 @@ public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketType
         _mapper.Map(request, existingTicket);
 
         _unitOfWork.TicketRepository.Update(existingTicket);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("update_ticket_queue", $"Ticket with Id: {existingTicket.Id}  has been edited.");
 

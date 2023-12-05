@@ -17,32 +17,40 @@ public static class CoreServiceRegistration
 
     public static IServiceCollection AddYtMeditor(this IServiceCollection services, params Assembly[] assemblies)
     {
-        AddRequiredServices(services);
-        RegisterServices(services, assemblies, typeof(IYtRequestHandler<,>));
+        RegisterServices(services, assemblies);
 
         return services;
     }
-    private static IServiceCollection RegisterServices(this IServiceCollection services, Assembly[] assemblies, Type registerationObj)
-    {
 
-        foreach (var assembly in assemblies)
-        {
-            var types = assembly.GetTypes();
-            var handlers = types.Where(x => x.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == registerationObj));
-            foreach (var handle in handlers)
-            {
-                var interfaces = handle.GetInterfaces();
-                foreach (var handleInterface in interfaces)
-                {
-                    services.AddTransient(handleInterface, handle);
-                }
-            }
-        }
+    private static IServiceCollection RegisterServices(this IServiceCollection services, Assembly[] assemblies)
+    {
+        services.Scan(scan => scan
+            .FromAssemblies(assemblies)
+            .AddClasses(classes => classes.AssignableTo(typeof(IYtRequestHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
+
+        services.Scan(scan => scan
+            .FromAssemblies(assemblies)
+            .AddClasses(classes => classes.AssignableTo(typeof(IYtPipelineBehavior<,>)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
+
+        services.Scan(scan => scan
+            .FromAssemblies(assemblies)
+            .AddClasses(classes => classes.AssignableTo(typeof(IYtMediator)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
+
+        services.Scan(scan => scan
+            .FromAssemblies(assemblies)
+            .AddClasses(classes => classes.AssignableTo(typeof(TransactionalRequestHandlerDecorator<,>)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
+
+        services.Decorate(typeof(IYtRequestHandler<,>), typeof(TransactionalRequestHandlerDecorator<,>));
 
         return services;
     }
-    private static void AddRequiredServices(IServiceCollection services)
-    {
-        services.TryAdd(new ServiceDescriptor(typeof(IYtMediator), typeof(YtMediator), ServiceLifetime.Transient));
-    }
+
 }

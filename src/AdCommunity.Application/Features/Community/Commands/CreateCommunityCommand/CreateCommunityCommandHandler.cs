@@ -48,7 +48,6 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         //}
 
         await _unitOfWork.CommunityRepository.AddAsync(community, cancellationToken);
-        //await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_community_queue", $"Community name: {community.Name} has been created.");
 

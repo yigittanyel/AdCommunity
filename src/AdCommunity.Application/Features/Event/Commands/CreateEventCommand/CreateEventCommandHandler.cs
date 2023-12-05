@@ -41,7 +41,6 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
         community.AddEvent(@event);
      
         _unitOfWork.CommunityRepository.Update(community);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_event_queue", $"Event name: {@event.EventName} has been created.");
 

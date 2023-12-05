@@ -44,7 +44,6 @@ public class UpdateUserEventCommandHandler : IYtRequestHandler<UpdateUserEventCo
         _mapper.Map(request, existingUserEvent);
 
         _unitOfWork.UserEventRepository.Update(existingUserEvent);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("update_userTicket_queue", $"User Ticket with Id: {existingUserEvent.Id}  has been edited.");
 

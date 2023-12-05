@@ -33,7 +33,6 @@ public class UpdateEventCommandHandler : IYtRequestHandler<UpdateEventCommand, b
         _mapper.Map(request, existingEvent);
 
         _unitOfWork.EventRepository.Update(existingEvent);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("update_event_queue", $"Event with Id: {existingEvent.Id}  has been edited.");
 

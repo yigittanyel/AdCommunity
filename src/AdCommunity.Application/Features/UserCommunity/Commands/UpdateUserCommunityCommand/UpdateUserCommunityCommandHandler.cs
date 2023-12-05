@@ -45,7 +45,6 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
         _mapper.Map(request, existingUserCommunity);
 
         _unitOfWork.UserCommunityRepository.Update(existingUserCommunity);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _rabbitMqFactory.PublishMessage("update_userCommunity_queue", $"UserCommunity with Id: {existingUserCommunity.Id}  has been edited.");
 
