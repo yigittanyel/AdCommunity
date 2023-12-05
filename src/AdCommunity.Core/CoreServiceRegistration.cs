@@ -2,7 +2,6 @@
 using AdCommunity.Core.CustomMediator;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace AdCommunity.Core;
@@ -52,5 +51,4 @@ public static class CoreServiceRegistration
 
         return services;
     }
-
 }

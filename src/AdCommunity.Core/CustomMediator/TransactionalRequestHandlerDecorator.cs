@@ -17,21 +17,30 @@ public class TransactionalRequestHandlerDecorator<TRequest, TResponse> : IYtRequ
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
     {
-        await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
-        try
+        // Belirli bir dependency'nin sonunda "CommandHandler" kelimesi geçiyorsa işlem yap
+        if (_innerHandler.GetType().Name.EndsWith("CommandHandler"))
         {
-            var result = await _innerHandler.Handle(request, cancellationToken);
+            await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            try
+            {
+                var result = await _innerHandler.Handle(request, cancellationToken);
 
-            return result;
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+                return result;
+            }
+            catch
+            {
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                throw;
+            }
         }
-        catch
+        else
         {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
+            // Belirli bir türde değilse, normal işlemi yap
+            return await _innerHandler.Handle(request, cancellationToken);
         }
     }
 }
