@@ -4,6 +4,8 @@ namespace AdCommunity.Application.Features.Event.Commands.UpdateEventCommand;
 
 public class UpdateEventCommand : IYtRequest<bool>
 {
+    public bool IsCommand => true;
+
     public int Id { get; set; }
     public string EventName { get; set; }
     public string Description { get; set; }

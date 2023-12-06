@@ -4,5 +4,6 @@ namespace AdCommunity.Application.Features.UserCommunity.Commands.DeleteUserComm
 
 public class DeleteUserCommunityCommand : IYtRequest<bool>
 {
+    public bool IsCommand => true;
     public int Id { get; set; }
 }

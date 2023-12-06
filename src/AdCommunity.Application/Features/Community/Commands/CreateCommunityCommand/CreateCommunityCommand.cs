@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCom
 
 public class CreateCommunityCommand : IYtRequest<CommunityCreateDto>
 {
+    public bool IsCommand => true;
     public string Name { get; set; }
     public string? Description { get; set; }
     public string? Tags { get; set; }

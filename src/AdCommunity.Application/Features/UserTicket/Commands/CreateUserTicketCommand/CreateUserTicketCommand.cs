@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.UserTicket.Commands.CreateUserTicketC
 
 public class CreateUserTicketCommand : IYtRequest<UserTicketCreateDto>
 {
+    public bool IsCommand => true;
     public int UserId { get; set; }
     public int TicketId { get; set; }
     public string? Pnr { get; set; }

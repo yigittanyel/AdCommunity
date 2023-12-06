@@ -4,6 +4,7 @@ namespace AdCommunity.Application.Features.Ticket.Commands.UpdateTicketCommand;
 
 public class UpdateTicketTypeCommand : IYtRequest<bool>
 {
+    public bool IsCommand => true;
     public int Id { get; set; }
     public int CommunityEventId { get; set; }
     public int CommunityId { get; set; }

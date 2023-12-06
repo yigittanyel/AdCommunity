@@ -7,4 +7,6 @@ namespace AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand
 public class RegisterCommand : IYtRequest<Tokens>
 {
     public UserCreateDto User { get; set; }
+    public bool IsCommand => true;
+
 }

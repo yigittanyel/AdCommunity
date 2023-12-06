@@ -17,8 +17,8 @@ public class TransactionalRequestHandlerDecorator<TRequest, TResponse> : IYtRequ
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
     {
-        // Belirli bir dependency'nin sonunda "CommandHandler" kelimesi geçiyorsa işlem yap
-        if (_innerHandler.GetType().Name.EndsWith("CommandHandler"))
+        // IYtRequest<TResponse> arayüzüne eklenen IsCommand özelliği ile işlemi kontrol et
+        if (request.IsCommand)
         {
             await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
@@ -39,7 +39,7 @@ public class TransactionalRequestHandlerDecorator<TRequest, TResponse> : IYtRequ
         }
         else
         {
-            // Belirli bir türde değilse, normal işlemi yap
+            // Diğer türler için normal işlemi yap
             return await _innerHandler.Handle(request, cancellationToken);
         }
     }

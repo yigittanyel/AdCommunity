@@ -5,5 +5,6 @@ namespace AdCommunity.Application.Features.UserEvent.Queries.GetUserEventQuery;
 
 public class GetUserEventQuery:IYtRequest<UserEventDto>
 {
+    public bool IsCommand => false;
     public int Id { get; set; }
 }

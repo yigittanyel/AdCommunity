@@ -4,6 +4,7 @@ namespace AdCommunity.Application.Features.Community.Commands.UpdateCommunityCom
 
 public class UpdateCommunityCommand : IYtRequest<bool>
 {
+    public bool IsCommand => true;
     public int Id { get; set; }
     public string Name { get; set; }
     public string? Description { get; set; }

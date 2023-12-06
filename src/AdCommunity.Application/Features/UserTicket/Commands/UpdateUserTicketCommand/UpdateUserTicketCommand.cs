@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketC
 
 public class UpdateUserTicketCommand : IYtRequest<bool>
 {
+    public bool IsCommand => true;
     public int Id { get; set; }
     public int UserId { get; set; }
     public int TicketId { get; set; }

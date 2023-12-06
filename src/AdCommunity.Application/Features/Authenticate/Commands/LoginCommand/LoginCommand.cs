@@ -7,4 +7,6 @@ namespace AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
 public class LoginCommand : IYtRequest<Tokens>
 {
     public UserLoginDto User { get; set; }
+    public bool IsCommand => true;
+
 }

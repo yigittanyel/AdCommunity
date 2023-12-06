@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.Event.Commands.CreateEventCommand;
 
 public class CreateEventCommand : IYtRequest<EventCreateDto>
 {
+    public bool IsCommand => true;
     public string EventName { get; set; }
     public string Description { get; set; }
     public DateTime EventDate { get; set; }

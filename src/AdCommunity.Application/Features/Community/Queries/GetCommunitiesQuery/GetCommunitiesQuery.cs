@@ -5,4 +5,6 @@ namespace AdCommunity.Application.Features.Community.Queries.GetCommunitiesQuery
 
 public class GetCommunitiesQuery : IYtRequest<List<CommunityDto>>
 {
+    public bool IsCommand => false;
+
 }

@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.UserEvent.Commands.CreateUserEventCom
 
 public class CreateUserEventCommand : IYtRequest<UserEventCreateDto>
 {
+    public bool IsCommand => true;
     public int UserId { get; set; }
     public int EventId { get; set; }
 

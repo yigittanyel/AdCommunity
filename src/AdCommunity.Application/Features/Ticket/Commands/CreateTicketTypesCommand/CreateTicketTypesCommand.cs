@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.Ticket.Commands.CreateTicketCommand;
 
 public class CreateTicketTypesCommand:IYtRequest<TicketTypesCreateDto>
 {
+    public bool IsCommand => true;
     public int CommunityEventId { get; set; }
     public int CommunityId { get; set; }
     public decimal? Price { get; set; }

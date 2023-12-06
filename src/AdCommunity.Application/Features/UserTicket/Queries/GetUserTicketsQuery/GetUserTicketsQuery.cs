@@ -5,4 +5,5 @@ namespace AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketsQuer
 
 public class GetUserTicketsQuery : IYtRequest<List<UserTicketDto>>
 {
+    public bool IsCommand => false;
 }

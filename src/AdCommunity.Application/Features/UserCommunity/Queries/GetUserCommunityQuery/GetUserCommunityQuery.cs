@@ -5,5 +5,6 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
 
 public class GetUserCommunityQuery : IYtRequest<UserCommunityDto>
 {
+    public bool IsCommand => false;
     public int Id { get; set; }
 }

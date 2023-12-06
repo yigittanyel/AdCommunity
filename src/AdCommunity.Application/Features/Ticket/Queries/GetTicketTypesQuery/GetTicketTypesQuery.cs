@@ -5,4 +5,5 @@ namespace AdCommunity.Application.Features.Ticket.Queries.GetTicketQuery;
 
 public class GetTicketTypesQuery:IYtRequest<List<TicketTypesDto>>
 {
+    public bool IsCommand => false;
 }

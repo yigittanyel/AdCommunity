@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.User.Commands.CreateUserCommand;
 
 public class CreateUserCommand : IYtRequest<UserCreateDto>
 {
+    public bool IsCommand => true;
     public string FirstName { get; set; }
     public string Password { get; set; }
     public string LastName { get; set; }

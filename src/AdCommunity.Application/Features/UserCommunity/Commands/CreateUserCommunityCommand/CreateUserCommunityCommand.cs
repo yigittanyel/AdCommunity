@@ -5,6 +5,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Commands.CreateUserComm
 
 public class CreateUserCommunityCommand : IYtRequest<UserCommunityCreateDto>
 {
+    public bool IsCommand => true;
     public int UserId { get; set; }
     public int CommunityId { get; set; }
     public DateTime? JoinDate { get; set; }

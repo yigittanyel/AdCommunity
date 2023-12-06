@@ -4,6 +4,7 @@ namespace AdCommunity.Application.Features.UserEvent.Commands.UpdateUserEventCom
 
 public class UpdateUserEventCommand : IYtRequest<bool>
 {
+    public bool IsCommand => true;
     public int Id { get; set; }
     public int UserId { get; set; }
     public int EventId { get; set; }

@@ -2,5 +2,6 @@
 
 public interface IYtRequest<TResponse>
 {
+    bool IsCommand { get; }
 }
 
