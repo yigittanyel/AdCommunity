@@ -3,15 +3,41 @@ using AdCommunity.Application;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Globalization;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+#region Localization Implementation
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("tr-TR")
+    };
+    options.DefaultRequestCulture = new RequestCulture("tr-TR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider(),
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
+});
+#endregion
 
 #region Swagger Authentication Implementation
 builder.Services.AddSwaggerGen(c =>
@@ -91,9 +117,7 @@ builder.Services.AddAuthentication(x =>
 });
 #endregion
 
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+
 
 var app = builder.Build();
 
@@ -107,6 +131,14 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 #region Exception Middleware Implementation
 app.UseMiddleware<ExceptionMiddleware>();
+#endregion
+
+#region Localization Implementation
+var options = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+if (options is not null)
+{
+    app.UseRequestLocalization(options.Value);
+}
 #endregion
 
 app.UseHttpsRedirection();
