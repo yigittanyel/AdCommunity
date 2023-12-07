@@ -1,4 +1,5 @@
-﻿using AdCommunity.Application.DTOs.Community;
+﻿using AdCommunity.Api.Resources;
+using AdCommunity.Application.DTOs.Community;
 using AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 using AdCommunity.Application.Features.Community.Commands.DeleteCommunityCommand;
 using AdCommunity.Application.Features.Community.Commands.UpdateCommunityCommand;
@@ -6,6 +7,7 @@ using AdCommunity.Application.Features.Community.Queries.GetCommunitiesQuery;
 using AdCommunity.Application.Features.Community.Queries.GetCommunityQuery;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdCommunity.Api.Controllers
@@ -16,10 +18,11 @@ namespace AdCommunity.Api.Controllers
     public class CommunitiesController : ControllerBase
     {
         private readonly IYtMediator _mediator;
-
-        public CommunitiesController(IYtMediator mediator)
+        private readonly LocalizationService _localization;
+        public CommunitiesController(IYtMediator mediator, LocalizationService localization)
         {
             _mediator = mediator;
+            _localization = localization;
         }
 
         [HttpGet("[action]/{communityId}")]
@@ -66,6 +69,24 @@ namespace AdCommunity.Api.Controllers
             bool updatedCommunity = await _mediator.Send(command);
 
             return updatedCommunity;
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult ChangeLanguage(string culture)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddYears(1),
+                IsEssential = true,
+                HttpOnly = false
+            };
+
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                cookieOptions
+            );
+            return Redirect(Request.Headers["Referer"].ToString());
         }
     }
 }

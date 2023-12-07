@@ -1,9 +1,9 @@
 using AdCommunity.Api.Middlewares;
+using AdCommunity.Api.Resources;
 using AdCommunity.Application;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -18,19 +18,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 #region Localization Implementation
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.Configure<RequestLocalizationOptions>(options =>
+builder.Services.AddSingleton<LocalizationService>();
+builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resources"; });
+builder.Services.Configure<RequestLocalizationOptions>(opt =>
 {
-    var supportedCultures = new[]
+    var cultures = new List<CultureInfo>()
     {
-        new CultureInfo("en-US"),
-        new CultureInfo("tr-TR")
+        new CultureInfo("tr-TR"),
+        new CultureInfo("en-US")
     };
-    options.DefaultRequestCulture = new RequestCulture("tr-TR");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
 
-    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    opt.DefaultRequestCulture = new RequestCulture(new CultureInfo("tr-TR"));
+    opt.SupportedCultures = cultures;
+    opt.SupportedUICultures = cultures;
+
+    opt.RequestCultureProviders = new List<IRequestCultureProvider>()
     {
         new QueryStringRequestCultureProvider(),
         new CookieRequestCultureProvider(),
@@ -117,7 +119,9 @@ builder.Services.AddAuthentication(x =>
 });
 #endregion
 
-
+builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 var app = builder.Build();
 
@@ -134,11 +138,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 #endregion
 
 #region Localization Implementation
-var options = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
-if (options is not null)
-{
-    app.UseRequestLocalization(options.Value);
-}
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 #endregion
 
 app.UseHttpsRedirection();
