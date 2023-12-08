@@ -18,7 +18,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 #region Localization Implementation
-builder.Services.AddSingleton<LocalizationService>();
 builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resources"; });
 builder.Services.Configure<RequestLocalizationOptions>(opt =>
 {
@@ -139,6 +138,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 #region Localization Implementation
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+app.UseMiddleware<LanguageChangeMiddleware>();
 #endregion
 
 app.UseHttpsRedirection();
