@@ -1,14 +1,12 @@
-﻿namespace AdCommunity.Application.Exceptions;
+﻿using AdCommunity.Application.Helpers;
+using Microsoft.AspNetCore.Http;
+
+namespace AdCommunity.Application.Exceptions;
 
 public class NotExistException : Exception
 {
-    public NotExistException(string entityName)
-        : base($"{entityName} does not exist.")
-    {
-    }
-
-    public NotExistException(string entityName, Exception innerException)
-        : base($"{entityName} does not exist.", innerException)
+    public NotExistException(string entityName, HttpContext httpContext)
+        : base(string.Format(LocalizationHelper.TranslateWithEntity("NotExistErrorMessage", entityName, LocalizationHelper.GetLanguageCode(httpContext))))
     {
     }
 }

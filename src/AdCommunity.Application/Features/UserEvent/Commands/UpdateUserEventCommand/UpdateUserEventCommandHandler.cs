@@ -3,6 +3,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserEvent.Commands.UpdateUserEventCommand;
 
@@ -11,12 +12,13 @@ public class UpdateUserEventCommandHandler : IYtRequestHandler<UpdateUserEventCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-
-    public UpdateUserEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public UpdateUserEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<bool> Handle(UpdateUserEventCommand request, CancellationToken cancellationToken)
@@ -24,19 +26,19 @@ public class UpdateUserEventCommandHandler : IYtRequestHandler<UpdateUserEventCo
         var existingUserEvent = await _unitOfWork.UserEventRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserEvent is null)
-            throw new NotExistException("User Ticket");
+            throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User");
+            throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         existingUserEvent.AssignUser(user);
 
         var @event = await _unitOfWork.EventRepository.GetAsync(request.EventId, null, cancellationToken);
 
         if (@event is null)
-            throw new NotExistException("Event");
+            throw new NotExistException("Event",_httpContextAccessor.HttpContext);
 
         existingUserEvent.AssignEvent(@event);
         existingUserEvent.SetDate();

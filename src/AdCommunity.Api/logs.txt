@@ -6022,3 +6022,238 @@ AdCommunity.Application.Exceptions.InvalidCredentialsException: Geçersiz kullan
    at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 37
    at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
    at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 11:14:07.541 +03:00 [ERR] An error occurred: Unable to cast object of type 'Microsoft.AspNetCore.Http.HttpContextAccessor' to type 'Microsoft.AspNetCore.Http.HttpContext'.
+System.InvalidCastException: Unable to cast object of type 'Microsoft.AspNetCore.Http.HttpContextAccessor' to type 'Microsoft.AspNetCore.Http.HttpContext'.
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method31(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 11:18:08.612 +03:00 [ERR] An error occurred: BBT is already exist.
+AdCommunity.Application.Exceptions.AlreadyExistsException: BBT is already exist.
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method31(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 11:19:09.699 +03:00 [ERR] An error occurred: AlreadyExistsErrorMessage
+AdCommunity.Application.Exceptions.AlreadyExistsException: AlreadyExistsErrorMessage
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method31(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 14:11:09.541 +03:00 [ERR] An error occurred: Could not find the resource "AdCommunity.Application.Resources.resources" among the resources "" embedded in the assembly "AdCommunity.Application", nor among the resources in any satellite assemblies for the specified culture. Perhaps the resources were embedded with an incorrect name.
+System.Resources.MissingManifestResourceException: Could not find the resource "AdCommunity.Application.Resources.resources" among the resources "" embedded in the assembly "AdCommunity.Application", nor among the resources in any satellite assemblies for the specified culture. Perhaps the resources were embedded with an incorrect name.
+   at System.Resources.ManifestBasedResourceGroveler.HandleResourceStreamMissing(String fileName)
+   at System.Resources.ManifestBasedResourceGroveler.GrovelForResourceSet(CultureInfo culture, Dictionary`2 localResourceSets, Boolean tryParents, Boolean createIfNotExists)
+   at System.Resources.ResourceManager.InternalGetResourceSet(CultureInfo culture, Boolean createIfNotExists, Boolean tryParents)
+   at System.Resources.ResourceManager.GetString(String name, CultureInfo culture)
+   at AdCommunity.Application.Helpers.LocalizationHelper.Translate(String key, String languageCode) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Helpers\LocalizationHelper.cs:line 17
+   at AdCommunity.Application.Helpers.LocalizationHelper.TranslateWithEntity(String key, String entityName, String languageCode) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Helpers\LocalizationHelper.cs:line 24
+   at AdCommunity.Application.Exceptions.AlreadyExistsException..ctor(String entityName, HttpContext httpContext) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Exceptions\AlreadyExistsException.cs:line 9
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method31(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 14:12:45.060 +03:00 [ERR] An error occurred: Could not find the resource "AdCommunity.Application.Resources.Strings.resources" among the resources "" embedded in the assembly "AdCommunity.Application", nor among the resources in any satellite assemblies for the specified culture. Perhaps the resources were embedded with an incorrect name.
+System.Resources.MissingManifestResourceException: Could not find the resource "AdCommunity.Application.Resources.Strings.resources" among the resources "" embedded in the assembly "AdCommunity.Application", nor among the resources in any satellite assemblies for the specified culture. Perhaps the resources were embedded with an incorrect name.
+   at System.Resources.ManifestBasedResourceGroveler.HandleResourceStreamMissing(String fileName)
+   at System.Resources.ManifestBasedResourceGroveler.GrovelForResourceSet(CultureInfo culture, Dictionary`2 localResourceSets, Boolean tryParents, Boolean createIfNotExists)
+   at System.Resources.ResourceManager.InternalGetResourceSet(CultureInfo culture, Boolean createIfNotExists, Boolean tryParents)
+   at System.Resources.ResourceManager.GetString(String name, CultureInfo culture)
+   at AdCommunity.Application.Helpers.LocalizationHelper.Translate(String key, String languageCode) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Helpers\LocalizationHelper.cs:line 17
+   at AdCommunity.Application.Helpers.LocalizationHelper.TranslateWithEntity(String key, String entityName, String languageCode) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Helpers\LocalizationHelper.cs:line 24
+   at AdCommunity.Application.Exceptions.AlreadyExistsException..ctor(String entityName, HttpContext httpContext) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Exceptions\AlreadyExistsException.cs:line 9
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method9(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 14:14:30.607 +03:00 [ERR] An error occurred: BBT zaten mevcut.
+AdCommunity.Application.Exceptions.AlreadyExistsException: BBT zaten mevcut.
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method9(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 14:14:40.157 +03:00 [ERR] An error occurred: BBT is already exist.
+AdCommunity.Application.Exceptions.AlreadyExistsException: BBT is already exist.
+   at AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand.CreateCommunityCommandHandler.Handle(CreateCommunityCommand request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Community\Commands\CreateCommunityCommand\CreateCommunityCommandHandler.cs:line 31
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 27
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 37
+   at AdCommunity.Core.CustomMediator.TransactionalRequestHandlerDecorator`2.Handle(TRequest request, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\TransactionalRequestHandlerDecorator.cs:line 38
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Create(CommunityCreateDto community) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 46
+   at lambda_method9(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19
+2023-12-11 14:18:35.809 +03:00 [ERR] An error occurred: It was not possible to connect to the redis server(s). Error connecting right now. To allow this multiplexer to continue retrying until it's able to connect, use abortConnect=false in your connection string or AbortOnConnectFail=false; in your code.
+StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). Error connecting right now. To allow this multiplexer to continue retrying until it's able to connect, use abortConnect=false in your connection string or AbortOnConnectFail=false; in your code.
+   at StackExchange.Redis.ConnectionMultiplexer.ConnectImpl(ConfigurationOptions configuration, TextWriter writer, Nullable`1 serverType, EndPointCollection endpoints) in /_/src/StackExchange.Redis/ConnectionMultiplexer.cs:line 723
+   at StackExchange.Redis.ConnectionMultiplexer.Connect(ConfigurationOptions configuration, TextWriter log) in /_/src/StackExchange.Redis/ConnectionMultiplexer.cs:line 685
+   at StackExchange.Redis.ConnectionMultiplexer.Connect(String configuration, TextWriter log) in /_/src/StackExchange.Redis/ConnectionMultiplexer.cs:line 663
+   at AdCommunity.Application.Services.Redis.RedisService..ctor(String url) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Services\Redis\RedisService.cs:line 13
+   at AdCommunity.Application.ApplicationServiceRegistration.<>c__DisplayClass0_0.<AddApplicationRegistration>b__0(IServiceProvider sp) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\ApplicationServiceRegistration.cs:line 26
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Scrutor.DecorationStrategy.<>c__DisplayClass8_0.<TypeDecorator>b__0(IServiceProvider serviceProvider)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at AdCommunity.Core.CustomMediator.YtRequestHandlerWrapper`2.<>c__DisplayClass1_0.<Handle>g__Handler|0() in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Core\CustomMediator\YtRequestHandlerWrapper.cs:line 19
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Application.Features.PipelineExample.LoggingBehavior`2.Handle(TReq req, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Application\Features\Pipeline\LoggingBehaviour.cs:line 26
+   at AdCommunity.Api.Controllers.CommunitiesController.Get(Int32 communityId) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Controllers\CommunitiesController.cs:line 28
+   at lambda_method39(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.LanguageChangeMiddleware.InvokeAsync(HttpContext context) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\LanguageChangeMiddleware.cs:line 39
+   at Microsoft.AspNetCore.Localization.RequestLocalizationMiddleware.Invoke(HttpContext context)
+   at AdCommunity.Api.Middlewares.ExceptionMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\tanyel\Desktop\AdCommunity\AdCommunity\src\AdCommunity.Api\Middlewares\ExceptionMiddleware.cs:line 19

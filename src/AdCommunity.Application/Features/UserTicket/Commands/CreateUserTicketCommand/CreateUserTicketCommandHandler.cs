@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.CreateUserTicketCommand;
 public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicketCommand, UserTicketCreateDto>
@@ -11,12 +12,14 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CreateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
+    public CreateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UserTicketCreateDto> Handle(CreateUserTicketCommand request, CancellationToken cancellationToken)
@@ -24,21 +27,21 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
         var existingUserTicket = await _unitOfWork.UserTicketRepository.GetUserTicketsByUserAndTicketAsync(request.UserId,request.TicketId,cancellationToken);
 
         if (existingUserTicket is not null)
-            throw new AlreadyExistsException("User Ticket");
+            throw new AlreadyExistsException("User Ticket", _httpContextAccessor.HttpContext);
 
         var userTicket = Domain.Entities.Aggregates.User.UserTicket.Create(request.UserId,request.TicketId,request.Pnr);
           
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User");
+            throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         userTicket.AssignUser(user);
 
         var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
 
         if (ticket is null)
-            throw new NotExistException("Ticket");
+            throw new NotExistException("Ticket",_httpContextAccessor.HttpContext);
 
         userTicket.AssignTicket(ticket);
 

@@ -52,5 +52,7 @@ public static class ApplicationServiceRegistration
         #region Pipeline Behavior
         serviceCollection.AddTransient(typeof(IYtPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         #endregion
+
+        serviceCollection.AddHttpContextAccessor();
     }
 }

@@ -16,7 +16,7 @@ public class LanguageChangeMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var culture = context.Request.Query["culture"].ToString();
+        var culture = context.Request.Query["culture"].ToString(); //culture yok. lang olarak gönder
 
         if (!string.IsNullOrEmpty(culture))
         {
@@ -32,6 +32,8 @@ public class LanguageChangeMiddleware
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                 cookieOptions
             );
+
+            context.Items["LanguageCode"] = culture;
         }
 
         await _next(context);

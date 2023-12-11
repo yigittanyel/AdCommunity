@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserEvent.Commands.CreateUserEventCommand;
 
@@ -12,12 +13,14 @@ public class CreateUserEventCommandHandler : IYtRequestHandler<CreateUserEventCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CreateUserEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
+    public CreateUserEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UserEventCreateDto> Handle(CreateUserEventCommand request, CancellationToken cancellationToken)
@@ -25,21 +28,21 @@ public class CreateUserEventCommandHandler : IYtRequestHandler<CreateUserEventCo
         var existingUserEvent = await _unitOfWork.UserEventRepository.GetUserEventsByUserAndEventAsync(request.UserId, request.EventId, cancellationToken);
 
         if (existingUserEvent is not null)
-            throw new AlreadyExistsException("User Event");
+            throw new AlreadyExistsException("User Event", _httpContextAccessor.HttpContext);
 
         var userEvent = Domain.Entities.Aggregates.User.UserEvent.Create(request.UserId, request.EventId);
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User");
+            throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         userEvent.AssignUser(user);
 
         var @event = await _unitOfWork.EventRepository.GetAsync(request.EventId, null, cancellationToken);
 
         if (@event is null)
-            throw new NotExistException("Event");
+            throw new NotExistException("Event",_httpContextAccessor.HttpContext);
 
         userEvent.AssignEvent(@event);
 

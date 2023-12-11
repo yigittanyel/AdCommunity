@@ -2,6 +2,7 @@
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserCommunity.Commands.DeleteUserCommunityCommand;
 
@@ -9,12 +10,13 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-    public DeleteUserCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
+    public DeleteUserCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<bool> Handle(DeleteUserCommunityCommand request, CancellationToken cancellationToken)
@@ -22,12 +24,12 @@ public class DeleteUserCommunityCommandHandler : IYtRequestHandler<DeleteUserCom
         var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserCommunity is null)
-            throw new NotExistException("UserCommunity");
+            throw new NotExistException("UserCommunity", _httpContextAccessor.HttpContext);
 
         var community= await _unitOfWork.CommunityRepository.GetAsync(existingUserCommunity.CommunityId, null, cancellationToken);
 
         if(community is null)
-            throw new NotExistException("Community");
+            throw new NotExistException("Community", _httpContextAccessor.HttpContext);
 
         community.RemoveUserCommunity(existingUserCommunity);
 

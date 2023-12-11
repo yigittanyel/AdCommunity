@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlreadyExistsErrorMessage" xml:space="preserve">
+    <value>{0} is already exist.</value>
+  </data>
   <data name="InvalidCredentialsErrorMessage" xml:space="preserve">
-    <value>Invalid username or password.</value>
+    <value>Invalid credentials.</value>
+  </data>
+  <data name="NotExistErrorMessage" xml:space="preserve">
+    <value>{0} does not exist.</value>
+  </data>
+  <data name="NotFoundErrorMessage" xml:space="preserve">
+    <value>{0} does not found.</value>
+  </data>
+  <data name="NullExceptionErrorMessage" xml:space="preserve">
+    <value>Null exception.</value>
   </data>
 </root>

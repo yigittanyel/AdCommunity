@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunityQuery;
@@ -14,14 +15,14 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-
-    public GetUserCommunityQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public GetUserCommunityQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
+        _httpContextAccessor = httpContextAccessor;
     }
-
 
     public async Task<UserCommunityDto> Handle(GetUserCommunityQuery request, CancellationToken cancellationToken)
     {
@@ -36,7 +37,7 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
                 cancellationToken);
 
             if (userCommunity is null)
-                throw new NotExistException("UserCommunity");
+                throw new NotExistException("UserCommunity",_httpContextAccessor.HttpContext);
 
             userCommunityDto = _mapper.Map<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunity);
 

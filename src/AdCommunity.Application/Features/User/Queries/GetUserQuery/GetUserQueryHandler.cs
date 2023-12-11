@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.User.Queries.GetUserQuery;
 
@@ -13,12 +14,14 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
+    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
@@ -33,7 +36,7 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
 
             if (user is null)
             {
-                throw new NotFoundException("User", request.Id);
+                throw new NotFoundException("User", _httpContextAccessor.HttpContext);
             }
 
             userDto = _mapper.Map<Domain.Entities.Aggregates.User.User, UserDto>(user);

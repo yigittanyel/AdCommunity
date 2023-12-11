@@ -3,6 +3,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketCommand;
 public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicketCommand, bool>
@@ -10,12 +11,13 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-
-    public UpdateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public UpdateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<bool> Handle(UpdateUserTicketCommand request, CancellationToken cancellationToken)
@@ -23,19 +25,19 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
         var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket is null)
-            throw new NotExistException("User Ticket");
+            throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
 
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User");
+            throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         existingUserTicket.AssignUser(user);
 
         var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
 
         if (ticket is null)
-            throw new NotExistException("Ticket does not exist");
+            throw new NotExistException("Ticket does not exist",_httpContextAccessor.HttpContext);
 
         existingUserTicket.AssignTicket(ticket);
         existingUserTicket.SetDate();

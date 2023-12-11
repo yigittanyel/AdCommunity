@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserCommunity.Commands.CreateUserCommunityCommand;
 
@@ -12,12 +13,14 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CreateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
+    public CreateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UserCommunityCreateDto> Handle(CreateUserCommunityCommand request, CancellationToken cancellationToken)
@@ -25,13 +28,13 @@ public class CreateUserCommunityCommandHandler : IYtRequestHandler<CreateUserCom
         var existingUserCommunity = await _unitOfWork.UserCommunityRepository.GetUserCommunitiesByUserAndCommunityAsync(request.UserId, request.CommunityId, cancellationToken);
 
         if (existingUserCommunity is not null)
-            throw new AlreadyExistsException("User Community");
+            throw new AlreadyExistsException("User Community", _httpContextAccessor.HttpContext);
 
         var userCommunity = new Domain.Entities.Aggregates.User.UserCommunity(request.JoinDate);
         var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User");
+            throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         userCommunity.AssignUser(user);
 

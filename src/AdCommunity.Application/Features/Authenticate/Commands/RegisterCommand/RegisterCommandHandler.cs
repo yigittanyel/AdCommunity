@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand;
 
@@ -11,11 +12,14 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public RegisterCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService)
+
+    public RegisterCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Tokens> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -24,7 +28,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 
         if (existingUser is not null)
         {
-            throw new AlreadyExistsException(existingUser.Username);
+            throw new AlreadyExistsException(existingUser.Username, _httpContextAccessor.HttpContext);
         }
 
         var user = new Domain.Entities.Aggregates.User.User(

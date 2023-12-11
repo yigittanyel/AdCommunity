@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.UserEvent.Queries.GetUserEventsQuery;
@@ -14,12 +15,13 @@ public class GetUserEventsQueryHandler : IYtRequestHandler<GetUserEventsQuery, L
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-
-    public GetUserEventsQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public GetUserEventsQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<List<UserEventDto>> Handle(GetUserEventsQuery request, CancellationToken cancellationToken)
@@ -34,7 +36,7 @@ public class GetUserEventsQueryHandler : IYtRequestHandler<GetUserEventsQuery, L
 
             if (userEvents is null || !userEvents.Any())
             {
-                throw new NotExistException("User Event");
+                throw new NotExistException("User Event",_httpContextAccessor.HttpContext);
             }
 
             userEventsDto = _mapper.MapList<Domain.Entities.Aggregates.User.UserEvent, UserEventDto>((List<Domain.Entities.Aggregates.User.UserEvent>)userEvents);

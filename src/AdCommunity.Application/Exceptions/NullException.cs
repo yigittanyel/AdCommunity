@@ -1,16 +1,11 @@
-﻿namespace AdCommunity.Application.Exceptions;
+﻿using AdCommunity.Application.Helpers;
+using Microsoft.AspNetCore.Http;
+
+namespace AdCommunity.Application.Exceptions;
 
 public class NullException : ArgumentNullException
 {
-    public NullException() : base()
-    {
-    }
-
-    public NullException(string paramName) : base(paramName)
-    {
-    }
-
-    public NullException(string message, Exception ex) : base(message, ex)
+    public NullException(HttpContext httpContext) : base(string.Format(LocalizationHelper.TranslateWithEntity("NullExceptionErrorMessage", LocalizationHelper.GetLanguageCode(httpContext))))
     {
     }
 }

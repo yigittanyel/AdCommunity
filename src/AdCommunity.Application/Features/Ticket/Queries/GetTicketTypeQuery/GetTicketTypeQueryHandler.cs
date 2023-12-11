@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.Ticket.Queries.GetTicketsQuery;
@@ -14,12 +15,14 @@ public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, T
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetTicketTypeQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
+    public GetTicketTypeQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
+        _httpContextAccessor = httpContextAccessor;
     }
     public async Task<TicketTypesDto> Handle(GetTicketTypeQuery request, CancellationToken cancellationToken)
     {
@@ -36,7 +39,7 @@ public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, T
 
             if (ticket is null)
             {
-                throw new NotFoundException("community", request.Id);
+                throw new NotFoundException("community", _httpContextAccessor.HttpContext);
             }
 
             ticketDto = _mapper.Map<Domain.Entities.Aggregates.Community.TicketType, TicketTypesDto>(ticket);

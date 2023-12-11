@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
@@ -13,12 +14,14 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
     private readonly IConfiguration _configuration;
     private readonly IUnitOfWork _unitOfWork;
     private readonly LocalizationService _localizationService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork, LocalizationService localizationService)
+    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork, LocalizationService localizationService, IHttpContextAccessor httpContextAccessor)
     {
         _configuration = configuration;
         _unitOfWork = unitOfWork;
         _localizationService = localizationService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Tokens> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -28,7 +31,7 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
         if (existingUser is null)
         {
             var errorMessage = _localizationService.GetKey("InvalidCredentialsErrorMessage").Value;
-            throw new InvalidCredentialsException(errorMessage);
+            throw new InvalidCredentialsException(_httpContextAccessor.HttpContext);
         }
 
         var tokenService = new JwtService(_configuration);

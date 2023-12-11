@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlreadyExistsErrorMessage" xml:space="preserve">
+    <value>{0} zaten mevcut.</value>
+  </data>
   <data name="InvalidCredentialsErrorMessage" xml:space="preserve">
-    <value>Geçersiz kullanıcı adı veya şifre.</value>
+    <value>Geçersiz kimlik bilgileri.</value>
+  </data>
+  <data name="NotExistErrorMessage" xml:space="preserve">
+    <value>{0} mevcut değil.</value>
+  </data>
+  <data name="NotFoundErrorMessage" xml:space="preserve">
+    <value>{0} bulunamadı.</value>
+  </data>
+  <data name="NullExceptionErrorMessage" xml:space="preserve">
+    <value>Null hatası.</value>
   </data>
 </root>
