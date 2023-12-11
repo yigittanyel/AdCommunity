@@ -1,4 +1,5 @@
 ﻿using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Resources;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
@@ -11,11 +12,13 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 {
     private readonly IConfiguration _configuration;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly LocalizationService _localizationService;
 
-    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork)
+    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork, LocalizationService localizationService)
     {
         _configuration = configuration;
         _unitOfWork = unitOfWork;
+        _localizationService = localizationService;
     }
 
     public async Task<Tokens> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -24,7 +27,8 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 
         if (existingUser is null)
         {
-            throw new InvalidCredentialsException();
+            var errorMessage = _localizationService.GetKey("InvalidCredentialsErrorMessage").Value;
+            throw new InvalidCredentialsException(errorMessage);
         }
 
         var tokenService = new JwtService(_configuration);

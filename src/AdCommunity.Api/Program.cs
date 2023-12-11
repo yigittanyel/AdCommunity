@@ -1,6 +1,6 @@
 using AdCommunity.Api.Middlewares;
-using AdCommunity.Api.Resources;
 using AdCommunity.Application;
+using AdCommunity.Application.Resources;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +18,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 #region Localization Implementation
+builder.Services.AddSingleton<LocalizationService>();
+
 builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resources"; });
 builder.Services.Configure<RequestLocalizationOptions>(opt =>
 {
@@ -27,7 +29,6 @@ builder.Services.Configure<RequestLocalizationOptions>(opt =>
         new CultureInfo("en-US")
     };
 
-    opt.DefaultRequestCulture = new RequestCulture(new CultureInfo("tr-TR"));
     opt.SupportedCultures = cultures;
     opt.SupportedUICultures = cultures;
 
