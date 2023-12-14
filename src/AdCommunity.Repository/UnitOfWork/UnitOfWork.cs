@@ -1,40 +1,32 @@
 ﻿using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
+using AdCommunity.Repository.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Repository.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
-
-    public UnitOfWork(ApplicationDbContext context,
-        IEventRepository eventRepository,
-        ICommunityRepository communityRepository,
-        ITicketRepository ticketRepository,
-        IUserCommunityRepository userCommunityRepository,
-        IUserEventRepository userEventRepository,
-        IUserTicketRepository userTicketRepository,
-        IUserRepository userRepository)
+    private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+    public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
-        EventRepository = eventRepository;
-        CommunityRepository = communityRepository;
-        TicketRepository = ticketRepository;
-        UserCommunityRepository = userCommunityRepository;
-        UserEventRepository = userEventRepository;
-        UserRepository = userRepository;
-        UserTicketRepository = userTicketRepository;
     }
 
-    public IEventRepository EventRepository { get; }
-    public ICommunityRepository CommunityRepository { get; }
-    public ITicketRepository TicketRepository { get; }
-    public IUserCommunityRepository UserCommunityRepository { get; }
-    public IUserEventRepository UserEventRepository { get; }
-    public IUserRepository UserRepository { get; }
-    public IUserTicketRepository UserTicketRepository { get; }
+    public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+    {
+        var entityType = typeof(TEntity);
+
+        if (_repositories.ContainsKey(entityType))
+        {
+            return (IGenericRepository<TEntity>)_repositories[entityType];
+        }
+
+        var repository = (IGenericRepository<TEntity>)Activator.CreateInstance(typeof(GenericRepository<>).MakeGenericType(entityType), _context);
+        _repositories.Add(entityType, repository);
+        return repository;
+    }
 
     public async Task<int> SaveChangesAsync(CancellationToken? cancellationToken)
     {
@@ -55,4 +47,6 @@ public class UnitOfWork : IUnitOfWork
     {
         await _context.Database.RollbackTransactionAsync((CancellationToken)cancellationToken);
     }
+
+
 }

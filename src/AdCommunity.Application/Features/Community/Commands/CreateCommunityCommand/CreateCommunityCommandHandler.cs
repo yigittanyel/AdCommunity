@@ -30,9 +30,9 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         if (existingCommunity is not null)
             throw new AlreadyExistsException(existingCommunity.Name, _httpContextAccessor.HttpContext);
 
-        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        var user = await _unitOfWork.GetRepository<AdCommunity.Domain.Entities.Aggregates.User.User>().GetAsync(request.UserId, null, cancellationToken);
 
-        if(user is null)
+        if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
@@ -46,7 +46,8 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         //    throw new ValidationException(validationResults.Errors.Select(e => e.ErrorMessage).ToList());
         //}
 
-        await _unitOfWork.CommunityRepository.AddAsync(community, cancellationToken);
+        await _unitOfWork.GetRepository<AdCommunity.Domain.Entities.Aggregates.Community.Community>().AddAsync(community, cancellationToken);
+
 
         _rabbitMqFactory.PublishMessage("create_community_queue", $"Community name: {community.Name} has been created.");
 
