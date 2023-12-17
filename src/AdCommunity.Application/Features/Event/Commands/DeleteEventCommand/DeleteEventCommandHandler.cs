@@ -3,7 +3,8 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Event.Commands.DeleteEventCommand;
 
@@ -11,24 +12,24 @@ public class DeleteEventCommandHandler : IYtRequestHandler<DeleteEventCommand, b
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public DeleteEventCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public DeleteEventCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
     public async Task<bool> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
         var existingEvent = await _unitOfWork.GetRepository<EventRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingEvent is null)
-            throw new NotExistException("Event",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Event");
 
         var community = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(existingEvent.CommunityId, null, cancellationToken);
 
         if (community is null)
-            throw new NotExistException("Community",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Community");
 
         community.RemoveEvent(existingEvent);
 

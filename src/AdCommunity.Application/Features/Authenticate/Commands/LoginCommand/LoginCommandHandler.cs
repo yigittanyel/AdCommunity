@@ -1,12 +1,10 @@
-﻿using AdCommunity.Application.Exceptions;
-using AdCommunity.Application.Resources;
-using AdCommunity.Application.Services.Jwt;
+﻿using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
 
@@ -14,15 +12,13 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 {
     private readonly IConfiguration _configuration;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly LocalizationService _localizationService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IStringLocalizerFactory _localizer;
 
-    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork, LocalizationService localizationService, IHttpContextAccessor httpContextAccessor)
+    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork, IStringLocalizerFactory localizer)
     {
         _configuration = configuration;
         _unitOfWork = unitOfWork;
-        _localizationService = localizationService;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<Tokens> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -31,8 +27,7 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 
         if (existingUser is null)
         {
-            var errorMessage = _localizationService.GetKey("InvalidCredentialsErrorMessage").Value;
-            throw new InvalidCredentialsException(_httpContextAccessor.HttpContext);
+            throw new InvalidCredentialsException((IStringLocalizer)_localizer);
         }
 
         var tokenService = new JwtService(_configuration);

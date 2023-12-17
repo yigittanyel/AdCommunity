@@ -5,8 +5,9 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserTicket.Queries.GetUserTicketsQuery;
 public class GetUserTicketsQueryHandler : IYtRequestHandler<GetUserTicketsQuery, List<UserTicketDto>>
@@ -15,13 +16,13 @@ public class GetUserTicketsQueryHandler : IYtRequestHandler<GetUserTicketsQuery,
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public GetUserTicketsQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public GetUserTicketsQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<List<UserTicketDto>> Handle(GetUserTicketsQuery request, CancellationToken cancellationToken)
@@ -35,7 +36,7 @@ public class GetUserTicketsQueryHandler : IYtRequestHandler<GetUserTicketsQuery,
             var userTickets = await _unitOfWork.GetRepository<UserTicketRepository>().GetAllAsync(null, query=>query.Include(x=>x.User).Include(x=>x.Ticket), cancellationToken);
 
             if (userTickets is null || !userTickets.Any())
-                throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
+                throw new NotExistException((IStringLocalizer)_localizer, "User Ticket");
 
             userTicketsDto = _mapper.MapList<Domain.Entities.Aggregates.User.UserTicket, UserTicketDto>((List<Domain.Entities.Aggregates.User.UserTicket>)userTickets);
 

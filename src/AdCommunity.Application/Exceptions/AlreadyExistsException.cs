@@ -1,12 +1,13 @@
-﻿using AdCommunity.Application.Helpers;
+﻿using AdCommunity.Core.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Exceptions;
 
 public class AlreadyExistsException : Exception
 {
-    public AlreadyExistsException(string entityName, HttpContext httpContext)
-        : base(string.Format(LocalizationHelper.TranslateWithEntity("AlreadyExistsErrorMessage", entityName, LocalizationHelper.GetLanguageCode(httpContext))))
+    public AlreadyExistsException(IStringLocalizer localizer, string entityName)
+        : base(LocalizationHelper.Translate(localizer, "AlreadyExistsErrorMessage", entityName))
     {
     }
 }

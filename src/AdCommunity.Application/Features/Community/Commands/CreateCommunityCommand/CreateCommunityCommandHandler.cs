@@ -5,7 +5,8 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 
@@ -14,14 +15,13 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public CreateCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public CreateCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<CommunityCreateDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
@@ -29,12 +29,12 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)
-            throw new AlreadyExistsException(existingCommunity.Name, _httpContextAccessor.HttpContext);
+            throw new AlreadyExistsException((IStringLocalizer)_localizer,existingCommunity.Name);
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer,"User");
 
         var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 

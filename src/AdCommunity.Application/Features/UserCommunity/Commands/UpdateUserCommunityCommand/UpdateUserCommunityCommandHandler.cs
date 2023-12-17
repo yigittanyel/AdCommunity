@@ -4,7 +4,8 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserCommunity.Commands.UpdateUserCommunityCommand;
 public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCommunityCommand, bool>
@@ -12,13 +13,13 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public UpdateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public UpdateUserCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<bool> Handle(UpdateUserCommunityCommand request, CancellationToken cancellationToken)
@@ -26,19 +27,19 @@ public class UpdateUserCommunityCommandHandler : IYtRequestHandler<UpdateUserCom
         var existingUserCommunity = await _unitOfWork.GetRepository<UserCommunityRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserCommunity is null)
-            throw new NotExistException("UserCommunity",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "UserCommunity");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "User");
 
         existingUserCommunity.AssignUser(user);
 
         var community = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.CommunityId, null, cancellationToken);
 
         if (community is null)
-            throw new NotExistException("Community",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Community");
 
         existingUserCommunity.AssignCommunity(community);
 

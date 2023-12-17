@@ -5,8 +5,9 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Community.Queries.GetCommunitiesQuery;
 
@@ -16,13 +17,14 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public GetCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+
+    public GetCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<List<CommunityDto>> Handle(GetCommunitiesQuery request, CancellationToken cancellationToken)
@@ -38,7 +40,7 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
             
             if (communities is null || !communities.Any())
             {
-                throw new NotFoundException("Community",_httpContextAccessor.HttpContext);
+                throw new NotFoundException((IStringLocalizer)_localizer, "Community");
             }
 
             communitiesDto = _mapper.MapList<Domain.Entities.Aggregates.Community.Community, CommunityDto>((List<Domain.Entities.Aggregates.Community.Community>)communities);

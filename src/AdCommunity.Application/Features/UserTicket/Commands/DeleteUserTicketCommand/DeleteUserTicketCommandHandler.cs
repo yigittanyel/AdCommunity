@@ -3,20 +3,20 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.DeleteUserTicketCommand;
 public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicketCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public DeleteUserTicketCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public DeleteUserTicketCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<bool> Handle(DeleteUserTicketCommand request, CancellationToken cancellationToken)
@@ -24,12 +24,12 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
         var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket is null)
-            throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "User Ticket");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(existingUserTicket.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "User");
 
         user.RemoveUserTicket(existingUserTicket);
 

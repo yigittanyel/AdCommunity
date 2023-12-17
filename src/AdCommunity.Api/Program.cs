@@ -1,45 +1,21 @@
 using AdCommunity.Api.Middlewares;
 using AdCommunity.Application;
-using AdCommunity.Application.Resources;
+using AdCommunity.Application.Exceptions;
+using AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Globalization;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-#region Localization Implementation
-builder.Services.AddSingleton<LocalizationService>();
-
-builder.Services.AddLocalization(opt => { opt.ResourcesPath = "Resources"; });
-builder.Services.Configure<RequestLocalizationOptions>(opt =>
-{
-    var cultures = new List<CultureInfo>()
-    {
-        new CultureInfo("tr-TR"),
-        new CultureInfo("en-US")
-    };
-
-    opt.SupportedCultures = cultures;
-    opt.SupportedUICultures = cultures;
-
-    opt.RequestCultureProviders = new List<IRequestCultureProvider>()
-    {
-        new QueryStringRequestCultureProvider(),
-        new CookieRequestCultureProvider(),
-        new AcceptLanguageHeaderRequestCultureProvider()
-    };
-});
-#endregion
 
 #region Swagger Authentication Implementation
 builder.Services.AddSwaggerGen(c =>
@@ -122,6 +98,10 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+#region Localization Implementation
+builder.Services.AddLocalizationOperations();
+#endregion
 
 var app = builder.Build();
 

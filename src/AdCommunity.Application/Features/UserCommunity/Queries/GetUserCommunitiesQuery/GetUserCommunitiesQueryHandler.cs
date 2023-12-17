@@ -6,8 +6,9 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunitiesQuery
 {
@@ -17,18 +18,17 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
         private readonly IUnitOfWork _unitOfWork;
         private readonly IYtMapper _mapper;
         private readonly IRedisService _redisService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IElasticSearchService _elasticSearchService;
         private const string IndexName = "user_communities";
+        private readonly IStringLocalizerFactory _localizer;
 
-
-        public GetUserCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IElasticSearchService elasticSearchService, IHttpContextAccessor httpContextAccessor)
+        public GetUserCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IElasticSearchService elasticSearchService, IStringLocalizerFactory localizer)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _redisService = redisService;
             _elasticSearchService = elasticSearchService;
-            _httpContextAccessor = httpContextAccessor;
+            _localizer = localizer;
         }
 
         public async Task<List<UserCommunityDto>> Handle(GetUserCommunitiesQuery request, CancellationToken cancellationToken)
@@ -61,7 +61,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
 
                 if (userCommunities is null || !userCommunities.Any())
                 {
-                    throw new NotExistException("UserCommunity",_httpContextAccessor.HttpContext);
+                    throw new NotExistException((IStringLocalizer)_localizer, "UserCommunity");
                 }
 
                 userCommunitiesDto = _mapper.MapList<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunities.ToList());

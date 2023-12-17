@@ -4,7 +4,8 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketCommand;
 public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicketCommand, bool>
@@ -12,13 +13,13 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public UpdateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public UpdateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<bool> Handle(UpdateUserTicketCommand request, CancellationToken cancellationToken)
@@ -26,19 +27,19 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
         var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket is null)
-            throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "User Ticket");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "User");
 
         existingUserTicket.AssignUser(user);
 
         var ticket = await _unitOfWork.GetRepository<TicketRepository>().GetAsync(request.TicketId, null, cancellationToken);
 
         if (ticket is null)
-            throw new NotExistException("Ticket does not exist",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Ticket does not exist");
 
         existingUserTicket.AssignTicket(ticket);
         existingUserTicket.SetDate();

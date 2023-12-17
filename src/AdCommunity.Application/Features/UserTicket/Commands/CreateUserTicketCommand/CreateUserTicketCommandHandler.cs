@@ -5,7 +5,8 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.CreateUserTicketCommand;
 public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicketCommand, UserTicketCreateDto>
@@ -13,14 +14,13 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public CreateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public CreateUserTicketCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<UserTicketCreateDto> Handle(CreateUserTicketCommand request, CancellationToken cancellationToken)
@@ -28,21 +28,21 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
         var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetUserTicketsByUserAndTicketAsync(request.UserId,request.TicketId,cancellationToken);
 
         if (existingUserTicket is not null)
-            throw new AlreadyExistsException("User Ticket", _httpContextAccessor.HttpContext);
+            throw new AlreadyExistsException((IStringLocalizer)_localizer, "User Ticket");
 
         var userTicket = Domain.Entities.Aggregates.User.UserTicket.Create(request.UserId,request.TicketId,request.Pnr);
           
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException("User",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "User");
 
         userTicket.AssignUser(user);
 
         var ticket = await _unitOfWork.GetRepository<TicketRepository>().GetAsync(request.TicketId, null, cancellationToken);
 
         if (ticket is null)
-            throw new NotExistException("Ticket",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Ticket");
 
         userTicket.AssignTicket(ticket);
 

@@ -1,6 +1,6 @@
 ﻿namespace AdCommunity.Api.Middlewares;
 
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Localization;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ public class LanguageChangeMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var culture = context.Request.Query["culture"].ToString(); //culture yok. lang olarak gönder
+        var culture = context.Request.Query["culture"].ToString();
 
         if (!string.IsNullOrEmpty(culture))
         {
@@ -33,7 +33,7 @@ public class LanguageChangeMiddleware
                 cookieOptions
             );
 
-            context.Items["LanguageCode"] = culture;
+            context.Items["lang"] = culture;
         }
 
         await _next(context);

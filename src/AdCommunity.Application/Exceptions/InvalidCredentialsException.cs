@@ -1,11 +1,10 @@
-﻿using AdCommunity.Application.Helpers;
-using Microsoft.AspNetCore.Http;
-
-namespace AdCommunity.Application.Exceptions;
+﻿using AdCommunity.Core.Helpers;
+using Microsoft.Extensions.Localization;
 
 public class InvalidCredentialsException : Exception
 {
-    public InvalidCredentialsException(HttpContext httpContext) : base(string.Format(LocalizationHelper.TranslateWithEntity("InvalidCredentialsErrorMessage", LocalizationHelper.GetLanguageCode(httpContext))))
+    public InvalidCredentialsException(IStringLocalizer localizer)
+        : base(LocalizationHelper.Translate(localizer, "InvalidCredentialsErrorMessage"))
     {
     }
 }

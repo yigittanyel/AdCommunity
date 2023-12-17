@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 using System.Reflection;
 
-namespace AdCommunity.Application.Resources;
+namespace AdCommunity.Core.Resources;
 
 public class LocalizationService
 {

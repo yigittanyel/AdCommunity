@@ -5,7 +5,7 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.User.Queries.GetUserQuery;
 
@@ -15,14 +15,13 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public GetUserQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
@@ -37,7 +36,7 @@ public class GetUserQueryHandler : IYtRequestHandler<GetUserQuery, UserDto>
 
             if (user is null)
             {
-                throw new NotFoundException("User", _httpContextAccessor.HttpContext);
+                throw new NotFoundException((IStringLocalizer)_localizer, "User");
             }
 
             userDto = _mapper.Map<Domain.Entities.Aggregates.User.User, UserDto>(user);

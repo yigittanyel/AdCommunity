@@ -4,7 +4,7 @@ using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Repositories;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Ticket.Commands.UpdateTicketCommand;
 
@@ -13,13 +13,13 @@ public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketType
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public UpdateTicketTypeCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IHttpContextAccessor httpContextAccessor)
+    private readonly IStringLocalizerFactory _localizer;
+    public UpdateTicketTypeCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _httpContextAccessor = httpContextAccessor;
+        _localizer = localizer;
     }
 
     public async Task<bool> Handle(UpdateTicketTypeCommand request, CancellationToken cancellationToken)
@@ -27,19 +27,19 @@ public class UpdateTicketTypeCommandHandler : IYtRequestHandler<UpdateTicketType
         var existingTicket = await _unitOfWork.GetRepository<TicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingTicket is null)
-            throw new NotExistException("Ticket",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Ticket");
 
         var communityEvent = await _unitOfWork.GetRepository<EventRepository>().GetAsync(request.CommunityEventId, null, cancellationToken);
 
         if (communityEvent is null)
-            throw new NotExistException("Event",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Event");
 
         existingTicket.AssignEvent(communityEvent);
 
         var community = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.CommunityId, null,cancellationToken);
 
         if (community is null)
-            throw new NotExistException("Community",_httpContextAccessor.HttpContext);
+            throw new NotExistException((IStringLocalizer)_localizer, "Community");
 
         existingTicket.AssignCommunity(community);
 
