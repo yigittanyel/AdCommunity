@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.CreateUserTicketCommand;
@@ -24,21 +25,21 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
 
     public async Task<UserTicketCreateDto> Handle(CreateUserTicketCommand request, CancellationToken cancellationToken)
     {
-        var existingUserTicket = await _unitOfWork.UserTicketRepository.GetUserTicketsByUserAndTicketAsync(request.UserId,request.TicketId,cancellationToken);
+        var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetUserTicketsByUserAndTicketAsync(request.UserId,request.TicketId,cancellationToken);
 
         if (existingUserTicket is not null)
             throw new AlreadyExistsException("User Ticket", _httpContextAccessor.HttpContext);
 
         var userTicket = Domain.Entities.Aggregates.User.UserTicket.Create(request.UserId,request.TicketId,request.Pnr);
           
-        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         userTicket.AssignUser(user);
 
-        var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
+        var ticket = await _unitOfWork.GetRepository<TicketRepository>().GetAsync(request.TicketId, null, cancellationToken);
 
         if (ticket is null)
             throw new NotExistException("Ticket",_httpContextAccessor.HttpContext);
@@ -47,7 +48,7 @@ public class CreateUserTicketCommandHandler : IYtRequestHandler<CreateUserTicket
 
         user.AddUserTicket(userTicket);
 
-        _unitOfWork.UserRepository.Update(user);
+        _unitOfWork.GetRepository<UserRepository>().Update(user);
 
         _rabbitMqFactory.PublishMessage("create_userTicket_queue", $"User Ticket has been created.");
 

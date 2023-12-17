@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand;
@@ -24,7 +25,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 
     public async Task<Tokens> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
+        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
 
         if (existingUser is not null)
         {
@@ -46,7 +47,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
             request.User.Medium
         );
 
-        await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
+        await _unitOfWork.GetRepository<UserRepository>().AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var loginDto = new UserLoginDto(request.User.Username, request.User.Password);

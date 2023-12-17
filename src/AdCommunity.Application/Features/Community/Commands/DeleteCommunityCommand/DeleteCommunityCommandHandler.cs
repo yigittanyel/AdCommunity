@@ -2,6 +2,7 @@
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.Community.Commands.DeleteCommunityCommand;
@@ -20,12 +21,12 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
 
     public async Task<bool> Handle(DeleteCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, null, cancellationToken);
+        var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingCommunity is null)
             throw new NotExistException("Community",_httpContextAccessor.HttpContext);
 
-        _unitOfWork.CommunityRepository.Delete(existingCommunity);
+        _unitOfWork.GetRepository<CommunityRepository>().Delete(existingCommunity);
 
         _rabbitMqFactory.PublishMessage("delete_community_queue", $"Community name: {existingCommunity.Name} has been removed.");
 

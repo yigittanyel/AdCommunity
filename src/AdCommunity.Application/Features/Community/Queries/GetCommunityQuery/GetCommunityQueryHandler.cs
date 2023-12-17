@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +34,7 @@ public class GetCommunityQueryHandler : IYtRequestHandler<GetCommunityQuery, Com
 
         if (communityDto is null)
         {
-            var community = await _unitOfWork.CommunityRepository
+            var community = await _unitOfWork.GetRepository<CommunityRepository>()
                 .GetAsync(request.Id, 
                     query=>query.Include(x=>x.User),
                     cancellationToken);

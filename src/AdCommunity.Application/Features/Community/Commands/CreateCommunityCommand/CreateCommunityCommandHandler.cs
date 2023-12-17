@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
@@ -25,12 +26,12 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
 
     public async Task<CommunityCreateDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingCommunity = await _unitOfWork.CommunityRepository.GetByCommunityNameAsync(request.Name, cancellationToken);
+        var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)
             throw new AlreadyExistsException(existingCommunity.Name, _httpContextAccessor.HttpContext);
 
-        var user = await _unitOfWork.GetRepository<AdCommunity.Domain.Entities.Aggregates.User.User>().GetAsync(request.UserId, null, cancellationToken);
+        var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
@@ -46,7 +47,7 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         //    throw new ValidationException(validationResults.Errors.Select(e => e.ErrorMessage).ToList());
         //}
 
-        await _unitOfWork.GetRepository<AdCommunity.Domain.Entities.Aggregates.Community.Community>().AddAsync(community, cancellationToken);
+        await _unitOfWork.GetRepository<CommunityRepository>().AddAsync(community, cancellationToken);
 
 
         _rabbitMqFactory.PublishMessage("create_community_queue", $"Community name: {community.Name} has been created.");

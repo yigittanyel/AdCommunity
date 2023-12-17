@@ -8,24 +8,23 @@ namespace AdCommunity.Repository.UnitOfWork;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
-    private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+    private readonly Dictionary<Type, object> _repositories;
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
+        _repositories = new Dictionary<Type, object>();
     }
 
-    public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+    public TRepository GetRepository<TRepository>() where TRepository : class
     {
-        var entityType = typeof(TEntity);
-
-        if (_repositories.ContainsKey(entityType))
+        var repositoryType = typeof(TRepository);
+        if (!_repositories.ContainsKey(repositoryType))
         {
-            return (IGenericRepository<TEntity>)_repositories[entityType];
+            var repositoryInstance = Activator.CreateInstance(repositoryType, _context);
+            _repositories.Add(repositoryType, repositoryInstance);
         }
 
-        var repository = (IGenericRepository<TEntity>)Activator.CreateInstance(typeof(GenericRepository<>).MakeGenericType(entityType), _context);
-        _repositories.Add(entityType, repository);
-        return repository;
+        return (TRepository)_repositories[repositoryType];
     }
 
     public async Task<int> SaveChangesAsync(CancellationToken? cancellationToken)

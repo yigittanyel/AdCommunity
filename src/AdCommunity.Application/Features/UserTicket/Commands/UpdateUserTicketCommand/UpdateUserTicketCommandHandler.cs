@@ -3,6 +3,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.UpdateUserTicketCommand;
@@ -22,19 +23,19 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
 
     public async Task<bool> Handle(UpdateUserTicketCommand request, CancellationToken cancellationToken)
     {
-        var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
+        var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket is null)
             throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
 
-        var user = await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         existingUserTicket.AssignUser(user);
 
-        var ticket = await _unitOfWork.TicketRepository.GetAsync(request.TicketId, null, cancellationToken);
+        var ticket = await _unitOfWork.GetRepository<TicketRepository>().GetAsync(request.TicketId, null, cancellationToken);
 
         if (ticket is null)
             throw new NotExistException("Ticket does not exist",_httpContextAccessor.HttpContext);
@@ -44,7 +45,7 @@ public class UpdateUserTicketCommandHandler : IYtRequestHandler<UpdateUserTicket
 
         _mapper.Map(request, existingUserTicket);
 
-        _unitOfWork.UserTicketRepository.Update(existingUserTicket);
+        _unitOfWork.GetRepository<UserTicketRepository>().Update(existingUserTicket);
 
         _rabbitMqFactory.PublishMessage("update_userTicket_queue", $"User Ticket with Id: {existingUserTicket.Id}  has been edited.");
 

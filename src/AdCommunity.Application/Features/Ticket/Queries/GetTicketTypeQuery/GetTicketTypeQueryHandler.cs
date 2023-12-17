@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +33,7 @@ public class GetTicketTypeQueryHandler : IYtRequestHandler<GetTicketTypeQuery, T
 
         if (ticketDto is null)
         {
-            var ticket = await _unitOfWork.TicketRepository.
+            var ticket = await _unitOfWork.GetRepository<TicketRepository>().
                 GetAsync(request.Id, query => query.Include(x => x.Community).Include(x => x.CommunityEvent),
                 cancellationToken);
 

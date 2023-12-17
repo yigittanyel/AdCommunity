@@ -3,6 +3,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.Community.Commands.UpdateCommunityCommand;
@@ -23,14 +24,14 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
 
     public async Task<bool> Handle(UpdateCommunityCommand request, CancellationToken cancellationToken)
     {
-        var existingCommunity = await _unitOfWork.CommunityRepository.GetAsync(request.Id, null, cancellationToken);
+        var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingCommunity is null)
             throw new NotExistException("Community",_httpContextAccessor.HttpContext);
 
         existingCommunity.SetDate();
 
-        var user= await _unitOfWork.UserRepository.GetAsync(request.UserId, null, cancellationToken);
+        var user= await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
         
         if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
@@ -39,7 +40,7 @@ public class UpdateCommunityCommandHandler : IYtRequestHandler<UpdateCommunityCo
 
         _mapper.Map(request, existingCommunity);
 
-        _unitOfWork.CommunityRepository.Update(existingCommunity);
+        _unitOfWork.GetRepository<CommunityRepository>().Update(existingCommunity);
 
         _rabbitMqFactory.PublishMessage("update_community_queue", $"Community with Id: {existingCommunity.Id}  has been edited.");
 

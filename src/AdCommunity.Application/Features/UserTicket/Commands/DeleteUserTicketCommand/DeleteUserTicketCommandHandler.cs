@@ -2,6 +2,7 @@
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.DeleteUserTicketCommand;
@@ -20,19 +21,19 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
 
     public async Task<bool> Handle(DeleteUserTicketCommand request, CancellationToken cancellationToken)
     {
-        var existingUserTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, null, cancellationToken);
+        var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket is null)
             throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);
 
-        var user = await _unitOfWork.UserRepository.GetAsync(existingUserTicket.UserId, null, cancellationToken);
+        var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(existingUserTicket.UserId, null, cancellationToken);
 
         if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         user.RemoveUserTicket(existingUserTicket);
 
-        _unitOfWork.UserRepository.Update(user);
+        _unitOfWork.GetRepository<UserRepository>().Update(user);
 
         _rabbitMqFactory.PublishMessage("delete_userTicket_queue", $"User Ticket with Id: {existingUserTicket.Id}  has been removed.");
 

@@ -4,7 +4,7 @@ namespace AdCommunity.Domain.Repository;
 
 public interface IUnitOfWork
 {
-    IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+    TRepository GetRepository<TRepository>() where TRepository : class;
     Task<int> SaveChangesAsync(CancellationToken? cancellationToken);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken? cancellationToken);
     Task CommitTransactionAsync(CancellationToken? cancellationToken);

@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +33,7 @@ public class GetUserEventsQueryHandler : IYtRequestHandler<GetUserEventsQuery, L
 
         if (userEventsDto is null)
         {
-            var userEvents = await _unitOfWork.UserEventRepository.GetAllAsync(null, query => query.Include(x => x.User).Include(x => x.Event), cancellationToken);
+            var userEvents = await _unitOfWork.GetRepository<UserEventRepository>().GetAllAsync(null, query => query.Include(x => x.User).Include(x => x.Event), cancellationToken);
 
             if (userEvents is null || !userEvents.Any())
             {

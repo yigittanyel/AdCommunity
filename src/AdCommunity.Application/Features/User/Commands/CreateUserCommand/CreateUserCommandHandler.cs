@@ -3,6 +3,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 
 namespace AdCommunity.Application.Features.User.Commands.CreateUserCommand;
 
@@ -21,7 +22,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
 
     public async Task<UserCreateDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.UserRepository.GetUsersByUsernameAndPasswordAsync(request.Username, request.Password);
+        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.Username, request.Password);
 
         if (existingUser is not null)
         {
@@ -31,7 +32,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
         var user = new Domain.Entities.Aggregates.User.User
         (request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.Username, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 
-        await _unitOfWork.UserRepository.AddAsync(user, cancellationToken);
+        await _unitOfWork.GetRepository<UserRepository>().AddAsync(user, cancellationToken);
 
         _rabbitMqFactory.PublishMessage("create_user_queue", $"UserName: {user.Username} has been created.");
 

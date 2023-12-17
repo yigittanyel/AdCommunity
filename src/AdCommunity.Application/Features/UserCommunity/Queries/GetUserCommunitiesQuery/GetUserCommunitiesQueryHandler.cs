@@ -5,6 +5,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,7 +55,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
             if (userCommunitiesDto is null || userCommunitiesDto.Count == 0)
             {
                 // Elasticsearch'te veri yoksa veritabanından al
-                var userCommunities = await _unitOfWork.UserCommunityRepository
+                var userCommunities = await _unitOfWork.GetRepository<UserCommunityRepository>()
                     .GetAllAsync(null, query => query.Include(x => x.Community).Include(x => x.User),
                         cancellationToken);
 

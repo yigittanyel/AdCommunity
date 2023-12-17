@@ -2,6 +2,7 @@
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.UserEvent.Commands.DeleteUserEventCommand;
@@ -21,19 +22,19 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
 
     public async Task<bool> Handle(DeleteUserEventCommand request, CancellationToken cancellationToken)
     {
-        var existingUserEvent = await _unitOfWork.UserEventRepository.GetAsync(request.Id, null, cancellationToken);
+        var existingUserEvent = await _unitOfWork.GetRepository<UserEventRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserEvent is null)
             throw new NotExistException("User Event",_httpContextAccessor.HttpContext);
 
-        var user = await _unitOfWork.UserRepository.GetAsync(existingUserEvent.UserId, null, cancellationToken);
+        var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(existingUserEvent.UserId, null, cancellationToken);
 
         if (user is null)
             throw new NotExistException("User",_httpContextAccessor.HttpContext);
 
         user.RemoveUserEvent(existingUserEvent);
 
-        _unitOfWork.UserRepository.Update(user);
+        _unitOfWork.GetRepository<UserRepository>().Update(user);
 
         _rabbitMqFactory.PublishMessage("delete_userEvent_queue", $"User Ticket with Id: {existingUserEvent.Id}  has been removed.");
 

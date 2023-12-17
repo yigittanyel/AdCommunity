@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.User.Queries.GetUsersQuery;
@@ -32,7 +33,7 @@ public class GetUsersQueryHandler : IYtRequestHandler<GetUsersQuery, List<UserDt
 
         if (usersDto is null)
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync(null, null, cancellationToken);
+            var users = await _unitOfWork.GetRepository<UserRepository>().GetAllAsync(null, null, cancellationToken);
 
             if (users is null || !users.Any())
             {

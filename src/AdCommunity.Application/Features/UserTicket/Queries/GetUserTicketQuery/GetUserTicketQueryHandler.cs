@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,7 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
 
         if (userTicketDto is null)
         {
-            var userTicket = await _unitOfWork.UserTicketRepository.GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Ticket), cancellationToken);
+            var userTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Ticket), cancellationToken);
 
             if (userTicket is null)
                 throw new NotExistException("User Ticket",_httpContextAccessor.HttpContext);

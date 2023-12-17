@@ -4,6 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Repository;
+using AdCommunity.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace AdCommunity.Application.Features.Event.Commands.CreateEventCommand;
@@ -27,12 +28,12 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
 
     public async Task<EventCreateDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        var existingEvent = await _unitOfWork.EventRepository.GetByEventNameAsync(request.EventName, cancellationToken);
+        var existingEvent = await _unitOfWork.GetRepository<EventRepository>().GetByEventNameAsync(request.EventName, cancellationToken);
 
         if (existingEvent is not null)
             throw new AlreadyExistsException(existingEvent.EventName, _httpContextAccessor.HttpContext);
 
-        var community= await _unitOfWork.CommunityRepository.GetAsync(request.CommunityId, null, cancellationToken);
+        var community= await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.CommunityId, null, cancellationToken);
 
         if (community is null) 
             throw new NotExistException("Community",_httpContextAccessor.HttpContext);
@@ -43,7 +44,7 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
 
         community.AddEvent(@event);
      
-        _unitOfWork.CommunityRepository.Update(community);
+        _unitOfWork.GetRepository<CommunityRepository>().Update(community);
 
         _rabbitMqFactory.PublishMessage("create_event_queue", $"Event name: {@event.EventName} has been created.");
 
