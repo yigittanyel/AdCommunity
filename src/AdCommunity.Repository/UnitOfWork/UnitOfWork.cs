@@ -1,4 +1,4 @@
-﻿using AdCommunity.Domain.Repository;
+﻿using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 

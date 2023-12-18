@@ -1,10 +1,9 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserEvent.Commands.DeleteUserEventCommand;
 
@@ -12,12 +11,12 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
-    public DeleteUserEventCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public DeleteUserEventCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteUserEventCommand request, CancellationToken cancellationToken)
@@ -25,12 +24,12 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
         var existingUserEvent = await _unitOfWork.GetRepository<UserEventRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserEvent is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "User Event");
+            throw new NotExistException(_localizationService, "User Event");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(existingUserEvent.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "User");
+            throw new NotExistException(_localizationService, "User");
 
         user.RemoveUserEvent(existingUserEvent);
 

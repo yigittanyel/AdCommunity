@@ -3,11 +3,11 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserEvent.Queries.GetUserEventQuery;
 
@@ -17,13 +17,13 @@ public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, Use
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IStringLocalizerFactory _localizer;
-    public GetUserEventQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public GetUserEventQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<UserEventDto> Handle(GetUserEventQuery request, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, Use
             var userEvent = await _unitOfWork.GetRepository<UserEventRepository>().GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Event), cancellationToken);
 
             if (userEvent is null)
-                throw new NotExistException((IStringLocalizer)_localizer, "User Event");
+                throw new NotExistException(_localizationService, "User Event");
 
             userEventDto = _mapper.Map<Domain.Entities.Aggregates.User.UserEvent, UserEventDto>(userEvent);
 

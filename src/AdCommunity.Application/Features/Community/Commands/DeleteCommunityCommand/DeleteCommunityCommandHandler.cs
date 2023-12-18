@@ -1,22 +1,21 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Community.Commands.DeleteCommunityCommand;
 public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
-    public DeleteCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public DeleteCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteCommunityCommand request, CancellationToken cancellationToken)
@@ -24,7 +23,7 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
         var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingCommunity is null)
-            throw new NotExistException((IStringLocalizer)_localizer,"Community");
+            throw new NotExistException(_localizationService,"Community");
 
         _unitOfWork.GetRepository<CommunityRepository>().Delete(existingCommunity);
 

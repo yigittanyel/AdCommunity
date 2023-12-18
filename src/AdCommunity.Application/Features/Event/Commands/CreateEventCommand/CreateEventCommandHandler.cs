@@ -3,10 +3,9 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Event.Commands.CreateEventCommand;
 
@@ -16,15 +15,15 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
+    private readonly LocalizationService _localizationService;
 
 
-    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
 
@@ -33,12 +32,12 @@ public class CreateEventCommandHandler : IYtRequestHandler<CreateEventCommand, E
         var existingEvent = await _unitOfWork.GetRepository<EventRepository>().GetByEventNameAsync(request.EventName, cancellationToken);
 
         if (existingEvent is not null)
-            throw new AlreadyExistsException((IStringLocalizer)_localizer,existingEvent.EventName);
+            throw new AlreadyExistsException(_localizationService,existingEvent.EventName);
 
         var community= await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.CommunityId, null, cancellationToken);
 
         if (community is null) 
-            throw new NotExistException((IStringLocalizer)_localizer,"Community");
+            throw new NotExistException(_localizationService,"Community");
 
         var @event = new Domain.Entities.Aggregates.Community.Event(request.EventName, request.Description, request.EventDate, request.Location);
 

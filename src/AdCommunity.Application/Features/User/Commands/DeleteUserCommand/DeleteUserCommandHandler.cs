@@ -1,9 +1,9 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.User.Commands.DeleteUserCommand;
 
@@ -11,13 +11,13 @@ public class DeleteUserCommandHandler : IYtRequestHandler<DeleteUserCommand, boo
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
+    private readonly LocalizationService _localizationService;
 
-    public DeleteUserCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    public DeleteUserCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class DeleteUserCommandHandler : IYtRequestHandler<DeleteUserCommand, boo
 
         if (existingUser == null)
         {
-            throw new NotExistException((IStringLocalizer)_localizer, "User");
+            throw new NotExistException(_localizationService, "User");
         }
 
         _unitOfWork.GetRepository<UserRepository>().Delete(existingUser);

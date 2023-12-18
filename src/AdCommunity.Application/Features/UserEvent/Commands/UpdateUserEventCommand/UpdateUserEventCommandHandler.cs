@@ -2,10 +2,9 @@
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserEvent.Commands.UpdateUserEventCommand;
 
@@ -14,13 +13,13 @@ public class UpdateUserEventCommandHandler : IYtRequestHandler<UpdateUserEventCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
-    public UpdateUserEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public UpdateUserEventCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(UpdateUserEventCommand request, CancellationToken cancellationToken)
@@ -28,19 +27,19 @@ public class UpdateUserEventCommandHandler : IYtRequestHandler<UpdateUserEventCo
         var existingUserEvent = await _unitOfWork.GetRepository<UserEventRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserEvent is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "User Ticket");
+            throw new NotExistException(_localizationService, "User Ticket");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "User");
+            throw new NotExistException(_localizationService, "User");
 
         existingUserEvent.AssignUser(user);
 
         var @event = await _unitOfWork.GetRepository<EventRepository>().GetAsync(request.EventId, null, cancellationToken);
 
         if (@event is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "Event");
+            throw new NotExistException(_localizationService, "Event");
 
         existingUserEvent.AssignEvent(@event);
         existingUserEvent.SetDate();

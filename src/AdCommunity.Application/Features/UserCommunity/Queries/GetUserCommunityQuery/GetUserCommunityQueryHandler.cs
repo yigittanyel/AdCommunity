@@ -3,11 +3,11 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunityQuery;
 
@@ -17,13 +17,13 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IStringLocalizerFactory _localizer;
-    public GetUserCommunityQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public GetUserCommunityQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<UserCommunityDto> Handle(GetUserCommunityQuery request, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ public class GetUserCommunityQueryHandler : IYtRequestHandler<GetUserCommunityQu
                 cancellationToken);
 
             if (userCommunity is null)
-                throw new NotExistException((IStringLocalizer)_localizer, "UserCommunity");
+                throw new NotExistException(_localizationService, "UserCommunity");
 
             userCommunityDto = _mapper.Map<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunity);
 

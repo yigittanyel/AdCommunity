@@ -1,11 +1,10 @@
 ﻿using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Resources;
+using AdCommunity.Core.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using System.Globalization;
 using System.Reflection;
 

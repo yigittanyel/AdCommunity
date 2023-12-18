@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿
+using Microsoft.EntityFrameworkCore.Storage;
 
-namespace AdCommunity.Domain.Repository;
+namespace AdCommunity.Core.UnitOfWork;
 
 public interface IUnitOfWork
 {

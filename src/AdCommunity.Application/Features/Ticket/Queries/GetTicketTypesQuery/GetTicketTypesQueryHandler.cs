@@ -3,10 +3,10 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Ticket.Queries.GetTicketQuery;
 
@@ -16,13 +16,13 @@ public class GetTicketTypesQueryHandler : IYtRequestHandler<GetTicketTypesQuery,
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IStringLocalizerFactory _localizer;
-    public GetTicketTypesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public GetTicketTypesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<List<TicketTypesDto>> Handle(GetTicketTypesQuery request, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ public class GetTicketTypesQueryHandler : IYtRequestHandler<GetTicketTypesQuery,
 
             if (tickets is null || !tickets.Any())
             {
-                throw new NotFoundException((IStringLocalizer)_localizer, "Tickets");
+                throw new NotFoundException(_localizationService, "Tickets");
             }
 
             ticketsDto = _mapper.MapList<Domain.Entities.Aggregates.Community.TicketType, TicketTypesDto>((List<Domain.Entities.Aggregates.Community.TicketType>)tickets);

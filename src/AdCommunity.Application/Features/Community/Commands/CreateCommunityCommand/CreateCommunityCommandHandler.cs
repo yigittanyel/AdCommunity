@@ -3,10 +3,11 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
-using Microsoft.Extensions.Localization;
+using AdCommunity.Repository.Repositories;
 
 namespace AdCommunity.Application.Features.Community.Commands.CreateCommunityCommand;
 
@@ -15,13 +16,13 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
-    public CreateCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService ;
+    public CreateCommunityCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<CommunityCreateDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
@@ -29,12 +30,12 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
         var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetByCommunityNameAsync(request.Name, cancellationToken);
 
         if (existingCommunity is not null)
-            throw new AlreadyExistsException((IStringLocalizer)_localizer,existingCommunity.Name);
+            throw new AlreadyExistsException(_localizationService,existingCommunity.Name);
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(request.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException((IStringLocalizer)_localizer,"User");
+            throw new NotExistException(_localizationService,"User");
 
         var community = new Domain.Entities.Aggregates.Community.Community(request.Name, request.Description, request.Tags, request.Location, request.Website, request.Facebook, request.Twitter, request.Instagram, request.Github, request.Medium);
 

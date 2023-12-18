@@ -1,5 +1,5 @@
 ﻿using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using  AdCommunity.Core.UnitOfWork;
 
 namespace AdCommunity.Core.CustomMediator;
 

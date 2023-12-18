@@ -2,9 +2,9 @@
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.User.Commands.UpdateUserCommand;
 
@@ -13,13 +13,13 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
-    public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ public class UpdateUserCommandHandler : IYtRequestHandler<UpdateUserCommand, boo
 
         if (existingUser == null)
         {
-            throw new NotExistException((IStringLocalizer)_localizer, "User");         
+            throw new NotExistException(_localizationService, "User");         
         }
 
         existingUser.SetHashedPassword(request.Password);

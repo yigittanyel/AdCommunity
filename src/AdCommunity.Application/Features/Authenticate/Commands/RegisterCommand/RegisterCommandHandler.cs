@@ -2,11 +2,11 @@
 using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Domain.Entities.SharedKernel;
-using AdCommunity.Domain.Repository;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand;
 
@@ -14,12 +14,12 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
-    private readonly IStringLocalizerFactory _localizer;
-    public RegisterCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public RegisterCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<Tokens> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 
         if (existingUser is not null)
         {
-            throw new AlreadyExistsException((IStringLocalizer)_localizer,existingUser.Username);
+            throw new AlreadyExistsException(_localizationService,existingUser.Username);
         }
 
         var user = new Domain.Entities.Aggregates.User.User(

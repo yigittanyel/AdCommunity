@@ -1,10 +1,9 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Ticket.Commands.DeleteTicketCommand;
 
@@ -12,13 +11,13 @@ public class DeleteTicketTypeCommandHandler : IYtRequestHandler<DeleteTicketComm
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
+    private readonly LocalizationService _localizationService;
 
-    public DeleteTicketTypeCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    public DeleteTicketTypeCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteTicketCommand request, CancellationToken cancellationToken)
@@ -26,13 +25,13 @@ public class DeleteTicketTypeCommandHandler : IYtRequestHandler<DeleteTicketComm
         var existingTicket = await _unitOfWork.GetRepository<TicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingTicket is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "Ticket");
+            throw new NotExistException(_localizationService, "Ticket");
 
 
         var community = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(existingTicket.CommunityId, null, cancellationToken);
 
         if (community is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "Community");
+            throw new NotExistException(_localizationService, "Community");
 
         community.RemoveTicket(existingTicket);
 

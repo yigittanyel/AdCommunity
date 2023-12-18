@@ -3,10 +3,9 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.Ticket.Commands.CreateTicketCommand;
 
@@ -15,35 +14,35 @@ public class CreateTicketTypesCommandHandler : IYtRequestHandler<CreateTicketTyp
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
+    private readonly LocalizationService _localizationService;
 
-    public CreateTicketTypesCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    public CreateTicketTypesCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
     public async Task<TicketTypesCreateDto> Handle(CreateTicketTypesCommand request, CancellationToken cancellationToken)
     {
         var existingTicket = await _unitOfWork.GetRepository<TicketRepository>().GetTicketByEventAndCommunityIdsAsync(request.CommunityEventId, request.CommunityId, cancellationToken);
 
         if (existingTicket is not null)
-            throw new AlreadyExistsException((IStringLocalizer)_localizer, "Ticket");
+            throw new AlreadyExistsException(_localizationService, "Ticket");
 
         var ticket = new Domain.Entities.Aggregates.Community.TicketType(request.Price);
 
         var communityEvent = await _unitOfWork.GetRepository<EventRepository>().GetAsync(request.CommunityEventId,null, cancellationToken);
 
         if (communityEvent is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "Event");
+            throw new NotExistException(_localizationService, "Event");
 
         ticket.AssignEvent(communityEvent);
 
         var community = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.CommunityId,null, cancellationToken);
 
         if (community is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "Community");
+            throw new NotExistException(_localizationService, "Community");
 
         ticket.AssignCommunity(community);
 

@@ -5,7 +5,7 @@ using AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Localization;
+using AdCommunity.Repository.Repositories;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;

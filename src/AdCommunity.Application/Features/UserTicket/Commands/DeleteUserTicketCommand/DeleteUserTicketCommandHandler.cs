@@ -1,22 +1,21 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Domain.Repository;
+using AdCommunity.Core.Helpers;
+using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
-using Microsoft.Extensions.Localization;
 
 namespace AdCommunity.Application.Features.UserTicket.Commands.DeleteUserTicketCommand;
 public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicketCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly IStringLocalizerFactory _localizer;
-    public DeleteUserTicketCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, IStringLocalizerFactory localizer)
+    private readonly LocalizationService _localizationService;
+    public DeleteUserTicketCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizer = localizer;
+        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteUserTicketCommand request, CancellationToken cancellationToken)
@@ -24,12 +23,12 @@ public class DeleteUserTicketCommandHandler : IYtRequestHandler<DeleteUserTicket
         var existingUserTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserTicket is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "User Ticket");
+            throw new NotExistException(_localizationService, "User Ticket");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(existingUserTicket.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException((IStringLocalizer)_localizer, "User");
+            throw new NotExistException(_localizationService, "User");
 
         user.RemoveUserTicket(existingUserTicket);
 

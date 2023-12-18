@@ -1,4 +1,5 @@
-﻿using AdCommunity.Domain.Repository;
+﻿using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using AdCommunity.Core.Resources;
+using Microsoft.Extensions.Localization;
 using System.Reflection;
 
-namespace AdCommunity.Core.Resources;
-
+namespace AdCommunity.Core.Helpers;
 public class LocalizationService
 {
     private readonly IStringLocalizer _localizer;
@@ -14,8 +14,9 @@ public class LocalizationService
         _localizer = factory.Create(nameof(ApplicationResource), assemblyName.Name);
     }
 
-    public LocalizedString GetKey(string key)
+    public string Translate(string key, params object[] parameters)
     {
-        return _localizer[key];
+        var translation = _localizer[key];
+        return translation ?? string.Format(key, parameters);
     }
 }
