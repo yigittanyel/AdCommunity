@@ -1,8 +1,7 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Helpers;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 namespace AdCommunity.Application.Features.UserEvent.Commands.DeleteUserEventCommand;
@@ -11,12 +10,10 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly LocalizationService _localizationService;
-    public DeleteUserEventCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
+    public DeleteUserEventCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteUserEventCommand request, CancellationToken cancellationToken)
@@ -24,12 +21,12 @@ public class DeleteUserEventCommandHandler : IYtRequestHandler<DeleteUserEventCo
         var existingUserEvent = await _unitOfWork.GetRepository<UserEventRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingUserEvent is null)
-            throw new NotExistException(_localizationService, "User Event");
+            throw new NotExistException("User Event");
 
         var user = await _unitOfWork.GetRepository<UserRepository>().GetAsync(existingUserEvent.UserId, null, cancellationToken);
 
         if (user is null)
-            throw new NotExistException(_localizationService, "User");
+            throw new NotExistException("User");
 
         user.RemoveUserEvent(existingUserEvent);
 

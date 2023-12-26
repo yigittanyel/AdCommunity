@@ -120,6 +120,9 @@
   <data name="AlreadyExistsErrorMessage" xml:space="preserve">
     <value>{0} is already exist.</value>
   </data>
+  <data name="ForeignKeyErrorMessage" xml:space="preserve">
+    <value>{0}'s foreign key or keys not valid.</value>
+  </data>
   <data name="InvalidCredentialsErrorMessage" xml:space="preserve">
     <value>Invalid credentials.</value>
   </data>
@@ -130,6 +133,6 @@
     <value>{0} does not found.</value>
   </data>
   <data name="NullExceptionErrorMessage" xml:space="preserve">
-    <value>Null exception.</value>
+    <value>{0} should not be null.</value>
   </data>
 </root>

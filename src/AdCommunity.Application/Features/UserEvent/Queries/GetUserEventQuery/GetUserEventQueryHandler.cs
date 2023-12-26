@@ -3,10 +3,8 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Helpers;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.UserEvent.Queries.GetUserEventQuery;
@@ -17,13 +15,11 @@ public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, Use
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly LocalizationService _localizationService;
-    public GetUserEventQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
+    public GetUserEventQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizationService = localizationService;
     }
 
     public async Task<UserEventDto> Handle(GetUserEventQuery request, CancellationToken cancellationToken)
@@ -37,7 +33,7 @@ public class GetUserEventQueryHandler : IYtRequestHandler<GetUserEventQuery, Use
             var userEvent = await _unitOfWork.GetRepository<UserEventRepository>().GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Event), cancellationToken);
 
             if (userEvent is null)
-                throw new NotExistException(_localizationService, "User Event");
+                throw new NotExistException("User Event");
 
             userEventDto = _mapper.Map<Domain.Entities.Aggregates.User.UserEvent, UserEventDto>(userEvent);
 

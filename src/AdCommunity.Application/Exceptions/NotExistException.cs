@@ -1,11 +1,10 @@
-﻿using AdCommunity.Core.Helpers;
+﻿using AdCommunity.Core.BaseException;
 
 namespace AdCommunity.Application.Exceptions;
-
-public class NotExistException : Exception
+public class NotExistException : YtException
 {
-    public NotExistException(LocalizationService localizationService, string entityName)
-        : base(localizationService.Translate("NotExistErrorMessage", entityName))
+    public NotExistException(string entityName)
+        : base("NotExistErrorMessage", entityName)
     {
     }
 }

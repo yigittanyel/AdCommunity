@@ -1,11 +1,10 @@
-﻿using AdCommunity.Core.Helpers;
+﻿using AdCommunity.Core.BaseException;
 
 namespace AdCommunity.Application.Exceptions;
-
-public class AlreadyExistsException : Exception
+public class AlreadyExistsException : YtException
 {
-    public AlreadyExistsException(LocalizationService localizationService, string entityName)
-        : base(localizationService.Translate("AlreadyExistsErrorMessage", entityName))
+    public AlreadyExistsException(string entityName)
+        : base("AlreadyExistsErrorMessage", entityName)
     {
     }
 }

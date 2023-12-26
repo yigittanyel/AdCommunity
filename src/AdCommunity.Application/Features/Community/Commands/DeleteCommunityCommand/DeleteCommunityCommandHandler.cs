@@ -1,7 +1,6 @@
 ﻿using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Helpers;
 using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
@@ -10,12 +9,10 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly LocalizationService _localizationService;
-    public DeleteCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
+    public DeleteCommunityCommandHandler(IUnitOfWork unitOfWork, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizationService = localizationService;
     }
 
     public async Task<bool> Handle(DeleteCommunityCommand request, CancellationToken cancellationToken)
@@ -23,7 +20,7 @@ public class DeleteCommunityCommandHandler : IYtRequestHandler<DeleteCommunityCo
         var existingCommunity = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.Id, null, cancellationToken);
 
         if (existingCommunity is null)
-            throw new NotExistException(_localizationService,"Community");
+            throw new NotExistException("Community");
 
         _unitOfWork.GetRepository<CommunityRepository>().Delete(existingCommunity);
 

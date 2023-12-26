@@ -1,4 +1,5 @@
-﻿using AdCommunity.Domain.Entities.Aggregates.Community;
+﻿using AdCommunity.Core.Helpers;
+using AdCommunity.Domain.Entities.Aggregates.Community;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Exceptions;
 
@@ -11,6 +12,7 @@ public partial class UserTicket:BaseEntity
     public string? Pnr { get; protected set; }
     public virtual TicketType Ticket { get; protected set; } = null!;
     public virtual User User { get; protected set; } = null!;
+
     public UserTicket(int userId, int ticketId, string? pnr)
     {
         if (userId <= 0)

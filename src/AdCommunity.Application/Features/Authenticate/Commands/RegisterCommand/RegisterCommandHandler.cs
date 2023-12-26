@@ -2,10 +2,8 @@
 using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Helpers;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Domain.Entities.SharedKernel;
-using  AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 namespace AdCommunity.Application.Features.Authenticate.Commands.RegisterCommand;
@@ -14,12 +12,10 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
-    private readonly LocalizationService _localizationService;
-    public RegisterCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService, LocalizationService localizationService)
+    public RegisterCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService)
     {
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
-        _localizationService = localizationService;
     }
 
     public async Task<Tokens> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -28,7 +24,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 
         if (existingUser is not null)
         {
-            throw new AlreadyExistsException(_localizationService,existingUser.Username);
+            throw new AlreadyExistsException(existingUser.Username);
         }
 
         var user = new Domain.Entities.Aggregates.User.User(

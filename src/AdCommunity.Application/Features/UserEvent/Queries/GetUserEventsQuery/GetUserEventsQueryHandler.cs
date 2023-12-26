@@ -3,8 +3,7 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Helpers;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +16,12 @@ public class GetUserEventsQueryHandler : IYtRequestHandler<GetUserEventsQuery, L
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly LocalizationService _localizationService;
-    public GetUserEventsQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
+    public GetUserEventsQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizationService = localizationService;
     }
-
     public async Task<List<UserEventDto>> Handle(GetUserEventsQuery request, CancellationToken cancellationToken)
     {
         var cacheKey = "userEvents";
@@ -38,7 +34,7 @@ public class GetUserEventsQueryHandler : IYtRequestHandler<GetUserEventsQuery, L
 
             if (userEvents is null || !userEvents.Any())
             {
-                throw new NotExistException(_localizationService, "User Event");
+                throw new NotExistException("User Event");
             }
 
             userEventsDto = _mapper.MapList<Domain.Entities.Aggregates.User.UserEvent, UserEventDto>((List<Domain.Entities.Aggregates.User.UserEvent>)userEvents);

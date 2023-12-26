@@ -1,10 +1,6 @@
-﻿namespace AdCommunity.Api.Middlewares;
+﻿using Microsoft.AspNetCore.Localization;
 
-
-using Microsoft.AspNetCore.Localization;
-using System;
-using System.Threading.Tasks;
-
+namespace AdCommunity.Api.Middlewares;
 public class LanguageChangeMiddleware
 {
     private readonly RequestDelegate _next;
@@ -32,8 +28,6 @@ public class LanguageChangeMiddleware
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                 cookieOptions
             );
-
-            context.Items["lang"] = culture;
         }
 
         await _next(context);

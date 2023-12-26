@@ -120,6 +120,9 @@
   <data name="AlreadyExistsErrorMessage" xml:space="preserve">
     <value>{0} zaten mevcut.</value>
   </data>
+  <data name="ForeignKeyErrorMessage" xml:space="preserve">
+    <value>{0}'a ait foreign key ya da keyler geçerli değil.</value>
+  </data>
   <data name="InvalidCredentialsErrorMessage" xml:space="preserve">
     <value>Geçersiz kimlik bilgileri.</value>
   </data>
@@ -130,6 +133,6 @@
     <value>{0} bulunamadı.</value>
   </data>
   <data name="NullExceptionErrorMessage" xml:space="preserve">
-    <value>Null hatası.</value>
+    <value>{0} null olmamalı.</value>
   </data>
 </root>

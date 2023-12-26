@@ -1,5 +1,4 @@
-﻿using AdCommunity.Core.Resources;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
 using System.Reflection;
 
 namespace AdCommunity.Core.Helpers;
@@ -20,3 +19,4 @@ public class LocalizationService
         return translation ?? string.Format(key, parameters);
     }
 }
+

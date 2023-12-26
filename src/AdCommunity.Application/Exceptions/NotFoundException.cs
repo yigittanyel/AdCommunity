@@ -1,11 +1,10 @@
-﻿using AdCommunity.Core.Helpers;
+﻿using AdCommunity.Core.BaseException;
 
 namespace AdCommunity.Application.Exceptions;
-
-public class NotFoundException : Exception
+public class NotFoundException : YtException
 {
-    public NotFoundException(LocalizationService localizationService,string entityName)
-        : base(localizationService.Translate("NotFoundErrorMessage", entityName))
+    public NotFoundException(string entityName)
+        : base("NotFoundErrorMessage", entityName)
     {
     }
 }

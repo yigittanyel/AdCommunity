@@ -1,9 +1,9 @@
-﻿using AdCommunity.Core.Helpers;
+﻿using AdCommunity.Core.BaseException;
 
-public class InvalidCredentialsException : Exception
+public class InvalidCredentialsException : YtException
 {
-    public InvalidCredentialsException(LocalizationService localizationService)
-        : base(localizationService.Translate("InvalidCredentialsErrorMessage"))
+    public InvalidCredentialsException()
+        : base("InvalidCredentialsErrorMessage")
     {
     }
 }

@@ -12,13 +12,11 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 {
     private readonly IConfiguration _configuration;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly LocalizationService _localizationService;
 
-    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork, LocalizationService localizationService)
+    public LoginCommandHandler(IConfiguration configuration, IUnitOfWork unitOfWork)
     {
         _configuration = configuration;
         _unitOfWork = unitOfWork;
-        _localizationService = localizationService;
     }
 
     public async Task<Tokens> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -27,7 +25,7 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 
         if (existingUser is null)
         {
-            throw new InvalidCredentialsException(_localizationService);
+            throw new InvalidCredentialsException();
         }
 
         var tokenService = new JwtService(_configuration);

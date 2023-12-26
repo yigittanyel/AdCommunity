@@ -4,7 +4,7 @@ using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Core.Helpers;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 namespace AdCommunity.Application.Features.Ticket.Commands.CreateTicketCommand;
@@ -14,35 +14,32 @@ public class CreateTicketTypesCommandHandler : IYtRequestHandler<CreateTicketTyp
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IMessageBrokerService _rabbitMqFactory;
-    private readonly LocalizationService _localizationService;
-
-    public CreateTicketTypesCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory, LocalizationService localizationService)
+    public CreateTicketTypesCommandHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IMessageBrokerService rabbitMqFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _rabbitMqFactory = rabbitMqFactory;
-        _localizationService = localizationService;
     }
     public async Task<TicketTypesCreateDto> Handle(CreateTicketTypesCommand request, CancellationToken cancellationToken)
     {
         var existingTicket = await _unitOfWork.GetRepository<TicketRepository>().GetTicketByEventAndCommunityIdsAsync(request.CommunityEventId, request.CommunityId, cancellationToken);
 
         if (existingTicket is not null)
-            throw new AlreadyExistsException(_localizationService, "Ticket");
+            throw new AlreadyExistsException("Ticket");
 
         var ticket = new Domain.Entities.Aggregates.Community.TicketType(request.Price);
 
         var communityEvent = await _unitOfWork.GetRepository<EventRepository>().GetAsync(request.CommunityEventId,null, cancellationToken);
 
         if (communityEvent is null)
-            throw new NotExistException(_localizationService, "Event");
+            throw new NotExistException("Event");
 
         ticket.AssignEvent(communityEvent);
 
         var community = await _unitOfWork.GetRepository<CommunityRepository>().GetAsync(request.CommunityId,null, cancellationToken);
 
         if (community is null)
-            throw new NotExistException(_localizationService, "Community");
+            throw new NotExistException("Community");
 
         ticket.AssignCommunity(community);
 

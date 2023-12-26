@@ -4,12 +4,10 @@ using AdCommunity.Application.Services.ElasticSearch;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-using AdCommunity.Repository.Repositories;
-using AdCommunity.Core.Helpers;
 
 namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunitiesQuery
 {
@@ -21,15 +19,13 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
         private readonly IRedisService _redisService;
         private readonly IElasticSearchService _elasticSearchService;
         private const string IndexName = "user_communities";
-        private readonly LocalizationService _localizationService;
 
-        public GetUserCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IElasticSearchService elasticSearchService, LocalizationService localizationService)
+        public GetUserCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IElasticSearchService elasticSearchService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _redisService = redisService;
             _elasticSearchService = elasticSearchService;
-            _localizationService = localizationService;
         }
 
         public async Task<List<UserCommunityDto>> Handle(GetUserCommunitiesQuery request, CancellationToken cancellationToken)
@@ -62,7 +58,7 @@ namespace AdCommunity.Application.Features.UserCommunity.Queries.GetUserCommunit
 
                 if (userCommunities is null || !userCommunities.Any())
                 {
-                    throw new NotExistException(_localizationService, "UserCommunity");
+                    throw new NotExistException("UserCommunity");
                 }
 
                 userCommunitiesDto = _mapper.MapList<Domain.Entities.Aggregates.User.UserCommunity, UserCommunityDto>(userCommunities.ToList());

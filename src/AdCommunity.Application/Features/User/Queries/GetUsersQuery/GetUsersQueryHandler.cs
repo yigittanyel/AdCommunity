@@ -15,13 +15,11 @@ public class GetUsersQueryHandler : IYtRequestHandler<GetUsersQuery, List<UserDt
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly LocalizationService _localizationService;
-    public GetUsersQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
+    public GetUsersQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizationService = localizationService;
     }
 
     public async Task<List<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
@@ -36,7 +34,7 @@ public class GetUsersQueryHandler : IYtRequestHandler<GetUsersQuery, List<UserDt
 
             if (users is null || !users.Any())
             {
-                throw new NotFoundException(_localizationService, "User");
+                throw new NotFoundException("User");
             }
 
             usersDto = _mapper.MapList<Domain.Entities.Aggregates.User.User, UserDto>((List<Domain.Entities.Aggregates.User.User>)users);

@@ -1,4 +1,5 @@
-﻿using AdCommunity.Domain.Entities.Aggregates.Community;
+﻿using AdCommunity.Core.Helpers;
+using AdCommunity.Domain.Entities.Aggregates.Community;
 using AdCommunity.Domain.Entities.SharedKernel;
 using AdCommunity.Domain.Exceptions;
 
@@ -10,6 +11,7 @@ public partial class UserEvent:BaseEntity
     public int EventId { get; protected set; }
     public virtual Event Event { get; protected set; } = null!;
     public virtual User User { get; protected set; } = null!;
+
     public UserEvent(int userId, int eventId)
     {
         if (userId <= 0)

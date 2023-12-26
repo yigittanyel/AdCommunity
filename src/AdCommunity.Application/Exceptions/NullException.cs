@@ -1,10 +1,11 @@
-﻿using AdCommunity.Core.Helpers;
+﻿using AdCommunity.Core.BaseException;
 
 namespace AdCommunity.Application.Exceptions;
-public class NullException : ArgumentNullException
+
+public class NullException : YtException
 {
-    public NullException(LocalizationService localizationService)
-        : base(localizationService.Translate("NullExceptionErrorMessage"))
+    public NullException(string entityName)
+        : base("NullExceptionErrorMessage", entityName)
     {
     }
 }

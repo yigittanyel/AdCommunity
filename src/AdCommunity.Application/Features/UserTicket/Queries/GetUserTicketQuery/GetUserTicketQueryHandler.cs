@@ -3,8 +3,7 @@ using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
-using AdCommunity.Core.Helpers;
-using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,15 +14,12 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly LocalizationService _localizationService;
-    public GetUserTicketQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, LocalizationService localizationService)
+    public GetUserTicketQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _redisService = redisService;
-        _localizationService = localizationService;
     }
-
     public async Task<UserTicketDto> Handle(GetUserTicketQuery request, CancellationToken cancellationToken)
     {
         var cacheKey = $"userTicket:{request.Id}";
@@ -35,7 +31,7 @@ public class GetUserTicketQueryHandler : IYtRequestHandler<GetUserTicketQuery, U
             var userTicket = await _unitOfWork.GetRepository<UserTicketRepository>().GetAsync(request.Id, query => query.Include(x => x.User).Include(x => x.Ticket), cancellationToken);
 
             if (userTicket is null)
-                throw new NotExistException(_localizationService, "User Ticket");
+                throw new NotExistException("User Ticket");
 
             userTicketDto = _mapper.Map<Domain.Entities.Aggregates.User.UserTicket, UserTicketDto>(userTicket);
 

@@ -1,4 +1,4 @@
-﻿namespace AdCommunity.Core.Resources;
+﻿namespace AdCommunity.Core;
 
 public class ApplicationResource
 {

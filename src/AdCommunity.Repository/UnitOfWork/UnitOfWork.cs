@@ -1,5 +1,7 @@
 ﻿using  AdCommunity.Core.UnitOfWork;
+using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
+using AdCommunity.Repository.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace AdCommunity.Repository.UnitOfWork;
@@ -17,6 +19,13 @@ public class UnitOfWork : IUnitOfWork
     public TRepository GetRepository<TRepository>() where TRepository : class
     {
         var repositoryType = typeof(TRepository);
+
+        //check the class name derived from GenericRepository
+        if (!(repositoryType.BaseType != null && repositoryType.BaseType.IsGenericType && repositoryType.BaseType.GetGenericTypeDefinition() == typeof(GenericRepository<>)))
+        {
+            throw new ArgumentException($"Type {repositoryType} must be derived from GenericRepository.");
+        }
+
         if (!_repositories.ContainsKey(repositoryType))
         {
             var repositoryInstance = Activator.CreateInstance(repositoryType, _context);
