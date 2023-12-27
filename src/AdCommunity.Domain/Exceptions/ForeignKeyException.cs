@@ -1,17 +1,11 @@
-﻿namespace AdCommunity.Domain.Exceptions;
+﻿using AdCommunity.Core.BaseException;
 
-public class ForeignKeyException : ArgumentException
+namespace AdCommunity.Domain.Exceptions;
+
+public class ForeignKeyException : YtException
 {
-    public ForeignKeyException() : base()
-    {
-    }
-
-    public ForeignKeyException(string paramName)
-           : base($"Foreign key value must be not equal 0 and greater than 0. (Parameter name: {paramName})")
-    {
-    }
-
-    public ForeignKeyException(string message, Exception ex) : base(message, ex)
+    public ForeignKeyException(string entityName)
+        : base("ForeignKeyErrorMessage", entityName)
     {
     }
 }

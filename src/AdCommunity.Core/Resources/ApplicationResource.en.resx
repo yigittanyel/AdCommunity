@@ -132,6 +132,9 @@
   <data name="NotFoundErrorMessage" xml:space="preserve">
     <value>{0} does not found.</value>
   </data>
+  <data name="NullErrorMessage" xml:space="preserve">
+    <value>{0} should not be null.</value>
+  </data>
   <data name="NullExceptionErrorMessage" xml:space="preserve">
     <value>{0} should not be null.</value>
   </data>

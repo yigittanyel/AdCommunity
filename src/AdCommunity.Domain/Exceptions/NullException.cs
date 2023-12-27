@@ -1,17 +1,11 @@
-﻿namespace AdCommunity.Domain.Exceptions;
+﻿using AdCommunity.Core.BaseException;
 
-public class NullException : ArgumentNullException
+namespace AdCommunity.Domain.Exceptions;
+
+public class NullException : YtException
 {
-    public NullException() : base()
-    {
-    }
-
-    public NullException(string paramName)
-           : base($"Value cannot be null. (Parameter name: {paramName})")
-    {
-    }
-
-    public NullException(string message, Exception ex) : base(message, ex)
+    public NullException(string entityName)
+        : base("NullErrorMessage", entityName)
     {
     }
 }

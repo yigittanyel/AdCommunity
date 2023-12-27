@@ -1,9 +1,8 @@
-﻿using AdCommunity.Core.Helpers;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AdCommunity.Core.BaseException;
+namespace AdCommunity.Core.Helpers;
 
 public class LocalizationServiceFactory
 {

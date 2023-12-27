@@ -15,7 +15,7 @@ public class LocalizationService
 
     public string Translate(string key, params object[] parameters)
     {
-        var translation = _localizer[key];
+        var translation = string.Format(_localizer[key], parameters);
         return translation ?? string.Format(key, parameters);
     }
 }
