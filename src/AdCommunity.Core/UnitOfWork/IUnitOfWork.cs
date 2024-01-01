@@ -1,8 +1,6 @@
-﻿
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
 namespace AdCommunity.Core.UnitOfWork;
-
 public interface IUnitOfWork
 {
     TRepository GetRepository<TRepository>() where TRepository : class;

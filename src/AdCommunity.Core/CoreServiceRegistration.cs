@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Reflection;
 
 namespace AdCommunity.Core;
-
 public static class CoreServiceRegistration
 {
     public static IServiceCollection AddLocalizationOperations(this IServiceCollection services)
