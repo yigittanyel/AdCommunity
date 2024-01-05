@@ -121,7 +121,7 @@
     <value>{0} is already exist.</value>
   </data>
   <data name="ForeignKeyErrorMessage" xml:space="preserve">
-    <value>{0}'s foreign key or keys not valid.</value>
+    <value>{0}'s foreign key information is not valid.</value>
   </data>
   <data name="InvalidCredentialsErrorMessage" xml:space="preserve">
     <value>Invalid credentials.</value>

@@ -121,7 +121,7 @@
     <value>{0} zaten mevcut.</value>
   </data>
   <data name="ForeignKeyErrorMessage" xml:space="preserve">
-    <value>{0}'a ait foreign key ya da keyler geçerli değil.</value>
+    <value>{0}'a ait foreign key bilgileri hatalı.</value>
   </data>
   <data name="InvalidCredentialsErrorMessage" xml:space="preserve">
     <value>Geçersiz kimlik bilgileri.</value>

@@ -52,6 +52,10 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddTransient<ExceptionMiddleware>();
 #endregion
 
+#region Localization Middleware Implementation
+builder.Services.AddTransient<LocalizationMiddleware>();
+#endregion
+
 #region Serilog Implementation
 using var log = new LoggerConfiguration()
     .WriteTo.File("./logs.txt")
@@ -119,7 +123,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 #region Localization Implementation
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
-app.UseMiddleware<LanguageChangeMiddleware>();
+app.UseMiddleware<LocalizationMiddleware>();
 #endregion
 
 app.UseHttpsRedirection();

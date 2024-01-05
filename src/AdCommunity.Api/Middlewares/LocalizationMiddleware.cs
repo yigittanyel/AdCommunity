@@ -1,16 +1,9 @@
 ﻿using Microsoft.AspNetCore.Localization;
 
 namespace AdCommunity.Api.Middlewares;
-public class LanguageChangeMiddleware
+public class LocalizationMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
-
-    public LanguageChangeMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var culture = context.Request.Query["culture"].ToString();
 
@@ -30,6 +23,6 @@ public class LanguageChangeMiddleware
             );
         }
 
-        await _next(context);
+        await next(context);
     }
 }

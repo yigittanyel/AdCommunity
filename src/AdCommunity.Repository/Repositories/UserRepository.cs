@@ -1,5 +1,5 @@
-﻿using AdCommunity.Domain.Repository;
-using AdCommunity.Domain.Entities.Aggregates.User;
+﻿using AdCommunity.Domain.Entities.Aggregates.User;
+using AdCommunity.Domain.Repository;
 using AdCommunity.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 

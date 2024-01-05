@@ -36,15 +36,7 @@ public class CreateCommunityCommandHandler : IYtRequestHandler<CreateCommunityCo
 
         community.AssignUser(user);
 
-        //var validationResult = await new CreateCommunityCommandValidator().ValidateAsync(request);
-
-        //if (!validationResults.IsValid)
-        //{
-        //    throw new ValidationException(validationResults.Errors.Select(e => e.ErrorMessage).ToList());
-        //}
-
         await _unitOfWork.GetRepository<CommunityRepository>().AddAsync(community, cancellationToken);
-
 
         _rabbitMqFactory.PublishMessage("create_community_queue", $"Community name: {community.Name} has been created.");
 
