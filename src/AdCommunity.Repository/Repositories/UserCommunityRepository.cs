@@ -11,11 +11,11 @@ public class UserCommunityRepository : GenericRepository<UserCommunity>,IUserCom
     {
     }
 
-    public async Task<UserCommunity> GetUserCommunitiesByUserAndCommunityAsync(int userId, int communityId, CancellationToken? cancellationToken)
+    public async Task<UserCommunity> GetUserCommunitiesByUserAndCommunityAsync(int userId, int communityId, CancellationToken cancellationToken)
     {
         return await _dbContext.UserCommunities
             .Where(x => x.UserId == userId && x.CommunityId == communityId)
             .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken ?? CancellationToken.None);   
+            .FirstOrDefaultAsync(cancellationToken);   
     }
 }

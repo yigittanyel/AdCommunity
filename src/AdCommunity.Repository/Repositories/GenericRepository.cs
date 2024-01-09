@@ -13,7 +13,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
     {
         _dbContext = context;
     }
-    public async Task<T> GetAsync(int id, Func<IQueryable<T>, IQueryable<T>> includeFunc, CancellationToken? cancellationToken = null)
+    public async Task<T> GetAsync(int id, Func<IQueryable<T>, IQueryable<T>> includeFunc, CancellationToken cancellationToken)
     {
         var query = _dbContext.Set<T>().AsQueryable();
 
@@ -22,10 +22,10 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
             query = includeFunc(query);
         }
 
-        return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken ?? CancellationToken.None);
+        return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IQueryable<T>> includeFunc, CancellationToken? cancellationToken)
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IQueryable<T>> includeFunc, CancellationToken cancellationToken)
     {
         var query = _dbContext.Set<T>().AsQueryable();
 
@@ -36,15 +36,15 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
 
         query = includeFunc(query);
 
-        var result = await query.ToListAsync(cancellationToken ?? CancellationToken.None);
+        var result = await query.ToListAsync(cancellationToken);
 
         return result;
     }
 
 
-    public async Task AddAsync(T entity, CancellationToken? cancellationToken)
+    public async Task AddAsync(T entity, CancellationToken cancellationToken)
     {
-        await _dbContext.Set<T>().AddAsync(entity, (CancellationToken)(cancellationToken));
+        await _dbContext.Set<T>().AddAsync(entity, cancellationToken);
     }
 
     public void Delete(T entity)

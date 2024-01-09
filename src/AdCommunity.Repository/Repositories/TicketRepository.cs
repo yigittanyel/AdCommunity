@@ -11,7 +11,7 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
     {
     }
 
-    public async Task<TicketType> GetTicketByEventAndCommunityIdsAsync(int eventId, int communityId, CancellationToken cancellationToken = default)
+    public async Task<TicketType> GetTicketByEventAndCommunityIdsAsync(int eventId, int communityId, CancellationToken cancellationToken)
     {
         return await _dbContext.Tickets
             .AsNoTracking()

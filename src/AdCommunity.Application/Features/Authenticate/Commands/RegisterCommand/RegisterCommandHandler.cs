@@ -20,7 +20,7 @@ public class RegisterCommandHandler : IYtRequestHandler<RegisterCommand, Tokens>
 
     public async Task<Tokens> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
+        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password, cancellationToken);
 
         if (existingUser is not null)
         {

@@ -11,11 +11,11 @@ public class UserTicketRepository : GenericRepository<UserTicket>, IUserTicketRe
     {
     }
 
-    public async Task<UserTicket> GetUserTicketsByUserAndTicketAsync(int userId, int ticketId, CancellationToken? cancellationToken)
+    public async Task<UserTicket> GetUserTicketsByUserAndTicketAsync(int userId, int ticketId, CancellationToken cancellationToken)
     {
         return await _dbContext.UserTickets
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketId == ticketId, 
-            cancellationToken ?? CancellationToken.None);
+            cancellationToken);
     }
 }

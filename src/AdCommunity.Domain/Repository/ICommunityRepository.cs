@@ -4,5 +4,5 @@ namespace AdCommunity.Domain.Repository;
 
 public interface ICommunityRepository : IGenericRepository<Community>
 {
-   Task<Community> GetByCommunityNameAsync(string communityName, CancellationToken? cancellationToken);  
+   Task<Community> GetByCommunityNameAsync(string communityName, CancellationToken cancellationToken);  
 }

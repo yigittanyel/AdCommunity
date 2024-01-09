@@ -21,7 +21,7 @@ public class LoginCommandHandler : IYtRequestHandler<LoginCommand, Tokens>
 
     public async Task<Tokens> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password);
+        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.User.Username, request.User.Password,cancellationToken);
 
         if (existingUser is null)
         {

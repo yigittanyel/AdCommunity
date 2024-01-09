@@ -11,11 +11,11 @@ public class UserRepository : GenericRepository<User>,IUserRepository
     {
     }
 
-    public async Task<User> GetUsersByUsernameAndPasswordAsync(string username, string password)
+    public async Task<User> GetUsersByUsernameAndPasswordAsync(string username, string password , CancellationToken cancellationToken)
     {
         return await _dbContext.Users
                 .Where(u => u.Username == username && u.Password == password)
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
     }
 }

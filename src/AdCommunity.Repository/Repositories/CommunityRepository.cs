@@ -10,11 +10,11 @@ public class CommunityRepository : GenericRepository<Community>, ICommunityRepos
     public CommunityRepository(ApplicationDbContext context) : base(context)
     {
     }
-    public async Task<Community> GetByCommunityNameAsync(string communityName, CancellationToken? cancellationToken)
+    public async Task<Community> GetByCommunityNameAsync(string communityName, CancellationToken cancellationToken)
     {
         var community= await _dbContext.Communities
                                         .AsNoTracking()
-                                        .FirstOrDefaultAsync(x => x.Name == communityName, (CancellationToken)(cancellationToken));
+                                        .FirstOrDefaultAsync(x => x.Name == communityName,cancellationToken);
         return community;
     }
 }

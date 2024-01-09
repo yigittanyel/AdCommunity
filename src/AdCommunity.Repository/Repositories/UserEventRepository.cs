@@ -11,12 +11,12 @@ public class UserEventRepository : GenericRepository<UserEvent>, IUserEventRepos
     {
     }
 
-    public async Task<UserEvent> GetUserEventsByUserAndEventAsync(int userId, int eventId, CancellationToken? cancellationToken)
+    public async Task<UserEvent> GetUserEventsByUserAndEventAsync(int userId, int eventId, CancellationToken cancellationToken)
     {
         return await _dbContext.UserEvents
             .Where(x => x.UserId == userId && x.EventId == eventId)
             .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken ?? CancellationToken.None);
+            .FirstOrDefaultAsync(cancellationToken);
         
     }
 }

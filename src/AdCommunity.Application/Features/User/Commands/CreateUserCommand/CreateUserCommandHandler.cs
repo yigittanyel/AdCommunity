@@ -22,7 +22,7 @@ public class CreateUserCommandHandler : IYtRequestHandler<CreateUserCommand, Use
 
     public async Task<UserCreateDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.Username, request.Password);
+        var existingUser = await _unitOfWork.GetRepository<UserRepository>().GetUsersByUsernameAndPasswordAsync(request.Username, request.Password,cancellationToken);
 
         if (existingUser is not null)
         {
