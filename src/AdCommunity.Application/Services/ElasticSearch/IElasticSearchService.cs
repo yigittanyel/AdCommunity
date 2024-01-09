@@ -1,5 +1,4 @@
 ﻿namespace AdCommunity.Application.Services.ElasticSearch;
-
 public interface IElasticSearchService
 {
     Task<bool> IndexExistsAsync(string indexName);

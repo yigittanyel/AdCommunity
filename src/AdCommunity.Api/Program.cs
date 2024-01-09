@@ -11,6 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
+using AdCommunity.Api.MongoDb;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,6 +105,7 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 
 #region Localization Implementation
 builder.Services.AddLocalizationOperations();

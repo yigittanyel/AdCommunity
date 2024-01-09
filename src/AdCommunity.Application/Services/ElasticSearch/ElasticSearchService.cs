@@ -12,13 +12,10 @@ namespace AdCommunity.Application.Services.ElasticSearch
         public ElasticSearchService(IConfiguration configuration)
         {
             _elasticSearchUrl = configuration.GetSection("ElasticSearch:Url").Value;
+            ValidateConfiguration();
+
             var settings = new ConnectionConfiguration(new Uri(_elasticSearchUrl));
             _client = new ElasticLowLevelClient(settings);
-        }
-
-        private ElasticLowLevelClient GetClient()
-        {
-            return _client;
         }
 
         public async Task<bool> IndexExistsAsync(string indexName)
@@ -39,9 +36,9 @@ namespace AdCommunity.Application.Services.ElasticSearch
                 query = new
                 {
                     wildcard = new Dictionary<string, object>
-                {
-                    { fieldName, new { value = $"*{value}*" } }
-                }
+                    {
+                        { fieldName, new { value = $"*{value}*" } }
+                    }
                 }
             };
 
@@ -65,15 +62,19 @@ namespace AdCommunity.Application.Services.ElasticSearch
         {
             List<T> items = await getDataFunc();
 
+            if (items == null)
+            {
+                return;
+            }
+
             var tasks = new List<Task>();
 
             foreach (var item in items)
             {
-                var itemId = item.GetType().GetProperty("Id")?.GetValue(item).ToString();
+                var itemId = item?.GetType().GetProperty("Id")?.GetValue(item)?.ToString();
 
                 if (string.IsNullOrEmpty(itemId))
                 {
-                    // Hata işlemesi eklenebilir
                     continue;
                 }
 
@@ -90,34 +91,37 @@ namespace AdCommunity.Application.Services.ElasticSearch
 
         public async Task SyncSingleToElastic<T>(string indexName, T data)
         {
-            try
+
+            var dataId = data?.GetType().GetProperty("Id")?.GetValue(data)?.ToString();
+
+            if (string.IsNullOrEmpty(dataId))
             {
-                var dataId = data.GetType().GetProperty("Id")?.GetValue(data).ToString();
-
-                ArgumentException.ThrowIfNullOrEmpty(dataId, nameof(dataId));
-
-                var response = await _client.CreateAsync<StringResponse>(indexName, dataId, PostData.Serializable(data));
-
-                if (response.HttpStatusCode == 201)
-                {
-                    response = await _client.IndexAsync<StringResponse>(indexName, dataId, PostData.Serializable(data));
-
-                    if (response.HttpStatusCode != 200)
-                    {
-                        throw new Exception($"Failed to index document. HttpStatusCode: {response.HttpStatusCode}");
-                    }
-                }
-                else
-                {
-                    throw new Exception($"Failed to create document. HttpStatusCode: {response.HttpStatusCode}");
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
+                return;
             }
 
+            var response = await _client.CreateAsync<StringResponse>(indexName, dataId, PostData.Serializable(data));
+
+            if (response.HttpStatusCode == 201)
+            {
+                response = await _client.IndexAsync<StringResponse>(indexName, dataId, PostData.Serializable(data));
+
+                if (response.HttpStatusCode != 200)
+                {
+                    throw new Exception($"Failed to index document. HttpStatusCode: {response.HttpStatusCode}");
+                }
+            }
+            else
+            {
+                throw new Exception($"Failed to create document. HttpStatusCode: {response.HttpStatusCode}");
+            }
+        }
+
+        private void ValidateConfiguration()
+        {
+            if (string.IsNullOrEmpty(_elasticSearchUrl))
+            {
+                throw new InvalidOperationException("ElasticSearchUrl is not configured.");
+            }
         }
     }
 }
