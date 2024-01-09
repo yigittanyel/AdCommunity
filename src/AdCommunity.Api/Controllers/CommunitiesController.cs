@@ -22,47 +22,47 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpGet("[action]/{communityId}")]
-        public async Task<CommunityDto> Get(int communityId)
+        public async Task<CommunityDto> Get(int communityId, CancellationToken cancellationToken)
         {
             GetCommunityQuery query = new GetCommunityQuery { Id = communityId };
-            CommunityDto community = await _mediator.Send(query);
+            CommunityDto community = await _mediator.Send(query,cancellationToken);
 
             return community;
         }
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<CommunityDto>> GetAll()
+        public async Task<IEnumerable<CommunityDto>> GetAll(CancellationToken cancellationToken)
         {
             GetCommunitiesQuery query = new GetCommunitiesQuery();
-            IEnumerable<CommunityDto> communities = await _mediator.Send(query);
+            IEnumerable<CommunityDto> communities = await _mediator.Send(query,cancellationToken);
 
             return communities;
         }
 
         [HttpPost("[action]")]
-        public async Task<CommunityCreateDto> Create(CommunityCreateDto community)
+        public async Task<CommunityCreateDto> Create(CommunityCreateDto community, CancellationToken cancellationToken)
         {
             CreateCommunityCommand command = new CreateCommunityCommand(community.Name, community.Description, community.Tags, community.Location, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium, community.UserId);
-            CommunityCreateDto createdCommunity = await _mediator.Send(command);
+            CommunityCreateDto createdCommunity = await _mediator.Send(command,cancellationToken);
 
             return createdCommunity;
         }
 
         [HttpDelete("[action]/{communityId}")]
-        public async Task<bool> Delete(int communityId)
+        public async Task<bool> Delete(int communityId, CancellationToken cancellationToken)
         {
             DeleteCommunityCommand command = new DeleteCommunityCommand { Id = communityId };
-            bool deletedCommunity = await _mediator.Send(command);
+            bool deletedCommunity = await _mediator.Send(command,cancellationToken);
 
             return deletedCommunity;
         }
 
 
         [HttpPut("[action]")]
-        public async Task<bool> Update(CommunityUpdateDto community)
+        public async Task<bool> Update(CommunityUpdateDto community, CancellationToken cancellationToken)
         {
             UpdateCommunityCommand command = new UpdateCommunityCommand(community.Id, community.Name, community.Description, community.Tags, community.Location, community.Website, community.Facebook, community.Twitter, community.Instagram, community.Github, community.Medium, community.UserId);
-            bool updatedCommunity = await _mediator.Send(command);
+            bool updatedCommunity = await _mediator.Send(command,cancellationToken);
 
             return updatedCommunity;
         }

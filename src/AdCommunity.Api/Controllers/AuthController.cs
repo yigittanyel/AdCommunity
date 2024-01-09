@@ -19,19 +19,19 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<Tokens> Login([FromBody] UserLoginDto user)
+        public async Task<Tokens> Login([FromBody] UserLoginDto user,CancellationToken cancellationToken)
         {
             LoginCommand command = new LoginCommand { User = user };
-            var tokens = await _mediator.Send(command);
+            var tokens = await _mediator.Send(command, cancellationToken);
 
             return tokens;
         }
 
         [HttpPost("register")]
-        public async Task<Tokens> Register([FromBody] UserCreateDto user)
+        public async Task<Tokens> Register([FromBody] UserCreateDto user, CancellationToken cancellationToken)
         {
             RegisterCommand command = new RegisterCommand { User = user };
-            var createdUser = await _mediator.Send(command);
+            var createdUser = await _mediator.Send(command, cancellationToken);
 
             return createdUser;
         }

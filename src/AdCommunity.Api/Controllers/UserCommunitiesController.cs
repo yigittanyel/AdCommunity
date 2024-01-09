@@ -23,45 +23,45 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpGet("[action]/{userCommunityId}")]
-        public async Task<UserCommunityDto> Get(int userCommunityId)
+        public async Task<UserCommunityDto> Get(int userCommunityId, CancellationToken cancellationToken)
         {
             GetUserCommunityQuery query = new GetUserCommunityQuery { Id = userCommunityId };
-            UserCommunityDto userCommunity = await _mediator.Send(query);
+            UserCommunityDto userCommunity = await _mediator.Send(query,cancellationToken);
             return userCommunity;
         }
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<UserCommunityDto>> GetAll()
+        public async Task<IEnumerable<UserCommunityDto>> GetAll(CancellationToken cancellationToken)
         {
             GetUserCommunitiesQuery query = new GetUserCommunitiesQuery();
-            IEnumerable<UserCommunityDto> userCommunities = await _mediator.Send(query);
+            IEnumerable<UserCommunityDto> userCommunities = await _mediator.Send(query,cancellationToken);
 
             return userCommunities;
         }
 
         [HttpPost("[action]")]
-        public async Task<UserCommunityCreateDto> Create(UserCommunityCreateDto userCommunity)
+        public async Task<UserCommunityCreateDto> Create(UserCommunityCreateDto userCommunity, CancellationToken cancellationToken)
         {
             CreateUserCommunityCommand command = new CreateUserCommunityCommand(userCommunity.UserId, userCommunity.CommunityId, userCommunity.JoinDate);
-            UserCommunityCreateDto createdUserCommunity = await _mediator.Send(command);
+            UserCommunityCreateDto createdUserCommunity = await _mediator.Send(command,cancellationToken);
 
             return createdUserCommunity;
         }
 
         [HttpPut("[action]")]
-        public async Task<bool> Update(UserCommunityUpdateDto userCommunity)
+        public async Task<bool> Update(UserCommunityUpdateDto userCommunity, CancellationToken cancellationToken)
         {
             UpdateUserCommunityCommand command = new UpdateUserCommunityCommand(userCommunity.Id,userCommunity.UserId, userCommunity.CommunityId, userCommunity.JoinDate);
-            bool updatedUserCommunity = await _mediator.Send(command);
+            bool updatedUserCommunity = await _mediator.Send(command,cancellationToken);
 
             return updatedUserCommunity;
         }
 
         [HttpDelete("[action]/{userCommunityId}")]
-        public async Task<bool> Delete(int userCommunityId)
+        public async Task<bool> Delete(int userCommunityId, CancellationToken cancellationToken)
         {
             DeleteUserCommunityCommand command = new DeleteUserCommunityCommand { Id = userCommunityId };
-            bool deletedUserCommunity = await _mediator.Send(command);
+            bool deletedUserCommunity = await _mediator.Send(command,cancellationToken);
 
             return deletedUserCommunity;
         }

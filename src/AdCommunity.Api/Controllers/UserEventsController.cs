@@ -23,45 +23,45 @@ namespace AdCommunity.Api.Controllers
         }
 
         [HttpGet("[action]/{userEventId}")]
-        public async Task<UserEventDto> Get(int userEventId)
+        public async Task<UserEventDto> Get(int userEventId, CancellationToken cancellationToken)
         {
             GetUserEventQuery query = new GetUserEventQuery { Id = userEventId };
-            UserEventDto userEvent = await _mediator.Send(query);
+            UserEventDto userEvent = await _mediator.Send(query,cancellationToken);
             return userEvent;
         }
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<UserEventDto>> GetAll()
+        public async Task<IEnumerable<UserEventDto>> GetAll(CancellationToken cancellationToken)
         {
             GetUserEventsQuery query = new GetUserEventsQuery();
-            IEnumerable<UserEventDto> userEvents = await _mediator.Send(query);
+            IEnumerable<UserEventDto> userEvents = await _mediator.Send(query,cancellationToken);
 
             return userEvents;
         }
 
         [HttpPost("[action]")]
-        public async Task<UserEventCreateDto> Create(UserEventCreateDto userEvent)
+        public async Task<UserEventCreateDto> Create(UserEventCreateDto userEvent, CancellationToken cancellationToken)
         {
             CreateUserEventCommand command = new CreateUserEventCommand(userEvent.UserId, userEvent.EventId);
-            UserEventCreateDto createdUserEvent = await _mediator.Send(command);
+            UserEventCreateDto createdUserEvent = await _mediator.Send(command,cancellationToken);
 
             return createdUserEvent;
         }
 
         [HttpPut("[action]")]
-        public async Task<bool> Update(UserEventUpdateDto userEvent)
+        public async Task<bool> Update(UserEventUpdateDto userEvent,CancellationToken cancellationToken)
         {
             UpdateUserEventCommand command = new UpdateUserEventCommand(userEvent.Id, userEvent.UserId, userEvent.EventId);
-            bool updatedUserEvent = await _mediator.Send(command);
+            bool updatedUserEvent = await _mediator.Send(command,cancellationToken);
 
             return updatedUserEvent;
         }
 
         [HttpDelete("[action]/{userEventId}")]
-        public async Task<bool> Delete(int userEventId)
+        public async Task<bool> Delete(int userEventId, CancellationToken cancellationToken)
         {
             DeleteUserEventCommand command = new DeleteUserEventCommand { Id = userEventId };
-            bool deletedUserEvent = await _mediator.Send(command);
+            bool deletedUserEvent = await _mediator.Send(command,cancellationToken);
 
             return deletedUserEvent;
         }
