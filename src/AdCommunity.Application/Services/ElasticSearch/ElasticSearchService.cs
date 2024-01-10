@@ -1,127 +1,108 @@
-﻿using Elasticsearch.Net;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using Nest;
 
-namespace AdCommunity.Application.Services.ElasticSearch
+namespace AdCommunity.Application.Services.ElasticSearch;
+
+public class ElasticSearchService<T> : IElasticSearchService<T>
+       where T : class
 {
-    public class ElasticSearchService : IElasticSearchService
+    private readonly IElasticClient _client;
+
+    public ElasticSearchService(IConfiguration configuration)
     {
-        private readonly ElasticLowLevelClient _client;
-        private readonly string _elasticSearchUrl;
+        _client = CreateInstance(configuration);
+    }
 
-        public ElasticSearchService(IConfiguration configuration)
+    private ElasticClient CreateInstance(IConfiguration configuration)
+    {
+        string host = configuration.GetSection("ElasticsearchServer:Host").Value;
+        string port = configuration.GetSection("ElasticsearchServer:Port").Value;
+        string username = configuration.GetSection("ElasticsearchServer:Username").Value;
+        string password = configuration.GetSection("ElasticsearchServer:Password").Value;
+        var settings = new ConnectionSettings(new Uri(host + ":" + port));
+
+        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            settings.BasicAuthentication(username, password);
+
+        return new ElasticClient(settings);
+    }
+
+    public async Task CheckIndex(string indexName, Action<CreateIndexDescriptor> customMappingFunc = null)
+    {
+        var indexExistsResponse = await _client.Indices.ExistsAsync(indexName);
+
+        if (indexExistsResponse.Exists)
+            return;
+
+        var createIndexDescriptor = new CreateIndexDescriptor(indexName)
+            .Settings(s => s.NumberOfShards(3).NumberOfReplicas(1));
+
+        customMappingFunc?.Invoke(createIndexDescriptor);
+
+        var response = await _client.Indices.CreateAsync(createIndexDescriptor);
+
+        return;
+    }
+
+
+
+    public async Task InsertDocument(string indexName, T document)
+    {
+        var indexResponse = await _client.IndexAsync(document, idx => idx.Index(indexName));
+
+        if (!indexResponse.IsValid)
         {
-            _elasticSearchUrl = configuration.GetSection("ElasticSearch:Url").Value;
-            ValidateConfiguration();
+            throw new Exception(indexResponse.OriginalException.Message);
+        }
+    }
 
-            var settings = new ConnectionConfiguration(new Uri(_elasticSearchUrl));
-            _client = new ElasticLowLevelClient(settings);
+    public async Task DeleteIndex(string indexName)
+    {
+        var deleteIndexResponse = await _client.Indices.DeleteAsync(indexName);
+
+        if (!deleteIndexResponse.IsValid)
+        {
+            throw new Exception(deleteIndexResponse.OriginalException.Message);
+        }
+    }
+
+    public async Task<T> GetDocument(string indexName, string id)
+    {
+        var getResponse = await _client.GetAsync<T>(new DocumentPath<T>(id).Index(indexName));
+
+        if (!getResponse.IsValid)
+        {
+            throw new Exception(getResponse.OriginalException.Message);
         }
 
-        public async Task<bool> IndexExistsAsync(string indexName)
+        return getResponse.Source;
+    }
+
+    public async Task<List<T>> GetDocuments(string indexName)
+    {
+        var searchResponse = await _client.SearchAsync<T>(s => s.Index(indexName).Size(1000));
+
+        if (!searchResponse.IsValid)
         {
-            var response = await _client.Indices.ExistsAsync<StringResponse>(indexName);
-            return response.Success;
+            throw new Exception(searchResponse.OriginalException.Message);
         }
 
-        public async Task CreateIndexAsync(string indexName, string mapping)
+        return searchResponse.Documents.ToList();
+    }
+
+    public async Task InsertBulkDocuments(string indexName, List<T> documents)
+    {
+        await _client.IndexManyAsync(documents, indexName);
+    }
+
+    public async Task DeleteByIdDocument(string indexName, T document)
+    {
+        var deleteResponse = await _client.DeleteAsync<T>(document, idx => idx.Index(indexName));
+
+        if (!deleteResponse.IsValid)
         {
-            await _client.Indices.CreateAsync<StringResponse>(indexName, PostData.Serializable(mapping));
-        }
-
-        public async Task<List<T>> SearchAsync<T>(string indexName, string fieldName, string value)
-        {
-            var searchQuery = new
-            {
-                query = new
-                {
-                    wildcard = new Dictionary<string, object>
-                    {
-                        { fieldName, new { value = $"*{value}*" } }
-                    }
-                }
-            };
-
-            var response = await _client.SearchAsync<StringResponse>(indexName, PostData.Serializable(searchQuery));
-
-            var results = JObject.Parse(response.Body);
-
-            var hits = results["hits"]["hits"].ToObject<List<JObject>>();
-
-            List<T> items = new();
-
-            foreach (var hit in hits)
-            {
-                items.Add(hit["_source"].ToObject<T>());
-            }
-
-            return items;
-        }
-
-        public async Task SyncToElastic<T>(string indexName, Func<Task<List<T>>> getDataFunc)
-        {
-            List<T> items = await getDataFunc();
-
-            if (items == null)
-            {
-                return;
-            }
-
-            var tasks = new List<Task>();
-
-            foreach (var item in items)
-            {
-                var itemId = item?.GetType().GetProperty("Id")?.GetValue(item)?.ToString();
-
-                if (string.IsNullOrEmpty(itemId))
-                {
-                    continue;
-                }
-
-                var response = await _client.GetAsync<StringResponse>(indexName, itemId);
-
-                if (response.HttpStatusCode != 200)
-                {
-                    tasks.Add(_client.IndexAsync<StringResponse>(indexName, itemId, PostData.Serializable(item)));
-                }
-            }
-
-            await Task.WhenAll(tasks);
-        }
-
-        public async Task SyncSingleToElastic<T>(string indexName, T data)
-        {
-
-            var dataId = data?.GetType().GetProperty("Id")?.GetValue(data)?.ToString();
-
-            if (string.IsNullOrEmpty(dataId))
-            {
-                return;
-            }
-
-            var response = await _client.CreateAsync<StringResponse>(indexName, dataId, PostData.Serializable(data));
-
-            if (response.HttpStatusCode == 201)
-            {
-                response = await _client.IndexAsync<StringResponse>(indexName, dataId, PostData.Serializable(data));
-
-                if (response.HttpStatusCode != 200)
-                {
-                    throw new Exception($"Failed to index document. HttpStatusCode: {response.HttpStatusCode}");
-                }
-            }
-            else
-            {
-                throw new Exception($"Failed to create document. HttpStatusCode: {response.HttpStatusCode}");
-            }
-        }
-
-        private void ValidateConfiguration()
-        {
-            if (string.IsNullOrEmpty(_elasticSearchUrl))
-            {
-                throw new InvalidOperationException("ElasticSearchUrl is not configured.");
-            }
+            throw new Exception(deleteResponse.OriginalException.Message);
         }
     }
 }
+

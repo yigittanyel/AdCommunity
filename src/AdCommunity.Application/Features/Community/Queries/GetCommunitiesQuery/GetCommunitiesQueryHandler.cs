@@ -1,12 +1,12 @@
 ﻿using AdCommunity.Application.DTOs.Community;
 using AdCommunity.Application.Exceptions;
 using AdCommunity.Application.Services.ElasticSearch;
+using AdCommunity.Application.Services.ElasticSearch.Mappings;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMapper;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Core.UnitOfWork;
 using AdCommunity.Repository.Repositories;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace AdCommunity.Application.Features.Community.Queries.GetCommunitiesQuery;
@@ -17,9 +17,13 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
     private readonly IUnitOfWork _unitOfWork;
     private readonly IYtMapper _mapper;
     private readonly IRedisService _redisService;
-    private readonly IElasticSearchService _elasticSearchService;
+    private readonly IElasticSearchService<AdCommunity.Domain.Entities.Aggregates.Community.Community> _elasticSearchService;
 
-    public GetCommunitiesQueryHandler(IUnitOfWork unitOfWork, IYtMapper mapper, IRedisService redisService, IElasticSearchService elasticSearchService)
+    public GetCommunitiesQueryHandler(
+        IUnitOfWork unitOfWork,
+        IYtMapper mapper,
+        IRedisService redisService,
+        IElasticSearchService<AdCommunity.Domain.Entities.Aggregates.Community.Community> elasticSearchService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -29,52 +33,39 @@ public class GetCommunitiesQueryHandler : IYtRequestHandler<GetCommunitiesQuery,
 
     public async Task<List<CommunityDto>> Handle(GetCommunitiesQuery request, CancellationToken cancellationToken)
     {
-        var indexName = "communities_index";
         var cacheKey = "communities";
-
-        if (!await _elasticSearchService.IndexExistsAsync(indexName))
-        {
-            await _elasticSearchService.CreateIndexAsync(indexName, @"
-                {
-                    ""mappings"": {
-                        ""properties"": {
-                            ""JoinDate"": { ""type"": ""date"" },
-                            ""UserId"": { ""type"": ""integer"" },
-                            ""CommunityId"": { ""type"": ""integer"" }
-                        }
-                    }
-                }");
-        }
-
-        // Try to get communities from Elasticsearch
-        var elasticSearchCommunities = await _elasticSearchService.SearchAsync<CommunityDto>(indexName, "name", "value");
-
-        if (elasticSearchCommunities.Any())
-        {
-            return elasticSearchCommunities;
-        }
-
-        // If not found in Elasticsearch, try to get from cache
+        var indexName = "communities_index";
         var communitiesDto = await _redisService.GetFromCacheAsync<List<CommunityDto>>(cacheKey);
 
         if (communitiesDto is null)
         {
-            // If not found in cache, get from the database
-            var communities = await _unitOfWork.GetRepository<CommunityRepository>()
-                .GetAllAsync(null, query => query.Include(x => x.User), cancellationToken);
+            await _elasticSearchService.CheckIndex(indexName, descriptor =>
+                descriptor.CommunityMapping()
+            );
 
-            if (communities is null || !communities.Any())
+            var elasticCommunities = await _elasticSearchService.GetDocuments(indexName);
+
+            if (elasticCommunities == null || !elasticCommunities.Any())
             {
-                throw new NotFoundException("Community");
+                var communities = await _unitOfWork.GetRepository<CommunityRepository>()
+                                                   .GetAllAsync(null, query => query.Include(x => x.User), cancellationToken);
+
+                if (communities == null || !communities.Any())
+                {
+                    throw new NotFoundException("Community");
+                }
+                communitiesDto = _mapper.MapList<Domain.Entities.Aggregates.Community.Community, CommunityDto>((List<Domain.Entities.Aggregates.Community.Community>)communities);
+                var domainCommunities = _mapper.MapList<CommunityDto, AdCommunity.Domain.Entities.Aggregates.Community.Community>(communitiesDto);
+
+                await _elasticSearchService.InsertBulkDocuments(indexName, domainCommunities);
+
+                await _redisService.AddToCacheAsync(cacheKey, communitiesDto, CacheTime);
             }
-
-            communitiesDto = _mapper.MapList<Domain.Entities.Aggregates.Community.Community, CommunityDto>((List<Domain.Entities.Aggregates.Community.Community>)communities);
-
-            // Sync communities to Elasticsearch for future queries
-            await _elasticSearchService.SyncToElastic(indexName, () => Task.FromResult(communitiesDto));
-
-            // Add communities to cache
-            await _redisService.AddToCacheAsync(cacheKey, communitiesDto, CacheTime);
+            else
+            {
+                communitiesDto = _mapper.MapList<AdCommunity.Domain.Entities.Aggregates.Community.Community, CommunityDto>(elasticCommunities);
+                await _redisService.AddToCacheAsync(cacheKey, communitiesDto, CacheTime);
+            }
         }
 
         return communitiesDto;

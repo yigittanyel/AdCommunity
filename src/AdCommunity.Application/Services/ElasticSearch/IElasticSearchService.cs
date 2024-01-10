@@ -1,9 +1,13 @@
-﻿namespace AdCommunity.Application.Services.ElasticSearch;
-public interface IElasticSearchService
+﻿using Nest;
+
+namespace AdCommunity.Application.Services.ElasticSearch;
+public interface IElasticSearchService<T>  where T : class
 {
-    Task<bool> IndexExistsAsync(string indexName);
-    Task CreateIndexAsync(string indexName, string mapping);
-    Task<List<T>> SearchAsync<T>(string indexName, string fieldName, string value);
-    Task SyncToElastic<T>(string indexName, Func<Task<List<T>>> getDataFunc);
-    Task SyncSingleToElastic<T>(string indexName, T data);
+    Task CheckIndex(string indexName, Action<CreateIndexDescriptor> customMappingFunc = null);
+    Task InsertDocument(string indexName, T document);
+    Task DeleteIndex(string indexName);
+    Task DeleteByIdDocument(string indexName, T document);
+    Task InsertBulkDocuments(string indexName, List<T> documents);
+    Task<T> GetDocument(string indexName, string id);
+    Task<List<T>> GetDocuments(string indexName);
 }

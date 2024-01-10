@@ -21,6 +21,9 @@ public partial class Community : BaseEntity, IAggregateRoot
     public virtual AdCommunity.Domain.Entities.Aggregates.User.User User { get; protected set; } = null!;
     public virtual ICollection<UserCommunity> UserCommunities { get; protected set; } = new List<UserCommunity>();
 
+    public Community()
+    {       
+    }
     public Community(string name, string? description, string? tags, string? location, string? website, string? facebook, string? twitter, string? instagram, string? github, string? medium)
     {
         ArgumentException.ThrowIfNullOrEmpty(name, nameof(name));

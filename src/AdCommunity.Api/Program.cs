@@ -1,19 +1,13 @@
 using AdCommunity.Api.Middlewares;
 using AdCommunity.Application;
-using AdCommunity.Application.Exceptions;
-using AdCommunity.Application.Features.Authenticate.Commands.LoginCommand;
 using AdCommunity.Core;
 using AdCommunity.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using AdCommunity.Repository.Repositories;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
-using AdCommunity.Api.MongoDb;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 

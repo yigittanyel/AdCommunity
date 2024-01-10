@@ -7,8 +7,12 @@ using AdCommunity.Core.CustomMediator.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver.Core.Configuration;
+using Nest;
 using RabbitMQ.Client;
 using System.Reflection;
+using ConnectionSettings = Nest.ConnectionSettings;
 
 namespace AdCommunity.Application;
 
@@ -46,7 +50,7 @@ public static class ApplicationServiceRegistration
         #endregion
 
         #region ELASTICSEARCH
-        serviceCollection.AddScoped<IElasticSearchService, ElasticSearchService>();
+        serviceCollection.AddScoped(typeof(IElasticSearchService<>), typeof(ElasticSearchService<>));
         #endregion
 
         #region Pipeline Behavior
