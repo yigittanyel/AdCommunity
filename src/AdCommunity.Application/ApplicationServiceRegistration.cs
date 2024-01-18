@@ -4,15 +4,13 @@ using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Core.CustomMediator.Interfaces;
+using AdCommunity.Domain.Entities.Aggregates.Community;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver.Core.Configuration;
 using Nest;
 using RabbitMQ.Client;
 using System.Reflection;
-using ConnectionSettings = Nest.ConnectionSettings;
 
 namespace AdCommunity.Application;
 
@@ -50,7 +48,16 @@ public static class ApplicationServiceRegistration
         #endregion
 
         #region ELASTICSEARCH
-        serviceCollection.AddScoped(typeof(IElasticSearchService<>), typeof(ElasticSearchService<>));
+        serviceCollection.AddSingleton<IElasticClient>(provider =>
+        {
+            var settings = new ConnectionSettings(new Uri(configuration["ElasticSearchConfig:Uri"]))
+                .DefaultIndex(configuration["ElasticSearchConfig:DefaultIndex"]);
+            return new ElasticClient(settings);
+        });
+
+        serviceCollection.AddSingleton(typeof(IElasticSearchService<>), typeof(ElasticSearchService<>));
+        serviceCollection.AddScoped<IElasticSearchService<Community>, ElasticSearchService<Community>>();
+
         #endregion
 
         #region Pipeline Behavior

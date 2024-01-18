@@ -3,106 +3,46 @@ using Nest;
 
 namespace AdCommunity.Application.Services.ElasticSearch;
 
-public class ElasticSearchService<T> : IElasticSearchService<T>
-       where T : class
+public class ElasticSearchService<T> : IElasticSearchService<T> where T : class
 {
-    private readonly IElasticClient _client;
+    private readonly IElasticClient _elasticClient;
 
-    public ElasticSearchService(IConfiguration configuration)
+    public ElasticSearchService(IElasticClient elasticClient)
     {
-        _client = CreateInstance(configuration);
+        _elasticClient = elasticClient;
     }
 
-    private ElasticClient CreateInstance(IConfiguration configuration)
+    public async Task<string> CreateDocumentAsync(T document)
     {
-        string host = configuration.GetSection("ElasticsearchServer:Host").Value;
-        string port = configuration.GetSection("ElasticsearchServer:Port").Value;
-        string username = configuration.GetSection("ElasticsearchServer:Username").Value;
-        string password = configuration.GetSection("ElasticsearchServer:Password").Value;
-        var settings = new ConnectionSettings(new Uri(host + ":" + port));
-
-        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-            settings.BasicAuthentication(username, password);
-
-        return new ElasticClient(settings);
+        var response = await _elasticClient.IndexDocumentAsync(document);
+        return response.IsValid ? "Document created successfully" : "Document creation failed";
     }
 
-    public async Task CheckIndex(string indexName, Action<CreateIndexDescriptor> customMappingFunc = null)
+    public async Task<string> DeleteDocumentAsync(int id)
     {
-        var indexExistsResponse = await _client.Indices.ExistsAsync(indexName);
-
-        if (indexExistsResponse.Exists)
-            return;
-
-        var createIndexDescriptor = new CreateIndexDescriptor(indexName)
-            .Settings(s => s.NumberOfShards(3).NumberOfReplicas(1));
-
-        customMappingFunc?.Invoke(createIndexDescriptor);
-
-        var response = await _client.Indices.CreateAsync(createIndexDescriptor);
-
-        return;
+        var response = await _elasticClient.DeleteAsync(new DocumentPath<T>(id));
+        return response.IsValid ? "Document deleted successfully" : "Document deletion failed";
     }
 
-
-
-    public async Task InsertDocument(string indexName, T document)
+    public async Task<T> GetDocumentAsync(int id)
     {
-        var indexResponse = await _client.IndexAsync(document, idx => idx.Index(indexName));
-
-        if (!indexResponse.IsValid)
-        {
-            throw new Exception(indexResponse.OriginalException.Message);
-        }
+        var response= await _elasticClient.GetAsync(new DocumentPath<T>(id));
+        return response.Source;
     }
 
-    public async Task DeleteIndex(string indexName)
+    public async Task<IEnumerable<T>> GetDocumentsAsync()
     {
-        var deleteIndexResponse = await _client.Indices.DeleteAsync(indexName);
-
-        if (!deleteIndexResponse.IsValid)
-        {
-            throw new Exception(deleteIndexResponse.OriginalException.Message);
-        }
+        var searchResponse = await _elasticClient.SearchAsync<T>(s => s
+                                                            .MatchAll()
+                                                            .Size(10000));
+        return searchResponse.Documents;
     }
 
-    public async Task<T> GetDocument(string indexName, string id)
+    public async Task<string> UpdateDocumentAsync(T document)
     {
-        var getResponse = await _client.GetAsync<T>(new DocumentPath<T>(id).Index(indexName));
-
-        if (!getResponse.IsValid)
-        {
-            throw new Exception(getResponse.OriginalException.Message);
-        }
-
-        return getResponse.Source;
-    }
-
-    public async Task<List<T>> GetDocuments(string indexName)
-    {
-        var searchResponse = await _client.SearchAsync<T>(s => s.Index(indexName).Size(1000));
-
-        if (!searchResponse.IsValid)
-        {
-            throw new Exception(searchResponse.OriginalException.Message);
-        }
-
-        return searchResponse.Documents.ToList();
-    }
-
-    public async Task InsertBulkDocuments(string indexName, List<T> documents)
-    {
-        await _client.IndexManyAsync(documents, indexName);
-    }
-
-    public async Task DeleteByIdDocument(string indexName, T document)
-    {
-        var deleteResponse = await _client.DeleteAsync<T>(document, idx => idx.Index(indexName));
-
-        if (!deleteResponse.IsValid)
-        {
-            throw new Exception(deleteResponse.OriginalException.Message);
-        }
+        var response= await _elasticClient.UpdateAsync(new DocumentPath<T>(document), u => u
+                                                            .Doc(document)
+                                                            .RetryOnConflict(3));
+        return response.IsValid ? "Document updated successfully" : "Document update failed";
     }
 }
-
