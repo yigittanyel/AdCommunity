@@ -3,6 +3,7 @@ using AdCommunity.Application.Services.ElasticSearch;
 using AdCommunity.Application.Services.Jwt;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
+using AdCommunity.Application.Services.Reporting;
 using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.Aggregates.Community;
 using FluentValidation;
@@ -62,6 +63,10 @@ public static class ApplicationServiceRegistration
 
         #region Pipeline Behavior
         serviceCollection.AddTransient(typeof(IYtPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        #endregion
+
+        #region Reporting
+        serviceCollection.AddScoped<IReportService, ReportService>();
         #endregion
 
         serviceCollection.AddHttpContextAccessor();
