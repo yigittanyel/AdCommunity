@@ -1,6 +1,7 @@
 ﻿using AdCommunity.Application.Features.PipelineExample;
 using AdCommunity.Application.Services.ElasticSearch;
 using AdCommunity.Application.Services.Jwt;
+using AdCommunity.Application.Services.MongoDB;
 using AdCommunity.Application.Services.RabbitMQ;
 using AdCommunity.Application.Services.Redis;
 using AdCommunity.Application.Services.Reporting;
@@ -9,6 +10,7 @@ using AdCommunity.Domain.Entities.Aggregates.Community;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Nest;
 using RabbitMQ.Client;
 using System.Reflection;
@@ -67,6 +69,11 @@ public static class ApplicationServiceRegistration
 
         #region Reporting
         serviceCollection.AddScoped<IReportService, ReportService>();
+        #endregion
+
+        #region MongoDB
+        serviceCollection.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
+        serviceCollection.AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>));
         #endregion
 
         serviceCollection.AddHttpContextAccessor();
