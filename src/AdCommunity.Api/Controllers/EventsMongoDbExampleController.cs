@@ -1,14 +1,7 @@
-﻿using AdCommunity.Application.DTOs.Event;
-using AdCommunity.Application.Features.Event.Commands.CreateEventCommand;
+using AdCommunity.Application.DTOs.Event;
 using AdCommunity.Application.Services.MongoDB;
-using AdCommunity.Core.CustomMediator.Interfaces;
 using AdCommunity.Domain.Entities.Aggregates.Community;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using Nest;
-using System.Reflection;
-using System.Threading;
 
 namespace AdCommunity.Api.Controllers
 {
@@ -16,9 +9,9 @@ namespace AdCommunity.Api.Controllers
     [ApiController]
     public class EventsMongoDbExampleController : ControllerBase
     {
-        private readonly IMongoDbService<Event> _mongoDbService;
+        private readonly IMongoDbService<EventMongo> _mongoDbService;
 
-        public EventsMongoDbExampleController(IMongoDbService<Event> mongoDbService, IYtMediator mediator)
+        public EventsMongoDbExampleController(IMongoDbService<EventMongo> mongoDbService)
         {
             _mongoDbService = mongoDbService;
         }
@@ -32,32 +25,31 @@ namespace AdCommunity.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(string id)
         {
-            return Ok(await _mongoDbService.GetByIdAsync(id));
+            var result = await _mongoDbService.GetByIdAsync(id);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(EventCreateDto @event, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(EventCreateDto @event)
         {
-            var eventEntity = new Event(
+            var eventEntity = new EventMongo(
                 @event.EventName,
                 @event.Description,
                 @event.EventDate,
                 @event.Location
             );
 
-            eventEntity.Id = Convert.ToInt32(ObjectId.GenerateNewId());
-
             await _mongoDbService.CreateAsync(eventEntity);
 
             return Ok(eventEntity);
         }
 
-
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(string id, EventUpdateDto entity)
         {
-            var @event = new Event(entity.EventName, entity.Description, entity.EventDate, entity.Location);
+            var @event = new EventMongo(entity.EventName, entity.Description, entity.EventDate, entity.Location);
+            @event.Id = id;
             await _mongoDbService.UpdateAsync(id, @event);
             return Ok();
         }

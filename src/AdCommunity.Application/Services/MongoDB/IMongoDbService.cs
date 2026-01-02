@@ -1,5 +1,8 @@
-﻿namespace AdCommunity.Application.Services.MongoDB;
-public interface IMongoDbService<T>
+using AdCommunity.Domain.Entities.SharedKernel;
+
+namespace AdCommunity.Application.Services.MongoDB;
+
+public interface IMongoDbService<T> where T : MongoBaseEntity
 {
     Task<List<T>> GetAllAsync();
     Task<T> GetByIdAsync(string id);
